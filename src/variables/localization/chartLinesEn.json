@@ -1,0 +1,17 @@
+{
+	"chartLines": {
+		"average": "Avg.",
+		"waterusageL": "Water Usage",
+		"waterusageP": "Prev. Period Water Usage",
+		"benchmark": "Water Usage Benchmark",
+		"tempAmbient": "Ambient Temp.",
+		"tempAmbientPrev": "Prev. Period Ambient Temp.",
+		"tempWater": "Water Temp.",
+		"tempWaterPrev": "Prev. Period Water Temp.",
+		"maxFlow": "Max. Flow",
+		"maxFlowPrev": "Prev. Period Max. Flow",
+		"minFlow": "Min. Flow",
+		"minFlowPrev": "Prev. Period Min. Flow",
+		"readingL": "Reading"
+	}
+}

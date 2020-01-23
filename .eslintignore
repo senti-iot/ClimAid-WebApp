@@ -1,0 +1,6 @@
+lib/
+dist/
+docs/
+node_modules/
+website/
+build/
