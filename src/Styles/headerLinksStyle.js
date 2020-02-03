@@ -177,6 +177,10 @@ const headerLinksStyle = makeStyles(theme => ({
 		fontSize: 40,
 		color: '#e7e7e7'
 	},
+	headerItemIconAdd: {
+		fontSize: 24,
+		color: '#e7e7e7'
+	},
 	headerItemText: {
 		fontSize: 25,
 		fontWeight: 300,

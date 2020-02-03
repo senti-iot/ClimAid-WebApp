@@ -1290,7 +1290,7 @@
 		}
 	},
 	"climaid": {
-		"area": "Område",
+		"map": "Kort",
 		"building": "Bygning",
 		"room": "Lokale"
 	}

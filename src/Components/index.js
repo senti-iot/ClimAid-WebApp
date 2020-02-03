@@ -41,8 +41,10 @@ import DateTimeFilter from 'Components/Input/DateTimeFilter'
 
 //Transitions
 import SlideT from 'Components/Transitions/SlideT'
-
 //#endregion
+
+import MapContainer from 'Components/Map/MapContainer'
+
 export {
 	//Transitions
 	SlideT,
@@ -68,5 +70,6 @@ export {
 	CircularOverlay,
 	//Dialogs
 	CookiesDialog,
-	PrivacyDialog
+	PrivacyDialog,
+	MapContainer
 }

@@ -1290,7 +1290,7 @@
 		}
 	},
 	"climaid": {
-		"area": "Area",
+		"map": "Map",
 		"building": "Building",
 		"room": "Room"
 	}

@@ -7,7 +7,6 @@ import ItemG from 'Components/Containers/ItemG';
 import { MainChart } from 'Components/Custom/MainChart/MainChart';
 import { Switch, Route, Redirect } from 'react-router-dom'
 import Settings from 'Routes/Settings';
-import Area from 'Routes/Area';
 import Building from 'Routes/Building';
 import Room from 'Routes/Room';
 import Header from 'Components/Header';
@@ -15,7 +14,7 @@ import Footer from 'Components/Footer';
 import cookie from 'react-cookies';
 import { useDispatch, useSelector } from 'Hooks';
 import { getSettings } from 'Redux/settings';
-import { CircularLoader } from 'Components';
+import { CircularLoader, MapContainer } from 'Components';
 import ArcGraph from 'Components/Graphs/ArcGraph';
 import DevicesWidget from 'Components/Custom/Devices/DevicesWidget';
 import DeviceTableWidget from 'Components/Custom/DevicesTable/DeviceTableWidget';
@@ -111,9 +110,6 @@ function Container(props) {
 							<Route path={'/settings'}>
 								<Settings />
 							</Route>
-							<Route path={'/area'}>
-								<Area />
-							</Route>
 							<Route path={'/building'}>
 								<Building />
 							</Route>
@@ -122,6 +118,7 @@ function Container(props) {
 							</Route>
 							<Route exact path={'/'}>
 								{/* <ChartContainer /> */}
+								<MapContainer />
 							</Route>
 							<Redirect path={'*'} to={'/'}></Redirect>
 						</Switch>

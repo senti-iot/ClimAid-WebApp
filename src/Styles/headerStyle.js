@@ -15,9 +15,19 @@ const headerStyles = makeStyles(theme => ({
 		}
 	},
 	logoContainer: {
-		width: 195,
+		width: '100%',
 		height: 48,
 		display: "flex",
+	},
+	logotext: {
+		width: 'calc(100% - 200px)',
+		color: '#000',
+		fontWeight: 'bold',
+		fontSize: '20px',
+		letterSpacing: '3px',
+		textAlign: 'left',
+		paddingLeft: '20px',
+		paddingTop: '12px'
 	},
 	appBar: {
 		backgroundColor: headerColor,
@@ -40,10 +50,6 @@ const headerStyles = makeStyles(theme => ({
 	image: {
 		position: "relative",
 		height: 48,
-		borderRadius: 4,
-		// [theme.breakpoints.down("xs")]: {
-		// 	height: 48
-		// },
 		"&:hover, &$focusVisible": {
 			zIndex: 1
 		}

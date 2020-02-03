@@ -1,5 +1,5 @@
 import { Grid, Menu, MenuItem, Divider, Tooltip, Button } from '@material-ui/core';
-import { PowerSettingsNew, SettingsRounded, MenuIcon, Business, Apartment, Dashboard } from 'variables/icons';
+import { PowerSettingsNew, SettingsRounded, MenuIcon, Business, Apartment, Dashboard, Add } from 'variables/icons';
 import React, { useState } from 'react';
 import cookie from 'react-cookies';
 import Gravatar from 'react-gravatar'
@@ -11,7 +11,8 @@ import { useDispatch, useSelector } from 'Hooks';
 
 
 function HeaderLinks(props) {
-
+	const [anchorBuildingEl, setAnchorBuildingEl] = React.useState(null);
+	const [anchorRoomsEl, setAnchorRoomsEl] = React.useState(null);
 	const [anchorProfile, setAnchorProfile] = useState(null)
 	const history = props.history
 	const dispatch = useDispatch()
@@ -97,47 +98,129 @@ function HeaderLinks(props) {
 		</div>
 	}
 
+	const handleBuildingMenuOpen = event => {
+		setAnchorBuildingEl(event.currentTarget);
+	};
+
+	const handleBuildingMenuClose = () => {
+		setAnchorBuildingEl(null);
+	};
+
+	const handleRoomsMenuOpen = event => {
+		setAnchorRoomsEl(event.currentTarget);
+	};
+
+	const handleRoomsMenuClose = () => {
+		setAnchorRoomsEl(null);
+	};
+
+	const goBoBuilding = (id) => {
+		history.push('/building/' + id);
+
+		handleBuildingMenuClose();
+	}
+
+	const goBoRoom = (id) => {
+		history.push('/room/' + id);
+
+		handleRoomsMenuClose();
+	}
+
 	const { t } = props;
 
 	return (
-		<Grid container direction="row" justify={'space-around'} alignItems={'center'}>
-			<ItemG>
-				{renderUserMenu()}
-			</ItemG>
-			<ItemG>
-				<Button onClick={() => { history.push(`/area`) }}>
-					<Grid container justify={'center'} alignItems={'center'} spacing={1}>
-						<ItemG>
-							<Business className={classes.headerItemIcon} />
-						</ItemG>
-						<ItemG><T className={classes.headerItemText}>{t('climaid.area')}</T></ItemG>
-					</Grid>
-				</Button>
-			</ItemG>
-			<ItemG>
-				<Button onClick={() => { history.push(`/building`) }}>
-					<Grid container justify={'center'} alignItems={'center'} spacing={1}>
-						<ItemG>
-							<Apartment className={classes.headerItemIcon} />
-						</ItemG>
-						<ItemG><T className={classes.headerItemText}>{t('climaid.building')}</T></ItemG>
-					</Grid>
-				</Button>
-			</ItemG>
-			<ItemG>
-				<Button onClick={() => { history.push(`/room`) }}>
-					<Grid container justify={'center'} alignItems={'center'} spacing={1}>
-						<ItemG>
-							<Dashboard className={classes.headerItemIcon} />
-						</ItemG>
-						<ItemG><T className={classes.headerItemText}>{t('climaid.room')}</T></ItemG>
-					</Grid>
-				</Button>
-			</ItemG>
-			<ItemG className={classes.burgerMenuIconWrapper}>
-				<MenuIcon className={classes.burgerMenuIcon} />
-			</ItemG>
-		</Grid>
+		<div>
+			<Grid container direction="row" justify={'space-around'} alignItems={'center'}>
+				<ItemG xs={1}>
+					{renderUserMenu()}
+				</ItemG>
+				<ItemG>
+					<Button onClick={() => { history.push(`/map`) }}>
+						<Grid container justify={'center'} alignItems={'center'} spacing={1}>
+							<ItemG>
+								<Business className={classes.headerItemIcon} />
+							</ItemG>
+							<ItemG><T className={classes.headerItemText}>{t('climaid.map')}</T></ItemG>
+						</Grid>
+					</Button>
+				</ItemG>
+				<ItemG>
+					<Button aria-controls="building-menu" aria-haspopup="true" onClick={handleBuildingMenuOpen}>
+						<Grid container justify={'center'} alignItems={'center'} spacing={1}>
+							<ItemG>
+								<Apartment className={classes.headerItemIcon} />
+							</ItemG>
+							<ItemG><T className={classes.headerItemText}>{t('climaid.building')}</T></ItemG>
+							<ItemG><Add className={classes.headerItemIconAdd} /></ItemG>
+						</Grid>
+					</Button>
+				</ItemG>
+				<ItemG>
+					<Button aria-controls="rooms-menu" aria-haspopup="true" onClick={handleRoomsMenuOpen}>
+						<Grid container justify={'center'} alignItems={'center'} spacing={1}>
+							<ItemG>
+								<Dashboard className={classes.headerItemIcon} />
+							</ItemG>
+							<ItemG><T className={classes.headerItemText}>{t('climaid.room')}</T></ItemG>
+							<ItemG><Add className={classes.headerItemIconAdd} /></ItemG>
+						</Grid>
+					</Button>
+				</ItemG>
+				<ItemG xs={1} className={classes.burgerMenuIconWrapper}>
+					<MenuIcon className={classes.burgerMenuIcon} />
+				</ItemG>
+			</Grid>
+			<Menu
+				style={{ marginTop: 45 }}
+				PaperProps={{
+					style: {
+						maxHeight: 800,
+						width: 200,
+						backgroundColor: '#ffffff',
+						color: '#000000'
+					},
+				}}
+				id="building-menu"
+				anchorEl={anchorBuildingEl}
+				keepMounted
+				open={Boolean(anchorBuildingEl)}
+				onClose={handleBuildingMenuClose}
+			>
+				<MenuItem onClick={() => goBoBuilding(1)}>Bygning 1</MenuItem>
+				<MenuItem onClick={() => goBoBuilding(2)}>Bygning 2</MenuItem>
+				<MenuItem onClick={() => goBoBuilding(3)}>Bygning 3</MenuItem>
+				<MenuItem onClick={() => goBoBuilding(4)}>Bygning 4</MenuItem>
+				<MenuItem onClick={() => goBoBuilding(5)}>Bygning 5</MenuItem>
+				<MenuItem onClick={() => goBoBuilding(6)}>Bygning 6</MenuItem>
+				<MenuItem onClick={() => goBoBuilding(7)}>Bygning 7</MenuItem>
+				<MenuItem onClick={() => goBoBuilding(8)}>Bygning 8</MenuItem>
+			</Menu>
+			<Menu
+				style={{ marginTop: 45 }}
+				PaperProps={{
+					style: {
+						maxHeight: 800,
+						width: 200,
+						backgroundColor: '#ffffff',
+						color: '#000000'
+					},
+				}}
+				id="rooms-menu"
+				anchorEl={anchorRoomsEl}
+				keepMounted
+				open={Boolean(anchorRoomsEl)}
+				onClose={handleRoomsMenuClose}
+			>
+				<MenuItem onClick={() => goBoRoom(1)}>Lokale 1</MenuItem>
+				<MenuItem onClick={() => goBoRoom(2)}>Lokale 2</MenuItem>
+				<MenuItem onClick={() => goBoRoom(3)}>Lokale 3</MenuItem>
+				<MenuItem onClick={() => goBoRoom(4)}>Lokale 4</MenuItem>
+				<MenuItem onClick={() => goBoRoom(5)}>Lokale 5</MenuItem>
+				<MenuItem onClick={() => goBoRoom(6)}>Lokale 6</MenuItem>
+				<MenuItem onClick={() => goBoRoom(7)}>Lokale 7</MenuItem>
+				<MenuItem onClick={() => goBoRoom(8)}>Lokale 8</MenuItem>
+			</Menu>
+		</div>
 	);
 }
 
