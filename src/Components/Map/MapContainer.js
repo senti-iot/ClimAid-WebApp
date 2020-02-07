@@ -1,16 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 // import { useLocalization } from 'Hooks';
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 
-const MapContainer = () => {
-	// const t = useLocalization();
-	const position = [57.0488, 9.9217];
-	const markerPos = [57.054010, 9.911410];
-	const markers = [position, markerPos];
+import { getBuildings } from 'data/climaid';
 
-	React.useEffect(() => {
+const MapContainer = () => {
+	const [buildings, setBuildings] = useState(null);
+	const position = [57.0488, 9.9217];
+
+	useEffect(() => {
+		async function fetchData() {
+			const data = await getBuildings();
+			if (data) {
+				setBuildings(data);
+			}
+		}
+
+		fetchData();
+
 		delete L.Icon.Default.prototype._getIconUrl;
 
 		L.Icon.Default.mergeOptions({
@@ -18,24 +27,28 @@ const MapContainer = () => {
 			iconUrl: require('leaflet/dist/images/marker-icon.png'),
 			shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 		});
-	});
+	}, []);
 
 	const handleMarkerClick = (marker) => {
 		console.log(marker);
 	}
 
 	return (
-		<Map center={position} zoom={18} scrollWheelZoom={false} style={{ height: "1000px", width: "100%" }}>
-			<TileLayer
-				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-			/>
-			{markers.map(function(marker, index) {
-				console.log(marker);
+		<div>
+			{buildings ? 
+				<Map center={position} zoom={18} scrollWheelZoom={false} style={{ height: "1000px", width: "100%" }}>
+					<TileLayer
+						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+						attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+					/>
+					{buildings.map(function(marker, index) {
+						// console.log(marker.latlong.split(','));
 
-				return (<Marker key={index} position={marker} onClick={() => handleMarkerClick(marker)} />)
-			})}
-		</Map>
+						return (<Marker key={index} position={marker.latlong.split(',')} onClick={() => handleMarkerClick(marker)} />)
+					})}
+				</Map>
+				: ""}
+		</div>
 	);
 }
 
