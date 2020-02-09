@@ -1,25 +1,38 @@
+import React, { useEffect, useState } from 'react';
 import { Grid, Menu, MenuItem, Divider, Tooltip, Button } from '@material-ui/core';
-import { PowerSettingsNew, SettingsRounded, MenuIcon, Business, Apartment, Dashboard, Add } from 'variables/icons';
-import React, { useState } from 'react';
 import cookie from 'react-cookies';
 import Gravatar from 'react-gravatar'
-import { logOut } from 'data/login';
-import { T, Muted, ItemG } from 'Components';
 import { GoogleLogout } from 'react-google-login';
-import headerLinksStyle from 'Styles/headerLinksStyle';
 import { useDispatch, useSelector } from 'Hooks';
 
+import { T, Muted, ItemG } from 'Components';
+import headerLinksStyle from 'Styles/headerLinksStyle';
+import { logOut } from 'data/login';
+import { PowerSettingsNew, SettingsRounded, MenuIcon, Business, Apartment, Dashboard, Add } from 'variables/icons';
+import { getBuildings } from 'data/climaid';
 
 function HeaderLinks(props) {
 	const [anchorBuildingEl, setAnchorBuildingEl] = React.useState(null);
 	const [anchorRoomsEl, setAnchorRoomsEl] = React.useState(null);
-	const [anchorProfile, setAnchorProfile] = useState(null)
+	const [anchorProfile, setAnchorProfile] = useState(null);
+	const [buildings, setBuildings] = useState(null);
 	const history = props.history
 	const dispatch = useDispatch()
 	const redux = {
 		resetRedux: () => dispatch({ type: 'RESET_APP' })
 	}
 	const user = useSelector(state => state.settings.user)
+
+	useEffect(() => {
+		async function fetchData() {
+			const data = await getBuildings();
+			if (data) {
+				setBuildings(data);
+			}
+		}
+
+		fetchData();
+	}, []);
 
 	const handleProfileOpen = e => {
 		setAnchorProfile(e.currentTarget)
@@ -186,14 +199,13 @@ function HeaderLinks(props) {
 				open={Boolean(anchorBuildingEl)}
 				onClose={handleBuildingMenuClose}
 			>
-				<MenuItem onClick={() => goBoBuilding(1)}>Bygning 1</MenuItem>
-				<MenuItem onClick={() => goBoBuilding(2)}>Bygning 2</MenuItem>
-				<MenuItem onClick={() => goBoBuilding(3)}>Bygning 3</MenuItem>
-				<MenuItem onClick={() => goBoBuilding(4)}>Bygning 4</MenuItem>
-				<MenuItem onClick={() => goBoBuilding(5)}>Bygning 5</MenuItem>
-				<MenuItem onClick={() => goBoBuilding(6)}>Bygning 6</MenuItem>
-				<MenuItem onClick={() => goBoBuilding(7)}>Bygning 7</MenuItem>
-				<MenuItem onClick={() => goBoBuilding(8)}>Bygning 8</MenuItem>
+				{buildings ?
+					<span>
+						{buildings.map(function (building, index) {
+							return (<MenuItem key={building.uuid} onClick={() => goBoBuilding(building.uuid)}>{building.name}</MenuItem>)
+						})}
+					</span>
+					: ""}
 			</Menu>
 			<Menu
 				style={{ marginTop: 45 }}

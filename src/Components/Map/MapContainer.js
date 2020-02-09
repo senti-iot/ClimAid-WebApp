@@ -4,6 +4,7 @@ import { Map, Marker, TileLayer } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 
+import CircularLoader from 'Components/Loaders/CircularLoader';
 import { getBuildings } from 'data/climaid';
 
 const MapContainer = () => {
@@ -34,20 +35,18 @@ const MapContainer = () => {
 	}
 
 	return (
-		<div>
-			{buildings ? 
-				<Map center={position} zoom={18} scrollWheelZoom={false} style={{ height: "1000px", width: "100%" }}>
+		<div style={{ height: "700px", width: "100%" }}>
+			{buildings ?
+				<Map center={position} zoom={18} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
 					<TileLayer
 						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 						attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 					/>
 					{buildings.map(function(marker, index) {
-						// console.log(marker.latlong.split(','));
-
 						return (<Marker key={index} position={marker.latlong.split(',')} onClick={() => handleMarkerClick(marker)} />)
 					})}
 				</Map>
-				: ""}
+				: <CircularLoader /> }
 		</div>
 	);
 }

@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import buildingStyles from 'Styles/buildingStyles';
 import { ItemG } from 'Components';
+import BuildingInfoRooms from 'Components/Building/BuildingInfoRooms';
 
 const BuildingInfo = () => {
 	const classes = buildingStyles();
@@ -53,6 +54,11 @@ const BuildingInfo = () => {
 					<ItemG xs={2}>
 						<img src={require('../../assets/imgs/letskyet.png')} alt="" className={classes.weatherImage} />
 					</ItemG>
+					<Grid container item xs={12}>
+						<ItemG xs={12}>
+							<BuildingInfoRooms uuid="" />
+						</ItemG>
+					</Grid>
 					<Grid container item xs={12}>
 						<ItemG xs={4}>
 						</ItemG>

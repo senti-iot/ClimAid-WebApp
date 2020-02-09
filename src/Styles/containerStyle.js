@@ -24,8 +24,8 @@ export const BPaper = styled(Paper)`
 	`;
 export const AppBackground = styled.div`
 	margin-top: 120px;
-	height: calc(100vh - 120px);
+	/* height: calc(100vh - 120px); */
 	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
-	background: ${props => bgColors[props.color].background};
+	/* background: ${props => bgColors[props.color].background}; */
 	`

@@ -19,18 +19,26 @@ export const getBuildings = async () => {
 
 export const getBuilding = async (uuid) => {
 	let data = await climaidApi.get('/building/' + uuid).then(rs => rs.data);
-	console.log(data);
+	// console.log(data);
 	return data;
 };
 
-export const getRooms = async (uuid) => {
+export const getRoomsInBuilding = async (uuid) => {
 	let data = await climaidApi.get('/rooms/' + uuid).then(rs => rs.data);
+	// console.log(data);
+	return data;
+};
+
+export const addBuilding = async (postData) => {
+	let data = await climaidApi.post('/building', postData).then(rs => rs.data);
 	console.log(data);
 	return data;
 };
 
 export const getRoom = async (uuid) => {
 	let data = await climaidApi.get('/room/' + uuid).then(rs => rs.data);
-	console.log(data);
+	// console.log(data);
 	return data;
 };
+
+
