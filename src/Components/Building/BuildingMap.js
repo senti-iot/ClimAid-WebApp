@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
-import { useHistory } from 'react-router'
-import { Map } from 'react-leaflet';
+import { useHistory } from 'react-router';
+import { Map, ZoomControl } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 
@@ -10,7 +10,7 @@ function BuildingMap(props) {
 	const history = useHistory();
 	const classes = buildingStyles();
 	const mapRef = useRef(null);
-	const position = [57.0488, 9.9217];
+	const { REACT_APP_CLIMAID_API_URL } = process.env;
 
 	useEffect(() => {
 		//leaflet hack to fix marker images
@@ -23,7 +23,7 @@ function BuildingMap(props) {
 		});
 
 		const w = 2550, h = 1691;
-		const url = 'http://hhdev.skywalker.webhouse.net/map/floorplan.jpg';
+		const url = REACT_APP_CLIMAID_API_URL + '/building/' + props.building.uuid + '/image';
 
 		if (mapRef.current !== null) {
 			let map = mapRef.current.leafletElement;
@@ -61,14 +61,17 @@ function BuildingMap(props) {
 	return (
 		<Map
 			ref={mapRef}
-			center={position}
+			center={[0, 0]}
 			minZoom={2}
 			maxZoom={4}
 			zoom={2}
+			zoomControl={false}
 			crs={L.CRS.Simple}
 			scrollWheelZoom={false}
 			className={classes.buildingMap}
-		/>
+		>
+			<ZoomControl position="bottomright" />
+		</Map>
 	);
 }
 

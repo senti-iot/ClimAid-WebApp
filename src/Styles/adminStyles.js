@@ -10,7 +10,8 @@ const adminStyles = makeStyles(theme => ({
 		fontWeight: 300,
 		color: '#201f20',
 	},
-	textField: {
+	uploadinput: {
+		display: 'none'
 	}
 }));
 

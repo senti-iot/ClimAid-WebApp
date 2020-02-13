@@ -5,16 +5,22 @@ import moment from 'moment';
 import buildingStyles from 'Styles/buildingStyles';
 import { ItemG } from 'Components';
 import BuildingInfoRooms from 'Components/Building/BuildingInfoRooms';
+import BuildingInfoUsage from 'Components/Building/BuildingInfoUsage';
 
-const BuildingInfo = () => {
+const BuildingInfo = (props) => {
 	const classes = buildingStyles();
+	const history = props.history;
+
+	const handleRoomClick = (room) => {
+		history.push('/building/' + props.building.uuid + '/room/' + room.uuid);
+	}
 
 	return (
 		<Paper elevation={3} className={classes.buildInfoContainer}>
 			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
 				<Grid container item xs={12}>
 					<ItemG xs={9}>
-						<div className={classes.buildingName}>Bygning xxx</div>
+						<div className={classes.buildingName}>{props.building.name}</div>
 						<div className={classes.dayName}>
 							{moment().format('dddd')}
 						</div>
@@ -26,47 +32,23 @@ const BuildingInfo = () => {
 						<div></div>
 					</ItemG>
 				</Grid>
-				<Grid container item xs={12} className={classes.weatherContainer}>
-					<ItemG xs={10}>
-						<Grid container item xs={12}>
-							<ItemG xs={12}>
-								<div className={classes.weatherHeader}>Vejret</div>
-							</ItemG>
-							<ItemG xs={6} className={classes.weatherInfo}>
-								Vejr: Let skyet
-							</ItemG>
-							<ItemG xs={6} className={classes.weatherInfo}>
-								Fugtighed: 92%
-							</ItemG>
-							<ItemG xs={6} className={classes.weatherInfo}>
-								Temperatur: 15c
-							</ItemG>
-							<ItemG xs={6} className={classes.weatherInfo}>
-								Tryk: 1024 HPa
-							</ItemG>
-							<ItemG xs={6} className={classes.weatherInfo}>
-								Vindhastighed: 1m/s
-							</ItemG>
-							<ItemG xs={6} className={classes.weatherInfo}>
-							</ItemG>
-						</Grid>
+				<Grid container item xs={12}>
+					<ItemG xs={12}>
+						<BuildingInfoUsage building={props.building} />
 					</ItemG>
-					<ItemG xs={2}>
-						<img src={require('../../assets/imgs/letskyet.png')} alt="" className={classes.weatherImage} />
+				</Grid>
+				<Grid container item xs={12}>
+					<ItemG xs={12}>
+						<BuildingInfoRooms handleRoomClick={handleRoomClick} building={props.building} />
 					</ItemG>
-					<Grid container item xs={12}>
-						<ItemG xs={12}>
-							<BuildingInfoRooms uuid="" />
-						</ItemG>
-					</Grid>
-					<Grid container item xs={12}>
-						<ItemG xs={4}>
-						</ItemG>
-						<ItemG xs={4}>
-						</ItemG>
-						<ItemG xs={4}>
-						</ItemG>
-					</Grid>
+				</Grid>
+				<Grid container item xs={12}>
+					<ItemG xs={4}>
+					</ItemG>
+					<ItemG xs={4}>
+					</ItemG>
+					<ItemG xs={4}>
+					</ItemG>
 				</Grid>
 			</Grid>
 		</Paper>

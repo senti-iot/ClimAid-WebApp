@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Paper } from '@material-ui/core';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 import buildingStyles from 'Styles/buildingStyles';
-import { ItemG } from 'Components';
 import { getRoomsInBuilding } from 'data/climaid';
+import { Notifications } from 'variables/icons';
 
 const BuildingInfoRooms = (props) => {
 	const classes = buildingStyles();
@@ -11,30 +15,43 @@ const BuildingInfoRooms = (props) => {
 
 	useEffect(() => {
 		async function fetchData() {
-			const data = await getRoomsInBuilding();
+			const data = await getRoomsInBuilding(props.building.uuid);
 			if (data) {
 				setRooms(data);
 			}
 		}
 
 		fetchData();
-	}, []);
+	}, [props]);
 
 	return (
 		<div>
 			<p><b>Lokale</b></p>
 			{rooms ?
-				<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
-					{rooms.map(function (room, index) {
-						return (
-							<ItemG xs={12}>
-								<Grid container item xs={12}>
-									<ItemG xs={3}>{room.name}</ItemG>
-								</Grid>
-							</ItemG>
-						)
-					})}
-				</Grid>
+				<Table className={classes.table} aria-label="Lokale tabel">
+					<TableHead>
+						<TableRow>
+							<TableCell>On/Off</TableCell>
+							<TableCell></TableCell>
+							<TableCell>Indeklima tilstand</TableCell>
+							<TableCell>Betteriniveau</TableCell>
+							<TableCell></TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{rooms.map((room, index) => {
+							return (
+								<TableRow key={room.uuid} style={{ height: 40 }} hover onClick={event => props.handleRoomClick(room)}>
+									<TableCell></TableCell>
+									<TableCell>{room.name}</TableCell>
+									<TableCell></TableCell>
+									<TableCell></TableCell>
+									<TableCell><Notifications style={{ color: '#ccc' }} /></TableCell>
+								</TableRow>
+							)
+						})}
+					</TableBody>
+				</Table>
 				: ""}
 		</div>
 	);

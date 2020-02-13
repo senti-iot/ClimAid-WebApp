@@ -134,7 +134,7 @@ function HeaderLinks(props) {
 	}
 
 	const goBoRoom = (id) => {
-		history.push('/room/' + id);
+		history.push('/building/5890450e-cccf-401e-8375-60e5041667b9/room/' + id);
 
 		handleRoomsMenuClose();
 	}
@@ -188,7 +188,7 @@ function HeaderLinks(props) {
 				PaperProps={{
 					style: {
 						maxHeight: 800,
-						width: 200,
+						width: 300,
 						backgroundColor: '#ffffff',
 						color: '#000000'
 					},

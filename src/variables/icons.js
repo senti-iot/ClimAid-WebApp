@@ -119,6 +119,9 @@ import Https from '@material-ui/icons/Https'
 import Palette from '@material-ui/icons/Palette'
 import ImportExport from '@material-ui/icons/ImportExport'
 import Apartment from '@material-ui/icons/Apartment'
+import MeetingRoom from '@material-ui/icons/MeetingRoom';
+import ArrowForward from '@material-ui/icons/ArrowForwardIos';
+import ArrowBack from '@material-ui/icons/ArrowBackIos';
 export {
 	Droplet,
 	Thermometer,
@@ -241,4 +244,7 @@ export {
 	LockOpen,
 	FolderShared,
 	Apartment,
+	MeetingRoom,
+	ArrowForward,
+	ArrowBack,
 }

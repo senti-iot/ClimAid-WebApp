@@ -1,4 +1,7 @@
 import { create } from 'apisauce';
+import moment from 'moment';
+
+import { servicesAPI } from './data';
 
 const { REACT_APP_CLIMAID_API_URL } = process.env;
 
@@ -31,7 +34,19 @@ export const getRoomsInBuilding = async (uuid) => {
 
 export const addBuilding = async (postData) => {
 	let data = await climaidApi.post('/building', postData).then(rs => rs.data);
-	console.log(data);
+	// console.log(data);
+	return data;
+};
+
+export const addBuildingImage = async (uuid, formData) => {
+	let data = await climaidApi.post('/building/' + uuid + '/image', formData).then(rs => rs.data);
+	// console.log(data);
+	return data;
+};
+
+export const getBuildingImage = async (uuid) => {
+	let data = await climaidApi.get('/building/' + uuid + '/image').then(rs => rs.data);
+	// console.log(data);
 	return data;
 };
 
@@ -40,5 +55,28 @@ export const getRoom = async (uuid) => {
 	// console.log(data);
 	return data;
 };
+
+// DEVICE DATA
+
+export const getMeassurement = async (deviceId, gauge) => {
+	let startDate = 0;
+	let endDate = 0;
+
+	switch (gauge.period) {
+		case 'hour':
+			startDate = moment().subtract(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
+			endDate = moment().format('YYYY-MM-DD HH:mm:ss');
+			break;
+		default:
+		case 'day':
+			startDate = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
+			endDate = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+			break;
+	}
+
+	let data = await servicesAPI.get('/v1/devicedata-clean/' + deviceId + '/' + startDate + '/' + endDate + '/' + gauge.type + '/' + gauge.function).then(rs => rs.data);
+	return data;
+};
+
 
 

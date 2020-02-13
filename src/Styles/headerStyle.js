@@ -31,7 +31,7 @@ const headerStyles = makeStyles(theme => ({
 	},
 	appBar: {
 		backgroundColor: headerColor,
-		boxShadow: "none",
+		//boxShadow: "none",
 		borderBottom: "0",
 		marginBottom: "0",
 		position: 'fixed',

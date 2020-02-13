@@ -3,11 +3,10 @@ import { makeStyles } from '@material-ui/styles';
 const buildingStyles = makeStyles(theme => ({
 	buildInfoContainer: {
 		height: 940,
-		backgroundColor: '#ffffff',
 		padding: 30,
 	},
 	buildingName: {
-		fontSize: 40,
+		fontSize: 30,
 		fontWeight: 300,
 		color: '#201f20',
 		paddingBottom: 25,
@@ -46,6 +45,10 @@ const buildingStyles = makeStyles(theme => ({
 	buildingMap: {
 		width: "100%",
 		height: 1000,
+	},
+	buildInfoRoomCell: {
+		borderBottom: "solid 1px #ccc",
+		
 	}
 }));
 
