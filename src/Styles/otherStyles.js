@@ -5,7 +5,7 @@ const otherStyles = makeStyles(theme => ({
 		boxSizing: 'border-box',
 		position: 'absolute',
 		zIndex: '1000',
-		height: "700px",
+		height: "1000px",
 		width: "800px",
 		backgroundColor: '#fff',
 		padding: 50,
@@ -41,7 +41,7 @@ const otherStyles = makeStyles(theme => ({
 	},
 	mapInfoContainerToggleOff: {
 		position: 'absolute',
-		top: '400px',
+		top: '500px',
 		left: '30px',
 		width: 50,
 		height: 50,
@@ -53,6 +53,16 @@ const otherStyles = makeStyles(theme => ({
 		paddingTop: 15,
 		paddingLeft: 17,
 		cursor: 'pointer',
+	},
+	mapPopupContainer: {
+		width: 400,
+		height: 550,
+		background: '#fff'
+	},
+	mapPopupHeader: {
+		fontSize: 18,
+		margin: 0,
+		padding: 0
 	}
 }));
 

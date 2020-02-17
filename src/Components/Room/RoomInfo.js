@@ -1,14 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Paper } from '@material-ui/core';
 import moment from 'moment';
 
 import roomStyles from 'Styles/roomStyles';
 import { ItemG } from 'Components';
 import GradientGauge from "Components/Graphs/GradientGauge/GradientGauge";
+import { getMeassurement } from 'data/climaid';
+import CircularLoader from 'Components/Loaders/CircularLoader';
 
 const RoomInfo = (props) => {
 	const classes = roomStyles();
-	const room = props.room;
+	let room = props.room;
+	const [roomValues, setRoomValues] = useState(null);
+
+	useEffect(() => {
+		async function fetchData() {
+			let values = {};
+			await Promise.all(
+				room.devices.map(async device => {
+					return await Promise.all(
+						device.gauges.map(async (gauge) => {
+							let value = await getMeassurement(device.deviceId, gauge);
+							values[gauge.uuid] = value;
+						})
+					)
+				})
+			)
+
+			setRoomValues(values);
+		}
+
+		fetchData();
+	}, [room]);
 
 	return (
 		<Paper elevation={3} className={classes.roomInfoContainer}>
@@ -24,10 +47,11 @@ const RoomInfo = (props) => {
 						</div>
 						<br />
 					</ItemG>
-					{room.devices ?
+
+					{roomValues ?
 						room.devices.map(device => {
 							return device.gauges.map((gauge, index) => {
-								let value = room.values[gauge.uuid];
+								let value = roomValues[gauge.uuid];
 
 								return (
 									<ItemG xs={12} key={index} align={index % 2 ? "right" : "left" }>
@@ -47,7 +71,7 @@ const RoomInfo = (props) => {
 									</ItemG>
 								)})
 						})
-						: ""}
+						: <CircularLoader fill />}
 				</Grid>
 			</Grid>
 		</Paper>

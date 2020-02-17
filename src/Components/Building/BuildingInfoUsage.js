@@ -11,28 +11,28 @@ const BuildingInfoUsage = (props) => {
 	const classes = buildingStyles();
 
 	return (
-		<div>
+		<>
 			<p><b>Brugstid</b></p>
 			<Table className={classes.table} aria-label="Brugstid tabel">
 				<TableBody>
-					<TableRow style={{ height: 40 }} hover>
+					<TableRow style={{ height: 40 }}>
 						<TableCell>Energiforbrug: Fjernvarme</TableCell>
 						<TableCell></TableCell>
-						<TableCell><Notifications style={{ color: '#ccc' }} /></TableCell>
+						<TableCell align="right"><Notifications style={{ color: '#ccc' }} /></TableCell>
 					</TableRow>
-					<TableRow style={{ height: 40 }} hover>
+					<TableRow style={{ height: 40 }}>
 						<TableCell>Energiforbrug: Brugsvand</TableCell>
 						<TableCell></TableCell>
-						<TableCell><Notifications style={{ color: '#ccc' }} /></TableCell>
+						<TableCell align="right"><Notifications style={{ color: '#ccc' }} /></TableCell>
 					</TableRow>
-					<TableRow style={{ height: 40 }} hover>
+					<TableRow style={{ height: 40 }}>
 						<TableCell>Energiforbrug: Solceller</TableCell>
 						<TableCell></TableCell>
-						<TableCell><Notifications style={{ color: '#ccc' }} /></TableCell>
+						<TableCell align="right"><Notifications style={{ color: '#ccc' }} /></TableCell>
 					</TableRow>
 				</TableBody>
 			</Table>
-		</div>
+		</>
 	);
 }
 

@@ -39,7 +39,7 @@ const BuildingInfo = (props) => {
 				</Grid>
 				<Grid container item xs={12}>
 					<ItemG xs={12}>
-						<BuildingInfoRooms handleRoomClick={handleRoomClick} building={props.building} />
+						<BuildingInfoRooms handleRoomClick={handleRoomClick} building={props.building} rooms={props.rooms} />
 					</ItemG>
 				</Grid>
 				<Grid container item xs={12}>

@@ -78,5 +78,13 @@ export const getMeassurement = async (deviceId, gauge) => {
 	return data;
 };
 
+export const getBatteryStatus = async (deviceId) => {
+	const startDate = moment().subtract(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
+	const endDate = moment().format('YYYY-MM-DD HH:mm:ss');
+
+	let data = await servicesAPI.get('/v1/devicedata-clean/' + deviceId + '/' + startDate + '/' + endDate + '/batteristatus/57').then(rs => rs.data);
+	return data;
+
+};
 
 

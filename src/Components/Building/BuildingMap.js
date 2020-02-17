@@ -1,18 +1,35 @@
-import React, { useEffect, useRef } from 'react'
-import { useHistory } from 'react-router';
+import React, { useEffect, useRef, useState } from 'react'
 import { Map, ZoomControl } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 
 import buildingStyles from 'Styles/buildingStyles';
+import RoomInfo from 'Components/Room/RoomInfo';
 
 function BuildingMap(props) {
-	const history = useHistory();
+	const [showingRoom, setShowingRoom] = useState(null);
 	const classes = buildingStyles();
 	const mapRef = useRef(null);
 	const { REACT_APP_CLIMAID_API_URL } = process.env;
+	const building = props.building;
+	const rooms = props.rooms;
+
+	const markerIcon = L.Icon.extend({
+		options: {
+			iconSize: [50, 84],
+			iconAnchor: [25, 84]
+		}
+	});
+
+	const markerIconGood = new markerIcon({ iconUrl: '/images/marker1.svg' });
+	// const markerIconAcceptable = new markerIcon({ iconUrl: '/images/marker2.svg' });
+	// const markerIconUnacceptable = new markerIcon({ iconUrl: '/images/marker3.svg' });
+	// const markerIconVeryUnacceptable = new markerIcon({ iconUrl: '/images/marker4.svg' });
+
+	const colors = { good: '#3fbfad', acceptable: '#e28117', unacceptable: '#d1463d', veryunacceptable: '#e56363' }
 
 	useEffect(() => {
+		console.log(1);
 		//leaflet hack to fix marker images
 		delete L.Icon.Default.prototype._getIconUrl;
 
@@ -23,7 +40,7 @@ function BuildingMap(props) {
 		});
 
 		const w = 2550, h = 1691;
-		const url = REACT_APP_CLIMAID_API_URL + '/building/' + props.building.uuid + '/image';
+		const url = REACT_APP_CLIMAID_API_URL + '/building/' + building.uuid + '/image';
 
 		if (mapRef.current !== null) {
 			let map = mapRef.current.leafletElement;
@@ -40,38 +57,64 @@ function BuildingMap(props) {
 			var layerGroup = L.layerGroup(markers);
 			layerGroup.addTo(map);
 
-			var rectBounds = [[-134, 30], [-134, 68], [-180, 30], [-180, 68]];
-			var rect = L.rectangle(rectBounds, { color: 'green', weight: 1 }).on('click', function (e) {
-				handleMarkerClick(1);
-			});
-			layerGroup.addLayer(rect);
+			// eslint-disable-next-line array-callback-return
+			rooms.map(room => {
+				if (room.bounds.length) {
+					const rect = L.rectangle(room.bounds, { color: colors.good, weight: 1 }).on('click', function () {
+						handleRoomClick(room);
+					});
+					layerGroup.addLayer(rect);
 
-			var rectBounds1 = [[-120, 145], [-120, 193], [-163, 145], [-163, 193]];
-			var rect2 = L.rectangle(rectBounds1, { color: 'blue', weight: 1 }).on('click', function (e) {
-				handleMarkerClick(2);
+					const marker = L.marker(rect.getBounds().getCenter(), { icon: markerIconGood }).on('click', function () {
+						handleRoomClick(room);
+					});
+
+					layerGroup.addLayer(marker);
+				}
 			});
-			layerGroup.addLayer(rect2);
 		}
-	});
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [REACT_APP_CLIMAID_API_URL, building, rooms]);
 
-	const handleMarkerClick = (roomId) => {
-		history.push('/room/' + roomId);
+	const handleRoomClick = (room) => {
+		setShowingRoom(room);
+		console.log(showingRoom);
+		console.log(room);
+		// if (showingRoom && room.uuid !== showingRoom.uuid) {
+		// 	setShowingRoom(null);
+		// 	setShowingRoom(room);
+		// 	console.log(4);
+		// } else if (!showingRoom) {
+		// 	console.log(3);
+		// 	setShowingRoom(room);
+		// } else {
+		// 	console.log(2);
+		// 	setShowingRoom(null);
+		// }
 	}
 
 	return (
-		<Map
-			ref={mapRef}
-			center={[0, 0]}
-			minZoom={2}
-			maxZoom={4}
-			zoom={2}
-			zoomControl={false}
-			crs={L.CRS.Simple}
-			scrollWheelZoom={false}
-			className={classes.buildingMap}
-		>
-			<ZoomControl position="bottomright" />
-		</Map>
+		<>
+			<Map
+				ref={mapRef}
+				center={[0, 0]}
+				minZoom={2}
+				maxZoom={4}
+				zoom={2}
+				zoomControl={false}
+				crs={L.CRS.Simple}
+				scrollWheelZoom={false}
+				className={classes.buildingMap}
+			>
+				<ZoomControl position="bottomright" />
+			</Map>
+
+			{showingRoom && 
+				<div style={{ position: 'absolute', left: 38, top: 158, width: 600, zIndex: 1000 }}>
+					<RoomInfo room={showingRoom} />
+				</div>
+			}
+		</>
 	);
 }
 

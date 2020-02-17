@@ -1,29 +1,50 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 // import { useLocalization } from 'Hooks';
-import { Map, TileLayer, ZoomControl } from 'react-leaflet';
+import { Map, TileLayer, ZoomControl, Marker, Popup, FeatureGroup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import moment from 'moment';
+import { Grid } from '@material-ui/core';
 
 import { MeetingRoom, ArrowForward, ArrowBack } from 'variables/icons';
 import otherStyles from 'Styles/otherStyles';
 import { getBuildings } from 'data/climaid';
+import MapPopupBuilding from 'Components/Map/MapPopupBuilding';
+import { useSelector } from 'Hooks';
+import { ItemG } from 'Components';
 
 const MapContainer = (props) => {
-	const [buildings, setBuildings] = useState(null);
+	const [buildings, setBuildings] = useState([]);
 	const [displayOverlay, setDisplayOverlay] = useState(false);
 	const mapRef = useRef(null);
+	const groupRef = useRef(null);
 	const position = [57.0488, 9.9217];
 	const classes = otherStyles();
+	const user = useSelector(state => state.settings.user)
+
+	const markerIcon = L.Icon.extend({
+		options: {
+			iconSize: [50, 84],
+			iconAnchor: [25, 84],
+			popupAnchor: [-3, -76]
+		}
+	});
+
+	const markerIconGood = new markerIcon({ iconUrl: '/images/marker1.svg' });
+	// const markerIconAcceptable = new markerIcon({ iconUrl: '/images/marker2.svg' });
+	// const markerIconUnacceptable = new markerIcon({ iconUrl: '/images/marker3.svg' });
+	// const markerIconVeryUnacceptable = new markerIcon({ iconUrl: '/images/marker4.svg' });
 
 	useEffect(() => {
 		async function fetchData() {
 			const data = await getBuildings();
+
 			if (data) {
-				plotMarkers(data);
+				setBuildings(data);
 			}
 		}
 
@@ -36,34 +57,21 @@ const MapContainer = (props) => {
 			iconUrl: require('leaflet/dist/images/marker-icon.png'),
 			shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 		});
-	}, []);
 
-	const plotMarkers = (data) => {
-		setBuildings(data);
-
-		if (mapRef.current !== null) {
-			let leafletMap = mapRef.current.leafletElement;
-
-			let markers = data.map((markerData, index) => {
-				let marker = null;
-				if (markerData.latlong.length) {
-					marker = new L.marker(markerData.latlong.split(','));
-					marker.on('click', function (e) {
-						handleMarkerClick(markerData)
-					});
-				}
-				return marker;
-			});
-
-			let featureGroup = new L.featureGroup(markers);
-			featureGroup.addTo(leafletMap);
-			leafletMap.fitBounds(featureGroup.getBounds());
+		const zoomToFitMarkers = () => {
+			if (!mapRef.current || !groupRef.current) {
+				setTimeout(function () {
+					zoomToFitMarkers();
+				}, 500);
+			} else {
+				const map = mapRef.current.leafletElement;
+				const group = groupRef.current.leafletElement;
+				map.fitBounds(group.getBounds());
+			}
 		}
-	}
 
-	const handleMarkerClick = (marker) => {
-		console.log(marker);
-	}
+		zoomToFitMarkers();
+	}, []);
 
 	const handleGoToBuilding = (uuid) => {
 		props.history.push('/building/' + uuid);
@@ -77,21 +85,50 @@ const MapContainer = (props) => {
 		}
 	}
 
+	const getWelcomeTime = () => {
+		let string = "";
+		const hour = moment().hour();
+
+		if (hour >= 0 && hour < 6) {
+			string = "God nat";
+		} else if (hour >= 6 && hour < 9) {
+			string = "God morgen";
+		} else if (hour >= 9 && hour < 12) {
+			string = "God formiddag";
+		} else if (hour >= 12 && hour < 14) {
+			string = "God middag";
+		} else if (hour >= 14 && hour < 18) {
+			string = "God eftermiddag";
+		} else if (hour >= 18 && hour < 0) {
+			string = "God aften";
+		}
+
+		return string;
+	}
+
 	return (
-		<div style={{ height: "700px", width: "100%" }}>
+		<div style={{ height: "1000px", width: "100%" }}>
 			{!displayOverlay ? 
 				<div className={classes.mapInfoContainerToggleOff} onClick={toogleOverlay}>
 					<ArrowForward style={{ color: '#b9bdbe' }} fontSize="large" />
 				</div>
-				: ""}
-
-			{buildings && displayOverlay ?
+				: 
 				<div className={classes.mapInfoContainer}>
 					<div className={classes.mapInfoContainerToggleOn} onClick={toogleOverlay}>
 						<ArrowBack  />
 					</div>
-					<h1 className={classes.mapInfoContainerHeader}>God eftermiddag Helle<br />En bygning vælges nedenfor</h1>
-					<h2 className={classes.mapInfoContainerSubHeader}>Her har du en liste af alle registrerede bygninger udstyret med en ERS Co2 indeklima sensorer</h2>
+					<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
+						<ItemG xs={7}>
+							<h1 className={classes.mapInfoContainerHeader}>{getWelcomeTime()} {user.firstName}<br />En bygning vælges nedenfor</h1>
+							<h2 className={classes.mapInfoContainerSubHeader}>Her har du en liste af alle registrerede bygninger udstyret med en ERS Co2 indeklima sensorer</h2>
+						</ItemG>
+						<ItemG xs={5}>
+							<img src="/images/velkommen.svg" alt="" style={{ maxWidth: 300 }} />
+						</ItemG>
+					</Grid>
+					<br />
+					<br />
+
 					<div className={classes.mapInfoContainerBuildingsContainer}>
 						<Table className={classes.table} aria-label="buildings table" style={{ boxShadow: "none" }}>
 							<TableBody>
@@ -108,11 +145,13 @@ const MapContainer = (props) => {
 						</Table>
 					</div>
 				</div>
-				: ""}
+			}
+
 			<Map
 				ref={mapRef}
 				center={position}
 				zoom={18}
+				maxZoom={19}
 				zoomControl={false}
 				scrollWheelZoom={false}
 				style={{ height: "100%", width: "100%" }}>
@@ -121,6 +160,20 @@ const MapContainer = (props) => {
 					attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 				/>
 				<ZoomControl position="bottomright" />
+
+				{buildings ? 
+					<FeatureGroup ref={groupRef}>
+						{buildings.map(building => {
+							return (
+								<Marker key={building.uuid} position={building.latlong.split(',')} icon={markerIconGood}>
+									<Popup maxWidth={400} maxHeight={550}>
+										<MapPopupBuilding building={building} history={props.history} />
+									</Popup>
+								</Marker>
+							);
+						})}
+					</FeatureGroup>
+					: ""}
 			</Map>
 		</div>
 	);
