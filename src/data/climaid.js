@@ -56,9 +56,14 @@ export const getRoom = async (uuid) => {
 	return data;
 };
 
+export const getRooms = async () => {
+	let data = await climaidApi.get('/rooms').then(rs => rs.data);
+	// console.log(data);
+	return data;
+};
+
 export const getWeather = async (date, lat, long) => {
-	//https://api.senti.cloud/weather/v1/2018-05-11T00:00:00/57.0488/9.9217/da
-	let data = await weatherApi.get('/' + date + '/' + lat + '/' + long).then(rs => rs.data);
+	let data = await weatherApi.get('/' + date + '/' + lat + '/' + long + '/da').then(rs => rs.data);
 	// console.log(data);
 	return data;
 };

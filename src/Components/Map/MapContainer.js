@@ -99,7 +99,7 @@ const MapContainer = (props) => {
 			string = "God middag";
 		} else if (hour >= 14 && hour < 18) {
 			string = "God eftermiddag";
-		} else if (hour >= 18 && hour < 0) {
+		} else if (hour >= 18 && hour <= 23) {
 			string = "God aften";
 		}
 

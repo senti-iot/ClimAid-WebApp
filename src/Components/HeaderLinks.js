@@ -9,13 +9,14 @@ import { T, Muted, ItemG } from 'Components';
 import headerLinksStyle from 'Styles/headerLinksStyle';
 import { logOut } from 'data/login';
 import { PowerSettingsNew, SettingsRounded, MenuIcon, Business, Apartment, Dashboard, Add } from 'variables/icons';
-import { getBuildings } from 'data/climaid';
+import { getBuildings, getRooms } from 'data/climaid';
 
 function HeaderLinks(props) {
 	const [anchorBuildingEl, setAnchorBuildingEl] = React.useState(null);
 	const [anchorRoomsEl, setAnchorRoomsEl] = React.useState(null);
 	const [anchorProfile, setAnchorProfile] = useState(null);
 	const [buildings, setBuildings] = useState(null);
+	const [rooms, setRooms] = useState(null);
 	const history = props.history
 	const dispatch = useDispatch()
 	const redux = {
@@ -28,6 +29,11 @@ function HeaderLinks(props) {
 			const data = await getBuildings();
 			if (data) {
 				setBuildings(data);
+			}
+
+			const roomData = await getRooms();
+			if (roomData) {
+				setRooms(roomData);
 			}
 		}
 
@@ -127,14 +133,14 @@ function HeaderLinks(props) {
 		setAnchorRoomsEl(null);
 	};
 
-	const goBoBuilding = (id) => {
-		history.push('/building/' + id);
+	const goToBuilding = (building) => {
+		history.push('/building/' + building.uuid);
 
 		handleBuildingMenuClose();
 	}
 
-	const goBoRoom = (id) => {
-		history.push('/building/5890450e-cccf-401e-8375-60e5041667b9/room/' + id);
+	const goToRoom = (room) => {
+		history.push('/building/' + room.building.uuid + '/room/' + room.uuid);
 
 		handleRoomsMenuClose();
 	}
@@ -201,8 +207,8 @@ function HeaderLinks(props) {
 			>
 				{buildings ?
 					<span>
-						{buildings.map(function (building, index) {
-							return (<MenuItem key={building.uuid} onClick={() => goBoBuilding(building.uuid)}>{building.name}</MenuItem>)
+						{buildings.map(function (building) {
+							return (<MenuItem key={building.uuid} onClick={() => goToBuilding(building)}>{building.name}</MenuItem>)
 						})}
 					</span>
 					: ""}
@@ -223,14 +229,13 @@ function HeaderLinks(props) {
 				open={Boolean(anchorRoomsEl)}
 				onClose={handleRoomsMenuClose}
 			>
-				<MenuItem onClick={() => goBoRoom(1)}>Lokale 1</MenuItem>
-				<MenuItem onClick={() => goBoRoom(2)}>Lokale 2</MenuItem>
-				<MenuItem onClick={() => goBoRoom(3)}>Lokale 3</MenuItem>
-				<MenuItem onClick={() => goBoRoom(4)}>Lokale 4</MenuItem>
-				<MenuItem onClick={() => goBoRoom(5)}>Lokale 5</MenuItem>
-				<MenuItem onClick={() => goBoRoom(6)}>Lokale 6</MenuItem>
-				<MenuItem onClick={() => goBoRoom(7)}>Lokale 7</MenuItem>
-				<MenuItem onClick={() => goBoRoom(8)}>Lokale 8</MenuItem>
+				{rooms ?
+					<span>
+						{rooms.map(function (room) {
+							return (<MenuItem key={room.uuid} onClick={() => goToRoom(room)}>{room.name}</MenuItem>)
+						})}
+					</span>
+					: ""}
 			</Menu>
 		</div>
 	);

@@ -32,6 +32,18 @@ const roomStyles = makeStyles(theme => ({
 		borderRadius: 4,
 		padding: 20,
 	},
+	currentRoomContainer: {
+		boxSizing: 'border-box',
+		width: '100%',
+		backgroundColor: '#f6f7ff',
+		borderRadius: 4,
+		padding: 20,
+		marginBottom: 20
+	},
+	currentRoomName: {
+		fontSize: 18,
+		paddingTop: 5,
+	},
 	currentReadingsContainer: {
 		boxSizing: 'border-box',
 		width: '100%',
@@ -67,7 +79,7 @@ const roomStyles = makeStyles(theme => ({
 	barGraphCurrectReading: {
 		display: 'inline-block',
 		fontWeight: 'bold',
-		fontSize: 18,
+		fontSize: 16,
 		paddingTop: 8,
 	},
 	currentReadingBarContainer: {
@@ -103,7 +115,7 @@ const roomStyles = makeStyles(theme => ({
 	barGraphCurrectBatteryReading: {
 		display: 'inline-block',
 		fontWeight: 'bold',
-		fontSize: 18,
+		fontSize: 16,
 	},
 	weatherContainer: {
 		boxSizing: 'border-box',
