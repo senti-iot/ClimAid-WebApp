@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="77.287" height="56.389" viewBox="0 0 77.287 56.389">
+  <defs>
+    <radialGradient id="radial-gradient" cx="0.5" cy="0.5" r="0.5" gradientTransform="translate(0)" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#dbac30"/>
+      <stop offset="0.12" stop-color="#dbad30" stop-opacity="0.98"/>
+      <stop offset="0.26" stop-color="#ddaf30" stop-opacity="0.922"/>
+      <stop offset="0.4" stop-color="#dfb430" stop-opacity="0.82"/>
+      <stop offset="0.54" stop-color="#e2b930" stop-opacity="0.678"/>
+      <stop offset="0.69" stop-color="#e6c130" stop-opacity="0.502"/>
+      <stop offset="0.84" stop-color="#ecca30" stop-opacity="0.278"/>
+      <stop offset="0.99" stop-color="#f1d530" stop-opacity="0.02"/>
+      <stop offset="1" stop-color="#f2d630" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <g id="Group_619" data-name="Group 619" transform="translate(-1674.646 -2153.127)">
+    <rect id="Rectangle_366" data-name="Rectangle 366" width="47.266" height="47.266" rx="14.16" transform="translate(1704.666 2153.127)" opacity="0.77" fill="url(#radial-gradient)"/>
+    <circle id="Ellipse_105" data-name="Ellipse 105" cx="10.624" cy="10.624" r="10.624" transform="translate(1718.009 2166.137)" fill="#deae2e"/>
+    <rect id="Rectangle_367" data-name="Rectangle 367" width="64.612" height="29.571" rx="14.785" transform="translate(1674.646 2179.945)" fill="#fff"/>
+    <rect id="Rectangle_368" data-name="Rectangle 368" width="35.341" height="35.341" rx="17.671" transform="translate(1689.289 2166.37)" fill="#fff"/>
+  </g>
+</svg>

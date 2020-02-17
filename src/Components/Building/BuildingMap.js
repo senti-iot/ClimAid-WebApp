@@ -29,7 +29,6 @@ function BuildingMap(props) {
 	const colors = { good: '#3fbfad', acceptable: '#e28117', unacceptable: '#d1463d', veryunacceptable: '#e56363' }
 
 	useEffect(() => {
-		console.log(1);
 		//leaflet hack to fix marker images
 		delete L.Icon.Default.prototype._getIconUrl;
 
@@ -60,9 +59,7 @@ function BuildingMap(props) {
 			// eslint-disable-next-line array-callback-return
 			rooms.map(room => {
 				if (room.bounds.length) {
-					const rect = L.rectangle(room.bounds, { color: colors.good, weight: 1 }).on('click', function () {
-						handleRoomClick(room);
-					});
+					const rect = L.rectangle(room.bounds, { color: colors.good, weight: 1 });
 					layerGroup.addLayer(rect);
 
 					const marker = L.marker(rect.getBounds().getCenter(), { icon: markerIconGood }).on('click', function () {
@@ -77,9 +74,8 @@ function BuildingMap(props) {
 	}, [REACT_APP_CLIMAID_API_URL, building, rooms]);
 
 	const handleRoomClick = (room) => {
-		setShowingRoom(room);
 		console.log(showingRoom);
-		console.log(room);
+		setShowingRoom(room);
 		// if (showingRoom && room.uuid !== showingRoom.uuid) {
 		// 	setShowingRoom(null);
 		// 	setShowingRoom(room);

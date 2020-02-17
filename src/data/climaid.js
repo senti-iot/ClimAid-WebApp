@@ -1,7 +1,7 @@
 import { create } from 'apisauce';
 import moment from 'moment';
 
-import { servicesAPI } from './data';
+import { servicesAPI, weatherApi } from './data';
 
 const { REACT_APP_CLIMAID_API_URL } = process.env;
 
@@ -52,6 +52,13 @@ export const getBuildingImage = async (uuid) => {
 
 export const getRoom = async (uuid) => {
 	let data = await climaidApi.get('/room/' + uuid).then(rs => rs.data);
+	// console.log(data);
+	return data;
+};
+
+export const getWeather = async (date, lat, long) => {
+	//https://api.senti.cloud/weather/v1/2018-05-11T00:00:00/57.0488/9.9217/da
+	let data = await weatherApi.get('/' + date + '/' + lat + '/' + long).then(rs => rs.data);
 	// console.log(data);
 	return data;
 };
