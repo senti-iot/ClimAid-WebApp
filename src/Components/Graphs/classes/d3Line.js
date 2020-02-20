@@ -1,7 +1,6 @@
 import * as d3 from 'd3';
 import moment from 'moment';
 import hexToRgba from 'hex-to-rgba';
-import { colors } from '@material-ui/core';
 
 const getMedianLineData = (data) => {
 	let medianValues = []
@@ -253,6 +252,7 @@ class d3Line {
 		// 	.attr('class', classes.axisText)
 		// 	.html(toUppercase(moment(ticks[0].date).format('MMMM')))
 	}
+
 	generateDots = () => {
 		let data = this.props.data[this.props.id]
 		const setTooltip = this.props.setTooltip
@@ -290,7 +290,7 @@ class d3Line {
 				// .attr("class", classes[`${line.name}Dot`]) // Assign a class for styling
 				.attr("cy", (d) => { return this.y(d.value) })
 				.attr("r", 0)
-				.attr("fill", line.color ? colors[line.color][500] : "#fff")
+				.attr("fill", line.color ? line.color : "#fff")
 				.attr('opacity', 0)
 				.transition()
 				.attr("id", `${line.name}Dots`)
@@ -312,7 +312,7 @@ class d3Line {
 
 					var active = this.state[line.name + 'Median'] ? false : true,
 						newOpacity = active ? 0 : 1, display = active ? 'none' : undefined,
-						newColor = active ? 'steelblue' : line.color ? colors[line.color][500] : "#fff";
+						newColor = active ? 'steelblue' : line.color ? line.color : "#fff";
 
 					// Hide or show the elements
 
@@ -329,7 +329,7 @@ class d3Line {
 					LegendMCheck
 						.attr('value', active)
 					LegendM
-						.style("color", active ? 'rgba(255, 255, 255, 0.3)' : colors[line.color][500])
+						.style("color", active ? 'rgba(255, 255, 255, 0.3)' : hexToRgba(line.color, 0.3))
 					LegendMLabel.style("color", active ? 'rgba(255,255,255,0.3)' : '#fff')
 					this.setState(line.name + 'Median', active)
 					// this.state[line.name + 'Median'] = active;
@@ -363,7 +363,7 @@ class d3Line {
 				LegendCheck
 					.attr('value', active)
 				Legend
-					.style("color", active ? 'rgba(255,255,255,0.3)' : line.prev ? '#fff' : colors[line.color][500])
+					.style("color", active ? 'rgba(255,255,255,0.3)' : line.prev ? '#fff' : hexToRgba(line.color, 0.3))
 				LegendLabel.style("color", active ? 'rgba(255,255,255,0.3)' : '#fff')
 
 				//Modified here
@@ -400,7 +400,7 @@ class d3Line {
 					.attr('id', line.name + 'Area')
 					.data([line.data])
 					.attr("opacity", this.state[line.name] ? 0 : 1)
-					.attr('fill', line.prev ? 'rgba(255,255,255, 0.1' : hexToRgba(colors[line.color][500], 0.1))
+					.attr('fill', line.prev ? 'rgba(255,255,255, 0.1' : hexToRgba(line.color, 0.1))
 					// .attr("class", line.prev ? classes.prevArea : classes[line.name + 'Area'])
 					.attr("d", animArea0)
 					.transition()
@@ -472,7 +472,7 @@ class d3Line {
 						.data([line.data])
 						.attr('id', line.name)
 						.attr('fill', 'none')
-						.attr('stroke', colors[line.color][500])
+						.attr('stroke', line.color)
 						.attr('stroke-width', '4px')
 						.attr('d', this.valueLine)
 						.attr("opacity", this.state[line.name] ? 0 : 1)
@@ -526,7 +526,7 @@ class d3Line {
 						.attr('id', line.name)
 						// .attr('class', classes[line.name])
 						.attr('fill', 'none')
-						.attr('stroke', colors[line.color][500])
+						.attr('stroke', line.color)
 						.attr('stroke-width', '4px')
 						.attr('d', this.valueLine)
 						.attr("stroke-dasharray", function () {
@@ -568,7 +568,7 @@ class d3Line {
 					.attr('id', `${line.name}MedianL`)
 					.attr('opacity', this.state[`${line.name}Median`] ? 0 : 1)
 					.attr('stroke-width', '4px')
-					.attr('stroke', colors[line.color][500])
+					.attr('stroke', line.color)
 					.attr('stroke-dasharray', ("3, 3"))
 
 				// Hidden overlay for Median tooltip

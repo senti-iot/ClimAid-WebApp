@@ -28,7 +28,9 @@ const roomStyles = makeStyles(theme => ({
 	graphContainer: {
 		boxSizing: 'border-box',
 		width: '100%',
-		backgroundColor: '#108686',
+		height: 800,
+		// backgroundColor: '#108686',
+		background: 'linear-gradient(180deg, rgba(59,185,169,1) 0%, rgba(6,120,125,1) 100%)',
 		borderRadius: 4,
 		padding: 20,
 	},
@@ -124,7 +126,15 @@ const roomStyles = makeStyles(theme => ({
 		borderRadius: 4,
 		padding: 20,
 		marginTop: 20
-	}
+	},
+	topDropdown: {
+		width: '100%',
+		height: 75,
+		borderRadius: 4,
+		backgroundColor: '#ccc',
+		fontSize: 20,
+	},
+
 }));
 
 export default roomStyles;

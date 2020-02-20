@@ -6,10 +6,12 @@ import roomStyles from 'Styles/roomStyles';
 import CurrentTemperatureBar from 'Components/Room/CurrentTemperatureBar';
 import CurrentCo2Bar from 'Components/Room/CurrentCo2Bar';
 import BatteryBar from 'Components/Room/BatteryBar';
+import RoomGraph from 'Components/Room/RoomGraph';
 import Weather from 'Components/Room/Weather';
+import ClimateDropdown from 'Components/Room/ClimateDropdown';
 import { getMeassurement, getBatteryStatus } from 'data/climaid';
 
-const RoomBarGraphs = (props) => {
+const RoomGraphContainer = (props) => {
 	const classes = roomStyles();
 	const [roomValues, setRoomValues] = useState(null);
 	const [batteryLevel, setBatteryLevel] = useState(null);
@@ -47,9 +49,16 @@ const RoomBarGraphs = (props) => {
 
 	return (
 		<>
-			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2}>
+			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2} style={{ marginTop: 30 }}>
+				<Grid item xs={2}>
+					<ClimateDropdown />
+				</Grid>
+				<Grid item xs={10}>
+				</Grid>
+
 				<Grid item xs={9}>
 					<div className={classes.graphContainer}>
+						<RoomGraph />
 					</div>
 				</Grid>
 				<Grid item xs={3}>
@@ -134,4 +143,4 @@ const RoomBarGraphs = (props) => {
 	)
 }
 
-export default RoomBarGraphs;
+export default RoomGraphContainer;

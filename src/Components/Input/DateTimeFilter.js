@@ -1,20 +1,19 @@
 import React, { Fragment, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Divider, MenuItem, Menu, IconButton, Button, Tooltip } from '@material-ui/core';
+import { Divider, MenuItem, Menu, Button, Tooltip } from '@material-ui/core';
 import { T, CustomDateTime, ItemG, DSelect } from 'Components';
 import { dateTimeFormatter } from 'variables/functions';
 import moment from 'moment'
 import { DateRange } from 'variables/icons';
-import { useLocalization, useDispatch } from 'Hooks';
-import { changeDate } from 'Redux/dateTime';
+import { useLocalization } from 'Hooks';
+import lineStyles from 'Components/Custom/Styles/lineGraphStyles';
 
 const DateFilterMenu = (props) => {
-
 	const { period, label, icon, button, settings, inputType, buttonProps } = props
-	const dispatch = useDispatch()
 	const t = useLocalization()
 	const [openCustomDate, setOpenCustomDate] = useState(false)
 	const [actionAnchor, setActionAnchor] = useState(null)
+	const classes = lineStyles();
 
 	const dOptions = [
 		// { value: 0, label: t('filters.dateOptions.today') },
@@ -90,10 +89,10 @@ const DateFilterMenu = (props) => {
 				break;
 		}
 
-		dispatch(changeDate(menuId, to, from, defaultT))
-		// if (props.customSetDate) {
-		// return props.customSetDate(menuId, to, from, defaultT)
-		// }
+		//dispatch(changeDate(menuId, to, from, defaultT))
+		if (props.customSetDate) {
+			return props.customSetDate(menuId, to, from, defaultT)
+		}
 
 	}
 
@@ -177,13 +176,11 @@ const DateFilterMenu = (props) => {
 					{icon ? icon : <DateRange />}
 				</Button>}
 				{!button && <Tooltip title={t('tooltips.chart.period')}>
-					<IconButton
-						aria-label='More'
-						aria-owns={actionAnchor ? 'long-menu' : null}
-						aria-haspopup='true'
-						onClick={handleOpenMenu}>
-						{icon ? icon : <DateRange />}
-					</IconButton>
+					<div className={classes.periodLabelsContainer} onClick={handleOpenMenu}>
+						<div className={classes.periodLabels}>{displayFrom}</div>
+						<div className={classes.periodLabels}>{displayTo}</div>
+						<div className={classes.periodLabels}>{ options[options.findIndex(d => d.id === period.menuId ? true : false)].label }</div>
+					</div>
 				</Tooltip>}
 				<Menu
 					disableAutoFocus
@@ -213,7 +210,7 @@ const DateFilterMenu = (props) => {
 						<MenuItem selected={isSelected(3)} onClick={handleDateFilter} value={3}>{t('filters.dateOptions.thisMonth')}</MenuItem>
 						<MenuItem selected={isSelected(7)} onClick={handleDateFilter} value={7}>{t('filters.dateOptions.30days')}</MenuItem>
 						<MenuItem selected={isSelected(5)} onClick={handleDateFilter} value={5}>{t('filters.dateOptions.90days')}</MenuItem>
-						<MenuItem selected={isSelected(4)} onClick={handleDateFilter} value={4}>{t('filters.dateOptions.thisYear')}</MenuItem>
+						{/* <MenuItem selected={isSelected(4)} onClick={handleDateFilter} value={4}>{t('filters.dateOptions.thisYear')}</MenuItem> */}
 
 						<Divider />
 						<MenuItem selected={isSelected(6)} onClick={handleDateFilter} value={6}>{t('filters.dateOptions.custom')}</MenuItem>

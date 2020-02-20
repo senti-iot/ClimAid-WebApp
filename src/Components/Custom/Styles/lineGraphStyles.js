@@ -95,6 +95,15 @@ const lineStyles = makeStyles(theme => ({
 	// minFlowArea: {
 	// 	fill: () => hexToRgba(theme.chart.minFlowLine, 0.1)
 	// },
+	periodLabels: {
+		color: '#ffffff',
+		fontSize: 18,
+		textAlign: 'center',
+		userSelect: 'none',
+	},
+	periodLabelsContainer: {
+		cursor: 'pointer',
+	},
 }))
 
 export default lineStyles

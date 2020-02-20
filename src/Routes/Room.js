@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { ItemG, GridContainer } from 'Components';
 import RoomInfo from 'Components/Room/RoomInfo';
 import RoomMap from 'Components/Room/RoomMap';
-import RoomBarGraphs from 'Components/Room/RoomBarGraphs';
+import RoomGraphContainer from 'Components/Room/RoomGraphContainer';
 import { getRoom } from 'data/climaid';
 
 const Room = () => {
@@ -34,7 +34,7 @@ const Room = () => {
 						<RoomMap room={room} />
 					</ItemG>
 					<ItemG xs={12}>
-						<RoomBarGraphs room={room} />
+						<RoomGraphContainer room={room} />
 					</ItemG>
 				</GridContainer>
 				: ""}
