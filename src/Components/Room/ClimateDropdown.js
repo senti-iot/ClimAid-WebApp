@@ -18,9 +18,9 @@ const ClimateDropdown = () => {
 		setAnchorClimateEl(null);
 	};
 
-	const climateCheckboxCheck = (e) => {
-		console.log(e);
-	}
+	// const climateCheckboxCheck = (e) => {
+	// 	console.log(e);
+	// }
 
 	const toogleTemperatureOpen = () => {
 		setTemperatureOpen(temperatureOpen ? false : true);
