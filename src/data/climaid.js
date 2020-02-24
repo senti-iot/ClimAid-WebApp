@@ -22,9 +22,9 @@ let climaidApiHost;
 const hostname = window && window.location && window.location.hostname;
 
 if (hostname === 'climaid-insight-beta.senti.cloud' || 'localhost') {
-	climaidApiHost = 'http://localhost:3026';
+	climaidApiHost = 'https://dev.services.senti.cloud/climaid-backend';
 } else {
-	climaidApiHost = 'http://localhost:3025';
+	climaidApiHost = 'https://services.senti.cloud/climaid-backend';
 }
 
 export const climaidApi = create({
