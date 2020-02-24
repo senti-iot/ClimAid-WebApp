@@ -4,7 +4,7 @@ import crypto from 'crypto'
 
 import { servicesAPI, weatherApi } from './data';
 
-const { REACT_APP_CLIMAID_API_URL, REACT_APP_ENCRYPTION_KEY } = process.env;
+const { REACT_APP_ENCRYPTION_KEY } = process.env;
 const IV_LENGTH = 16
 
 const encrypt = (text) => {
@@ -17,8 +17,18 @@ const encrypt = (text) => {
 	return iv.toString('hex') + ':' + encrypted.toString('hex')
 }
 
+let climaidApiHost;
+
+const hostname = window && window.location && window.location.hostname;
+
+if (hostname === 'climaid-insight-beta.senti.cloud' || 'localhost') {
+	climaidApiHost = 'http://localhost:3026';
+} else {
+	climaidApiHost = 'http://localhost:3025';
+}
+
 export const climaidApi = create({
-	baseURL: REACT_APP_CLIMAID_API_URL,
+	baseURL: climaidApiHost,
 	timout: 30000,
 	headers: {
 		'auth': encrypt(process.env.REACT_APP_ENCRYPTION_KEY),

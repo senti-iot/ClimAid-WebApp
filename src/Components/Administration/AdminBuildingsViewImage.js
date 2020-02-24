@@ -1,12 +1,12 @@
 import React from 'react';
 
-const AdminBuildingsViewImage = (props) => {
-	const { REACT_APP_CLIMAID_API_URL } = process.env;
+import { climaidApi } from 'data/climaid';
 
+const AdminBuildingsViewImage = (props) => {
 	return (
 		<div>
 			{props.building.image ? 
-				<img style={{ maxWidth: 200 }} src={REACT_APP_CLIMAID_API_URL + '/building/' + props.building.uuid + '/image'} alt="" />
+				<img style={{ maxWidth: 200 }} src={climaidApi.getBaseURL() + '/building/' + props.building.uuid + '/image'} alt="" />
 				: "<p>Intet valgt</p>"
 			}
 		</div>

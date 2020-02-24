@@ -4,11 +4,11 @@ import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 
 import buildingStyles from 'Styles/buildingStyles';
+import { climaidApi } from 'data/climaid';
 
 function RoomMap(props) {
 	const classes = buildingStyles();
 	const mapRef = useRef(null);
-	const { REACT_APP_CLIMAID_API_URL } = process.env;
 	const room = props.room;
 
 	useEffect(() => {
@@ -22,7 +22,7 @@ function RoomMap(props) {
 		});
 
 		const w = 1440, h = 1080;
-		const url = REACT_APP_CLIMAID_API_URL + '/room/' + room.uuid + '/image';
+		const url = climaidApi.getBaseURL() + '/room/' + room.uuid + '/image';
 
 		if (mapRef.current !== null) {
 			let leafletMap = mapRef.current.leafletElement;

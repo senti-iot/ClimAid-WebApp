@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 
+import { climaidApi } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
 import { getBuilding, addBuildingImage } from 'data/climaid';
 // import AdminBuildingViewImage from 'Components/Administration/AdminBuildingsViewImage';
@@ -15,7 +16,6 @@ const AdminBuildingsView = (props) => {
 	const [alertSuccess, setAlertSuccess] = React.useState(false);
 	const [alertFail, setAlertFail] = React.useState(false);
 	const classes = adminStyles();
-	const { REACT_APP_CLIMAID_API_URL } = process.env;
 
 	useEffect(() => {
 		async function fetchData() {
@@ -79,7 +79,7 @@ const AdminBuildingsView = (props) => {
 
 					{/* <AdminBuildingViewImage building={building} /> */}
 					{building.image ?
-						<img style={{ maxWidth: 400 }} src={REACT_APP_CLIMAID_API_URL + '/building/' + building.uuid + '/image'} alt="" />
+						<img style={{ maxWidth: 400 }} src={climaidApi.getBaseURL() + '/building/' + building.uuid + '/image'} alt="" />
 						: "<p>Intet valgt</p>"
 					}
 

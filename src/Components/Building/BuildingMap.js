@@ -5,12 +5,12 @@ import L from 'leaflet';
 
 import buildingStyles from 'Styles/buildingStyles';
 import RoomInfo from 'Components/Room/RoomInfo';
+import { climaidApi } from 'data/climaid';
 
 function BuildingMap(props) {
 	const [showingRoom, setShowingRoom] = useState(null);
 	const classes = buildingStyles();
 	const mapRef = useRef(null);
-	const { REACT_APP_CLIMAID_API_URL } = process.env;
 	const building = props.building;
 	const rooms = props.rooms;
 
@@ -39,7 +39,7 @@ function BuildingMap(props) {
 		});
 
 		const w = 2550, h = 1691;
-		const url = REACT_APP_CLIMAID_API_URL + '/building/' + building.uuid + '/image';
+		const url = climaidApi.getBaseURL() + '/building/' + building.uuid + '/image';
 
 		if (mapRef.current !== null) {
 			let map = mapRef.current.leafletElement;
@@ -71,7 +71,7 @@ function BuildingMap(props) {
 			});
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [REACT_APP_CLIMAID_API_URL, building, rooms]);
+	}, [climaidApi, building, rooms]);
 
 	const handleRoomClick = (room) => {
 		console.log(showingRoom);
