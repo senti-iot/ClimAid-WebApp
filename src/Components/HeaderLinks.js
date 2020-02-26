@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'Hooks';
 import { T, Muted, ItemG } from 'Components';
 import headerLinksStyle from 'Styles/headerLinksStyle';
 import { logOut } from 'data/login';
-import { PowerSettingsNew, SettingsRounded, MenuIcon, Business, Apartment, Dashboard, Add } from 'variables/icons';
+import { PowerSettingsNew, MenuIcon, Business, Apartment, Dashboard, Add } from 'variables/icons';
 import { getBuildings, getRooms } from 'data/climaid';
 
 function HeaderLinks(props) {
@@ -65,10 +65,10 @@ function HeaderLinks(props) {
 		}
 		setAnchorProfile(null)
 	}
-	const handleSettingsOpen = () => {
-		handleProfileClose()
-		history.push(`/settings`)
-	}
+	// const handleSettingsOpen = () => {
+	// 	handleProfileClose()
+	// 	history.push(`/settings`)
+	// }
 
 	const renderUserMenu = () => {
 		const { t } = props;
