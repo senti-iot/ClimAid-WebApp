@@ -103,9 +103,9 @@ function HeaderLinks(props) {
 					</MenuItem>
 					: null}
 				<Divider />
-				<MenuItem onClick={handleSettingsOpen}>
+				{/* <MenuItem onClick={handleSettingsOpen}>
 					<SettingsRounded className={classes.leftIcon} />{t('sidebar.settings')}
-				</MenuItem>
+				</MenuItem> */}
 				<GoogleLogout
 					// onLogoutSuccess={() => logOut()}
 					clientId="1038408973194-qcb30o8t7opc83k158irkdiar20l3t2a.apps.googleusercontent.com"
