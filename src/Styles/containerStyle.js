@@ -1,4 +1,3 @@
-import { bgColors } from './backgroundColors';
 import styled from 'styled-components';
 import Paper from '@material-ui/core/Paper'
 
@@ -21,11 +20,12 @@ export const BPaper = styled(Paper)`
 	padding: 8px 16px;
 	margin: 8px;
 	background: ${({ theme }) => theme.boxBackground};
-	`;
+`;
+
 export const AppBackground = styled.div`
 	margin-top: 120px;
-	/* height: calc(100vh - 120px); */
+	min-height: 1100px;
+	/* min-height: calc(100vh - 200px); */
 	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
-	/* background: ${props => bgColors[props.color].background}; */
-	`
+`;

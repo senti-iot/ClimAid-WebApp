@@ -33,8 +33,8 @@ function Container(props) {
 		cookie.load('SESSION') ?
 			<Fragment>
 				<Header title={props.title} />
-				{!loading ?
-					<AppBackground color={colorTheme}>
+				<AppBackground color={colorTheme}>
+					{!loading ?
 						<Switch>
 							<Route path={'/administration'}>
 								<Administraion />
@@ -53,8 +53,8 @@ function Container(props) {
 							</Route>
 							<Redirect path={'*'} to={'/'}></Redirect>
 						</Switch>
-					</AppBackground>
-					: <CircularLoader fill />}
+						: <CircularLoader fill style={{ marginTop: 500 }} />}
+				</AppBackground>
 				<Footer />
 			</Fragment>
 			: <Redirect from={window.location.pathname} to={{
