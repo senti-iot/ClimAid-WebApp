@@ -101,7 +101,7 @@ const RoomGraphContainer = (props) => {
 											{roomValues && <CurrentTemperatureBar roomValues={roomValues} />}
 										</Grid>
 										<Grid item xs={2} align="center">
-											<span className={classes.barGraphCurrectReading}>{roomValues['temperature'] + '°C'}</span>
+											<span className={classes.barGraphCurrectReading}>{roomValues['temperature'].toFixed(1)} °C</span>
 										</Grid>
 									</Grid>
 								</div>
@@ -118,7 +118,7 @@ const RoomGraphContainer = (props) => {
 											{roomValues && <CurrentCo2Bar roomValues={roomValues} />}
 										</Grid>
 										<Grid item xs={2} align="center">
-											<span className={classes.barGraphCurrectReading}>{roomValues['co2']} ppm</span>
+											<span className={classes.barGraphCurrectReading}>{Math.round(roomValues['co2'])} ppm</span>
 										</Grid>
 									</Grid>
 								</div>
