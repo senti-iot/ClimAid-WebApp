@@ -47,7 +47,7 @@ const BuildingInfoRooms = (props) => {
 								<TableCell>On/Off</TableCell>
 								<TableCell></TableCell>
 								<TableCell>Indeklima</TableCell>
-								<TableCell>Betteriniveau</TableCell>
+								<TableCell>Batteriniveau</TableCell>
 								<TableCell></TableCell>
 							</TableRow>
 						</TableHead>
