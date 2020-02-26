@@ -2,9 +2,9 @@ import React from 'react';
 
 import LineGraph from 'Components/Room/LineGraph';
 
-const RoomGraph = () => {
+const RoomGraph = (props) => {
 	return (
-		<LineGraph id="temperature" />
+		<LineGraph id="temperature" checkboxStates={props.checkboxStates} />
 	);
 }
 

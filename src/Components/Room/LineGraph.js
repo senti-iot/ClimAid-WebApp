@@ -1,9 +1,11 @@
-import React, { useRef, useLayoutEffect, useState } from 'react';
+/* eslint-disable array-callback-return */
+import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import moment from 'moment';
 import { Grid } from '@material-ui/core';
 
 import { useLocalization } from 'Hooks';
 import d3Line from 'Components/Graphs/classes/d3Line';
+import Legend from 'Components/Graphs/Legend';
 import lineStyles from 'Components/Custom/Styles/lineGraphStyles';
 import Tooltip from 'Components/Room/Tooltip';
 import { getDeviceDataConverted } from 'data/climaid';
@@ -15,36 +17,150 @@ let line = null;
 
 const LineGraph = React.memo((props) => {
 	const [value, setValue] = useState({ value: null, date: null });
-	const [data, setData] = useState([]);
 	const [period, setPeriod] = useState(null);
 	const [selectedPeriod, setSelectedPeriod] = useState(2);
 	const [loading, setLoading] = useState(true);
+	const [graphLines, setGraphLines] = useState({});
 	const lineChartContainer = useRef(null);
 	const t = useLocalization();
 	const classes = lineStyles({ id: props.id });
-	const prevId = usePrevious(props.id);
+	// const prevId = usePrevious(props.id);
 	let prevLoading = usePrevious(loading);
 
+	useEffect(() => {
+		setLoading(true);
+	}, [props.checkboxStates]);
+
 	useLayoutEffect(() => {
+		const graphLinesData = {
+			temperature: [],
+			co2: [],
+			humidity: []
+		}
+
 		async function fetchData() {
 			const period = getPeriod(selectedPeriod);
 			setPeriod(period);
 
-			const deviceData = await getDeviceDataConverted(2287, period, 'temperature');
+			await Promise.all(
+				Object.keys(props.checkboxStates).map(async key => {
+					let temperatureData = null;
+					let co2Data = null;
+					if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
+						temperatureData = await getDeviceDataConverted(2287, period, 'temperature');
+					}
+					if (key === 'co2history' || key === 'co2anbmin' || key === 'co2anbmax') {
+						co2Data = await getDeviceDataConverted(2287, period, 'co2');
+					}
 
-			if (deviceData) {
-				setData(deviceData);
-				setLoading(false);
-			}
-		}
+					if (props.checkboxStates[key]) {
+						switch (key) {
+							default:
+							case 'temphistory':
+								if (temperatureData) {
+									graphLinesData.temperature.push({
+										unit: '°C',
+										name: key,
+										median: true,
+										data: temperatureData,
+										color: "#e28117"
+									});
+								}
+								break;
+							case 'tempanbmin':
+								if (temperatureData) {
+									let dataMinimum = [];
+									temperatureData.map(dataReading => {
+										dataMinimum.push({ date: dataReading.date, value: 20 });
+									});
 
-		const unitType = () => {
-			switch (props.id) {
-				case 'temperature':
-					return '°C';
-				default:
-					break;
-			}
+									graphLinesData.temperature.push({
+										unit: '°C',
+										name: key,
+										median: true,
+										data: dataMinimum,
+										color: "#e28117",
+										noArea: true,
+										noDots: true,
+										dashed: true
+									});
+								}
+								break;
+							case 'tempanbmax':
+								if (temperatureData) {
+									let dataMax = [];
+									temperatureData.map(dataReading => {
+										dataMax.push({ date: dataReading.date, value: 24.5 });
+									});
+
+									graphLinesData.temperature.push({
+										unit: '°C',
+										name: key,
+										median: true,
+										data: dataMax,
+										color: "#e28117",
+										noArea: true,
+										noDots: true,
+										dashed: true
+									});
+								}
+								break;
+							case 'co2history':
+								if (co2Data) {
+									graphLinesData.co2.push({
+										unit: 'ppm',
+										name: key,
+										median: true,
+										data: co2Data,
+										color: "#245bed"
+									});
+								}
+								break;
+							case 'co2anbmin':
+								if (co2Data) {
+									let dataMinimum = [];
+									co2Data.map(dataReading => {
+										dataMinimum.push({ date: dataReading.date, value: 400 });
+									});
+
+									graphLinesData.co2.push({
+										unit: 'ppm',
+										name: key,
+										median: true,
+										data: dataMinimum,
+										color: "#245bed",
+										noArea: true,
+										noDots: true,
+										dashed: true
+									});
+								}
+								break;
+							case 'co2anbmax':
+								if (co2Data) {
+									let dataMax = [];
+									co2Data.map(dataReading => {
+										dataMax.push({ date: dataReading.date, value: 1000 });
+									});
+
+									graphLinesData.co2.push({
+										unit: 'ppm',
+										name: key,
+										median: true,
+										data: dataMax,
+										color: "#245bed",
+										noArea: true,
+										noDots: true,
+										dashed: true
+									});
+								}
+								break;
+						}
+					}
+				})
+			);
+
+			setGraphLines(graphLinesData);
+			setLoading(false);
 		}
 
 		const getPeriod = (menuId) => {
@@ -86,22 +202,11 @@ const LineGraph = React.memo((props) => {
 			};
 		}
 
-		const deviceData = {
-			temperature: [
-				{
-					name: "temperature",
-					median: true,
-					data: data,
-					color: "#e28117"
-				}
-			]
-		}
-
 		const genNewLine = () => {
 			let cProps = {
-				unit: unitType(),
-				id: props.id,
-				data: deviceData,
+				//unit: unitType(),
+				//id: props.id,
+				data: graphLines,
 				setTooltip: setValue,
 				// setMedianTooltip: setMedianValue,
 				period: period,
@@ -111,7 +216,7 @@ const LineGraph = React.memo((props) => {
 			line = new d3Line(lineChartContainer.current, cProps, classes);
 		}
 
-		if ((props.id !== prevId) && line) {
+		if (line && !loading) {
 			line.destroy();
 			genNewLine();
 		}
@@ -144,13 +249,14 @@ const LineGraph = React.memo((props) => {
 					</Grid>
 				</Grid>
 
-				<svg id={props.id} ref={lineChartContainer}
+				<svg id="graph" ref={lineChartContainer}
 					style={{
 						width: '100%',
 						height: '85%',
 						// minHeight: 500
 					}}>
 				</svg>
+				<Legend id={props.id} data={graphLines} />
 				<Tooltip tooltip={value} id={props.id} />
 			</div>
 	)

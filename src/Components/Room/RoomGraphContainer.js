@@ -15,6 +15,7 @@ const RoomGraphContainer = (props) => {
 	const classes = roomStyles();
 	const [roomValues, setRoomValues] = useState(null);
 	const [batteryLevel, setBatteryLevel] = useState(null);
+	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true });
 	const room = props.room;
 
 	useEffect(() => {
@@ -47,18 +48,24 @@ const RoomGraphContainer = (props) => {
 
 	}
 
+	const handleCheckboxChange = (e) => {
+		let newStates = { ...checkboxStates };
+		newStates[e.target.value] = (newStates[e.target.value]) ? false : true;
+		setCheckboxStates(newStates);
+	}
+
 	return (
 		<>
 			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2} style={{ marginTop: 30 }}>
 				<Grid item xs={2}>
-					<ClimateDropdown />
+					<ClimateDropdown onChange={handleCheckboxChange} checkboxStates={checkboxStates} />
 				</Grid>
 				<Grid item xs={10}>
 				</Grid>
 
 				<Grid item xs={9}>
 					<div className={classes.graphContainer}>
-						<RoomGraph />
+						<RoomGraph checkboxStates={checkboxStates} />
 					</div>
 				</Grid>
 				<Grid item xs={3}>

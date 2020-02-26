@@ -1,17 +1,10 @@
 {
 	"chartLines": {
-		"average": "Avg.",
-		"waterusageL": "Water Usage",
-		"waterusageP": "Prev. Period Water Usage",
-		"benchmark": "Water Usage Benchmark",
-		"tempAmbient": "Ambient Temp.",
-		"tempAmbientPrev": "Prev. Period Ambient Temp.",
-		"tempWater": "Water Temp.",
-		"tempWaterPrev": "Prev. Period Water Temp.",
-		"maxFlow": "Max. Flow",
-		"maxFlowPrev": "Prev. Period Max. Flow",
-		"minFlow": "Min. Flow",
-		"minFlowPrev": "Prev. Period Min. Flow",
-		"readingL": "Reading"
+		"temphistory": "Temperatur historik",
+		"tempanbmin": "Temperatur anbefalet minimum",
+		"tempanbmax": "Temperatur anbefalet maksimum",
+		"co2history": "Co2 historik",
+		"co2anbmin": "Co2 anbefalet minimum",
+		"co2anbmax": "Co2 anbefalet maksimum"
 	}
 }
