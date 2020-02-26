@@ -47,10 +47,10 @@ const LineGraph = React.memo((props) => {
 					let temperatureData = null;
 					let co2Data = null;
 					if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
-						temperatureData = await getDeviceDataConverted(2287, period, 'temperature');
+						temperatureData = await getDeviceDataConverted(571, period, 'temperature');
 					}
 					if (key === 'co2history' || key === 'co2anbmin' || key === 'co2anbmax') {
-						co2Data = await getDeviceDataConverted(2287, period, 'co2');
+						co2Data = await getDeviceDataConverted(571, period, 'co2');
 					}
 
 					if (props.checkboxStates[key]) {
