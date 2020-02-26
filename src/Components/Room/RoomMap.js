@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Map, ZoomControl } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
@@ -10,6 +10,7 @@ function RoomMap(props) {
 	const classes = buildingStyles();
 	const mapRef = useRef(null);
 	const room = props.room;
+	const [draggable, setDraggable] = useState(false);
 
 	const markerIcon = L.Icon.extend({
 		options: {
@@ -37,12 +38,12 @@ function RoomMap(props) {
 		const url = climaidApi.getBaseURL() + '/room/' + room.uuid + '/image';
 
 		if (mapRef.current !== null) {
-			let leafletMap = mapRef.current.leafletElement;
+			var leafletMap = mapRef.current.leafletElement;
 
 			// calculate the edges of the image, in coordinate space
-			var southWest = leafletMap.unproject([0, h], leafletMap.getMaxZoom() - 1);
-			var northEast = leafletMap.unproject([w, 0], leafletMap.getMaxZoom() - 1);
-			var bounds = new L.LatLngBounds(southWest, northEast);
+			let southWest = leafletMap.unproject([0, h], leafletMap.getMaxZoom() - 1);
+			let northEast = leafletMap.unproject([w, 0], leafletMap.getMaxZoom() - 1);
+			let bounds = new L.LatLngBounds(southWest, northEast);
 			L.imageOverlay(url, bounds).addTo(leafletMap);
 			leafletMap.setMaxBounds(bounds);
 
@@ -51,8 +52,16 @@ function RoomMap(props) {
 				return L.marker({ lat: position[0], lng: position[1] }, { icon: markerIconGood });
 			});
 
-			var layerGroup = L.layerGroup(markers);
+			let layerGroup = L.layerGroup(markers);
 			layerGroup.addTo(leafletMap);
+
+			leafletMap.on('zoomend', function () {
+				if (leafletMap.getZoom() === leafletMap.getMinZoom()) {
+					setDraggable(false);
+				} else {
+					setDraggable(true);
+				}
+			});
 
 			// leafletMap.on('click', function (e) {
 			// 	var coord = e.latlng;
@@ -73,7 +82,9 @@ function RoomMap(props) {
 			zoomControl={false}
 			crs={L.CRS.Simple}
 			scrollWheelZoom={false}
+			dragging={draggable}
 			className={classes.buildingMap}
+			attributionControl={false}
 		>
 			<ZoomControl position="bottomright" />
 		</Map>

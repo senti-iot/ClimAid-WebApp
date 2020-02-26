@@ -9,6 +9,7 @@ import { climaidApi } from 'data/climaid';
 
 function BuildingMap(props) {
 	const [showingRoom, setShowingRoom] = useState(null);
+	const [draggable, setDraggable] = useState(false);
 	const classes = buildingStyles();
 	const mapRef = useRef(null);
 	const building = props.building;
@@ -42,19 +43,28 @@ function BuildingMap(props) {
 		const url = climaidApi.getBaseURL() + '/building/' + building.uuid + '/image';
 
 		if (mapRef.current !== null) {
-			let map = mapRef.current.leafletElement;
+			var leafletMap = mapRef.current.leafletElement;
 
 			// calculate the edges of the image, in coordinate space
-			var southWest = map.unproject([0, h], map.getMaxZoom() - 1);
-			var northEast = map.unproject([w, 0], map.getMaxZoom() - 1);
-			var bounds = new L.LatLngBounds(southWest, northEast);
+			let southWest = leafletMap.unproject([0, h], leafletMap.getMaxZoom() - 1);
+			let northEast = leafletMap.unproject([w, 0], leafletMap.getMaxZoom() - 1);
+			let bounds = new L.LatLngBounds(southWest, northEast);
 
-			L.imageOverlay(url, bounds).addTo(map);
-			map.setMaxBounds(bounds);
+			L.imageOverlay(url, bounds).addTo(leafletMap);
+			leafletMap.setMaxBounds(bounds);
 
-			var markers = [];
-			var layerGroup = L.layerGroup(markers);
-			layerGroup.addTo(map);
+			let markers = [];
+			let layerGroup = L.layerGroup(markers);
+			layerGroup.addTo(leafletMap);
+
+			leafletMap.on('zoomend', function () {
+				if (leafletMap.getZoom() === leafletMap.getMinZoom()) {
+					setDraggable(false);
+				} else {
+					setDraggable(true);
+				}
+			});
+
 
 			// eslint-disable-next-line array-callback-return
 			rooms.map(room => {
@@ -100,7 +110,9 @@ function BuildingMap(props) {
 				zoomControl={false}
 				crs={L.CRS.Simple}
 				scrollWheelZoom={false}
+				dragging={draggable}
 				className={classes.buildingMap}
+				attributionControl={false}
 			>
 				<ZoomControl position="bottomright" />
 			</Map>
