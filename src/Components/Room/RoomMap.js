@@ -11,6 +11,18 @@ function RoomMap(props) {
 	const mapRef = useRef(null);
 	const room = props.room;
 
+	const markerIcon = L.Icon.extend({
+		options: {
+			iconSize: [50, 84],
+			iconAnchor: [25, 84]
+		}
+	});
+
+	const markerIconGood = new markerIcon({ iconUrl: '/images/marker1.svg' });
+	// const markerIconAcceptable = new markerIcon({ iconUrl: '/images/marker2.svg' });
+	// const markerIconUnacceptable = new markerIcon({ iconUrl: '/images/marker3.svg' });
+	// const markerIconVeryUnacceptable = new markerIcon({ iconUrl: '/images/marker4.svg' });
+
 	useEffect(() => {
 		//leaflet hack to fix marker images
 		delete L.Icon.Default.prototype._getIconUrl;
@@ -36,7 +48,7 @@ function RoomMap(props) {
 
 			let markers = room.devices.map(device => {
 				let position = device.position.split(',');
-				return L.marker({ lat: position[0], lng: position[1] });
+				return L.marker({ lat: position[0], lng: position[1] }, { icon: markerIconGood });
 			});
 
 			var layerGroup = L.layerGroup(markers);
