@@ -54,7 +54,7 @@ const BuildingInfoRooms = (props) => {
 						<TableBody>
 							{props.rooms.map((room) => {
 								return (
-									<TableRow key={room.uuid} style={{ height: 40 }} hover onClick={() => props.handleRoomClick(room)}>
+									<TableRow key={room.uuid} style={{ height: 40, cursor: 'pointer' }} hover onClick={() => props.handleRoomClick(room)}>
 										<TableCell></TableCell>
 										<TableCell>{room.name}</TableCell>
 										<TableCell></TableCell>
