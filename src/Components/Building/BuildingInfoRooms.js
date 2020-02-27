@@ -4,20 +4,23 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 import buildingStyles from 'Styles/buildingStyles';
-import { getBatteryStatus } from 'data/climaid';
+import { getBatteryStatus, getDeviceOnlineStatus } from 'data/climaid';
 // import { Notifications } from 'variables/icons';
 import BatteryStatus from 'Components/BatteryStatus';
 
 const BuildingInfoRooms = (props) => {
 	const classes = buildingStyles();
 	const [batteryStates, setBatteryStates] = useState({});
+	const [onlineStates, setOnlineStates] = useState({});
 
 	useEffect(() => {
 		async function fetchData() {
 			if (props.rooms.length) {
 				let batteryStateData = {};
+				let onlineStatesData = {};
 
 				await Promise.all(
 					props.rooms.map(async (room) => {
@@ -25,11 +28,15 @@ const BuildingInfoRooms = (props) => {
 							let device = room.devices[0];
 							let state = await getBatteryStatus(device.device);
 							batteryStateData[room.uuid] = Math.round(state);
+
+							let onlineState = await getDeviceOnlineStatus(device.device);
+							onlineStatesData[room.uuid] = onlineState;
 						}
 					})
 				);
 
 				setBatteryStates(batteryStateData);
+				setOnlineStates(onlineStatesData);
 			}
 		}
 
@@ -55,7 +62,7 @@ const BuildingInfoRooms = (props) => {
 							{props.rooms.map((room) => {
 								return (
 									<TableRow key={room.uuid} style={{ height: 40, cursor: 'pointer' }} hover onClick={() => props.handleRoomClick(room)}>
-										<TableCell></TableCell>
+										<TableCell align="center">{onlineStates[room.uuid] ? <FiberManualRecordIcon style={{ color: '#74d3c9' }} /> : <FiberManualRecordIcon style={{ color: '#cf565c' }} />}</TableCell>
 										<TableCell>{room.name}</TableCell>
 										<TableCell></TableCell>
 										<TableCell align="center">{batteryStates[room.uuid] ? <BatteryStatus charge={batteryStates[room.uuid]} /> : ''}</TableCell>

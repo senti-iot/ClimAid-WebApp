@@ -130,7 +130,7 @@ function BuildingMap(props) {
 			</Map>
 
 			{showingRoom && 
-				<div style={{ position: 'absolute', left: 38, top: 158, width: 600, zIndex: 1000 }}>
+				<div style={{ position: 'absolute', left: 38, top: 158, width: 500, zIndex: 1000 }}>
 					<RoomInfo room={showingRoom} />
 				</div>
 			}

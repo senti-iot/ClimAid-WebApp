@@ -133,7 +133,7 @@ const MapContainer = (props) => {
 						<Table className={classes.table} aria-label="buildings table" style={{ boxShadow: "none" }}>
 							<TableBody>
 								{buildings.map((building, index) => (
-									<TableRow key={building.uuid} style={{ backgroundColor: index % 2 ? '#f6f7ff' : '#ffffff', height: 40 }}>
+									<TableRow key={building.uuid} style={{ backgroundColor: index % 2 ? '#f6f7ff' : '#ffffff', height: 40, cursor: 'pointer' }}>
 										<TableCell style={{ borderBottom: "none", borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }}></TableCell>
 										<TableCell style={{ borderBottom: "none" }} onClick={() => handleGoToBuilding(building.uuid)}>
 											{building.name}
