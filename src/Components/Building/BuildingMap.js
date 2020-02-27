@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Map, ZoomControl } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
+import CloseTwoToneIcon from '@material-ui/icons/CloseTwoTone';
 
 import buildingStyles from 'Styles/buildingStyles';
 import RoomInfo from 'Components/Room/RoomInfo';
@@ -111,6 +112,10 @@ function BuildingMap(props) {
 		// }
 	}
 
+	const closeRoomInfo = () => {
+		setShowingRoom(null);
+	}
+
 	return (
 		<>
 			<Map
@@ -131,6 +136,7 @@ function BuildingMap(props) {
 
 			{showingRoom && 
 				<div style={{ position: 'absolute', left: 38, top: 158, width: 500, zIndex: 1000 }}>
+					<div style={{ position: 'absolute', top: 10, right: 10, cursor: 'pointer' }} onClick={closeRoomInfo}><CloseTwoToneIcon /></div>
 					<RoomInfo room={showingRoom} />
 				</div>
 			}

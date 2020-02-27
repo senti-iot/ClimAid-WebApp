@@ -166,7 +166,7 @@ const MapContainer = (props) => {
 						{buildings.map(building => {
 							return (
 								<Marker key={building.uuid} position={building.latlong.split(',')} icon={markerIconGood}>
-									<Popup maxWidth={400} maxHeight={550}>
+									<Popup maxWidth={400} maxHeight={550} closeButton="">
 										<MapPopupBuilding building={building} history={props.history} />
 									</Popup>
 								</Marker>
