@@ -40,6 +40,10 @@ function RoomMap(props) {
 		if (mapRef.current !== null) {
 			var leafletMap = mapRef.current.leafletElement;
 
+			leafletMap.eachLayer(function (layer) {
+				leafletMap.removeLayer(layer);
+			});
+
 			let buildingImage = new Image();
 			buildingImage.onload = function () {
 				// calculate the edges of the image, in coordinate space

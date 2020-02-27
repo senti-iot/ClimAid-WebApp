@@ -13,6 +13,7 @@ import { getMeassurement, getBatteryStatus } from 'data/climaid';
 
 const RoomGraphContainer = (props) => {
 	const classes = roomStyles();
+	const [loading, setLoading] = useState(false);
 	const [roomValues, setRoomValues] = useState(null);
 	const [batteryLevel, setBatteryLevel] = useState(null);
 	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true });
@@ -20,6 +21,7 @@ const RoomGraphContainer = (props) => {
 
 	useEffect(() => {
 		async function fetchData() {
+			setLoading(true);
 			let values = {};
 			await Promise.all(
 				room.devices.map(async device => {
@@ -39,6 +41,8 @@ const RoomGraphContainer = (props) => {
 				let state = await getBatteryStatus(device.device);
 				setBatteryLevel(Math.round(state));
 			}
+
+			setLoading(false);
 		}
 
 		fetchData();
@@ -65,7 +69,7 @@ const RoomGraphContainer = (props) => {
 
 				<Grid item xs={9}>
 					<div className={classes.graphContainer}>
-						<RoomGraph checkboxStates={checkboxStates} room={room} />
+						<RoomGraph loading={loading} checkboxStates={checkboxStates} room={room} />
 					</div>
 				</Grid>
 				<Grid item xs={3}>

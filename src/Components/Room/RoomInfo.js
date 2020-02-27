@@ -55,7 +55,7 @@ const RoomInfo = (props) => {
 								//align={index % 2 ? "right" : "left" }
 								return (
 									<ItemG xs={12} key={index} align="center">
-										<GradientGauge
+										{value && <GradientGauge
 											ringWidth={7}
 											maxSegmentLabels={gauge.segments}
 											segments={1}
@@ -67,7 +67,7 @@ const RoomInfo = (props) => {
 											height={240}
 											topLabel={gauge.topLabel}
 											unitLabel={gauge.unitLabel}
-										/>
+										/>}
 									</ItemG>
 								)})
 						})

@@ -32,6 +32,10 @@ const LineGraph = React.memo((props) => {
 		setLoading(true);
 	}, [props.checkboxStates]);
 
+	useEffect(() => {
+		setLoading(true);
+	}, [props.loading]);
+
 	useLayoutEffect(() => {
 		const graphLinesData = {
 			temperature: [],
@@ -43,122 +47,124 @@ const LineGraph = React.memo((props) => {
 			const period = getPeriod(selectedPeriod);
 			setPeriod(period);
 
-			await Promise.all(
-				Object.keys(props.checkboxStates).map(async key => {
-					let temperatureData = null;
-					let co2Data = null;
-					if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
-						temperatureData = await getDeviceDataConverted(room.devices[0].device, period, 'temperature');
-					}
-					if (key === 'co2history' || key === 'co2anbmin' || key === 'co2anbmax') {
-						co2Data = await getDeviceDataConverted(room.devices[0].device, period, 'co2');
-					}
-
-					if (props.checkboxStates[key]) {
-						switch (key) {
-							default:
-							case 'temphistory':
-								if (temperatureData) {
-									graphLinesData.temperature.push({
-										unit: '°C',
-										name: key,
-										median: true,
-										data: temperatureData,
-										color: "#e28117"
-									});
-								}
-								break;
-							case 'tempanbmin':
-								if (temperatureData) {
-									let dataMinimum = [];
-									temperatureData.map(dataReading => {
-										dataMinimum.push({ date: dataReading.date, value: 20 });
-									});
-
-									graphLinesData.temperature.push({
-										unit: '°C',
-										name: key,
-										median: true,
-										data: dataMinimum,
-										color: "#e28117",
-										noArea: true,
-										noDots: true,
-										dashed: true
-									});
-								}
-								break;
-							case 'tempanbmax':
-								if (temperatureData) {
-									let dataMax = [];
-									temperatureData.map(dataReading => {
-										dataMax.push({ date: dataReading.date, value: 24.5 });
-									});
-
-									graphLinesData.temperature.push({
-										unit: '°C',
-										name: key,
-										median: true,
-										data: dataMax,
-										color: "#e28117",
-										noArea: true,
-										noDots: true,
-										dashed: true
-									});
-								}
-								break;
-							case 'co2history':
-								if (co2Data) {
-									graphLinesData.co2.push({
-										unit: 'ppm',
-										name: key,
-										median: true,
-										data: co2Data,
-										color: "#245bed"
-									});
-								}
-								break;
-							case 'co2anbmin':
-								if (co2Data) {
-									let dataMinimum = [];
-									co2Data.map(dataReading => {
-										dataMinimum.push({ date: dataReading.date, value: 400 });
-									});
-
-									graphLinesData.co2.push({
-										unit: 'ppm',
-										name: key,
-										median: true,
-										data: dataMinimum,
-										color: "#245bed",
-										noArea: true,
-										noDots: true,
-										dashed: true
-									});
-								}
-								break;
-							case 'co2anbmax':
-								if (co2Data) {
-									let dataMax = [];
-									co2Data.map(dataReading => {
-										dataMax.push({ date: dataReading.date, value: 1000 });
-									});
-
-									graphLinesData.co2.push({
-										unit: 'ppm',
-										name: key,
-										median: true,
-										data: dataMax,
-										color: "#245bed",
-										noArea: true,
-										noDots: true,
-										dashed: true
-									});
-								}
-								break;
+			if (room.devices.length) {
+				await Promise.all(
+					Object.keys(props.checkboxStates).map(async key => {
+						let temperatureData = null;
+						let co2Data = null;
+						if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
+							temperatureData = await getDeviceDataConverted(room.devices[0].device, period, 'temperature');
 						}
-					}
-				})
-			);
+						if (key === 'co2history' || key === 'co2anbmin' || key === 'co2anbmax') {
+							co2Data = await getDeviceDataConverted(room.devices[0].device, period, 'co2');
+						}
+
+						if (props.checkboxStates[key]) {
+							switch (key) {
+								default:
+								case 'temphistory':
+									if (temperatureData) {
+										graphLinesData.temperature.push({
+											unit: '°C',
+											name: key,
+											median: true,
+											data: temperatureData,
+											color: "#e28117"
+										});
+									}
+									break;
+								case 'tempanbmin':
+									if (temperatureData) {
+										let dataMinimum = [];
+										temperatureData.map(dataReading => {
+											dataMinimum.push({ date: dataReading.date, value: 20 });
+										});
+
+										graphLinesData.temperature.push({
+											unit: '°C',
+											name: key,
+											median: true,
+											data: dataMinimum,
+											color: "#e28117",
+											noArea: true,
+											noDots: true,
+											dashed: true
+										});
+									}
+									break;
+								case 'tempanbmax':
+									if (temperatureData) {
+										let dataMax = [];
+										temperatureData.map(dataReading => {
+											dataMax.push({ date: dataReading.date, value: 24.5 });
+										});
+
+										graphLinesData.temperature.push({
+											unit: '°C',
+											name: key,
+											median: true,
+											data: dataMax,
+											color: "#e28117",
+											noArea: true,
+											noDots: true,
+											dashed: true
+										});
+									}
+									break;
+								case 'co2history':
+									if (co2Data) {
+										graphLinesData.co2.push({
+											unit: 'ppm',
+											name: key,
+											median: true,
+											data: co2Data,
+											color: "#245bed"
+										});
+									}
+									break;
+								case 'co2anbmin':
+									if (co2Data) {
+										let dataMinimum = [];
+										co2Data.map(dataReading => {
+											dataMinimum.push({ date: dataReading.date, value: 400 });
+										});
+
+										graphLinesData.co2.push({
+											unit: 'ppm',
+											name: key,
+											median: true,
+											data: dataMinimum,
+											color: "#245bed",
+											noArea: true,
+											noDots: true,
+											dashed: true
+										});
+									}
+									break;
+								case 'co2anbmax':
+									if (co2Data) {
+										let dataMax = [];
+										co2Data.map(dataReading => {
+											dataMax.push({ date: dataReading.date, value: 1000 });
+										});
+
+										graphLinesData.co2.push({
+											unit: 'ppm',
+											name: key,
+											median: true,
+											data: dataMax,
+											color: "#245bed",
+											noArea: true,
+											noDots: true,
+											dashed: true
+										});
+									}
+									break;
+							}
+						}
+					})
+				);
+			}
 
 			setGraphLines(graphLinesData);
 			setLoading(false);

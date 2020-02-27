@@ -4,7 +4,7 @@ import LineGraph from 'Components/Room/LineGraph';
 
 const RoomGraph = (props) => {
 	return (
-		<LineGraph id="temperature" room={props.room} checkboxStates={props.checkboxStates} />
+		<LineGraph id="temperature" loading={props.loading} room={props.room} checkboxStates={props.checkboxStates} />
 	);
 }
 
