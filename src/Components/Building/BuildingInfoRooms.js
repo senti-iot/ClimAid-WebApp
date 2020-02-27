@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import buildingStyles from 'Styles/buildingStyles';
 import { getBatteryStatus } from 'data/climaid';
-import { Notifications } from 'variables/icons';
+// import { Notifications } from 'variables/icons';
 import BatteryStatus from 'Components/BatteryStatus';
 
 const BuildingInfoRooms = (props) => {
@@ -23,7 +23,7 @@ const BuildingInfoRooms = (props) => {
 					props.rooms.map(async (room) => {
 						if (room.devices.length) {
 							let device = room.devices[0];
-							let state = await getBatteryStatus(device.deviceId);
+							let state = await getBatteryStatus(device.device);
 							batteryStateData[room.uuid] = Math.round(state);
 						}
 					})
@@ -59,7 +59,7 @@ const BuildingInfoRooms = (props) => {
 										<TableCell>{room.name}</TableCell>
 										<TableCell></TableCell>
 										<TableCell align="center">{batteryStates[room.uuid] ? <BatteryStatus charge={batteryStates[room.uuid]} /> : ''}</TableCell>
-										<TableCell><Notifications style={{ color: '#ccc' }} /></TableCell>
+										<TableCell>{/* <Notifications style={{ color: '#ccc' }} /> */}</TableCell>
 									</TableRow>
 								)
 							})}

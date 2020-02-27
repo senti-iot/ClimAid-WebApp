@@ -27,10 +27,10 @@ const Room = () => {
 		<>
 			{room ?
 				<GridContainer spacing={2}>
-					<ItemG xs={3}>
+					<ItemG xs={2}>
 						<RoomInfo room={room} />
 					</ItemG>
-					<ItemG xs={9}>
+					<ItemG xs={10}>
 						<RoomMap room={room} />
 					</ItemG>
 					<ItemG xs={12}>

@@ -278,9 +278,15 @@ class d3Line {
 				}
 				ticks.push(to.valueOf())
 				monthTicks.push(to.valueOf())
-			}
-			else {
-
+			} else if (timeType === 1) {
+				monthTicks.push(counter.valueOf())
+				while (moment(counter).diff(to, 'hour') < 0) {
+					ticks.push(counter.valueOf())
+					counter.add(add, 'hour')
+				}
+				ticks.push(to.valueOf())
+				monthTicks.push(to.valueOf())			
+			} else {
 				monthTicks.push(counter.valueOf())
 				while (moment(counter).diff(to, 'day') < 0) {
 					ticks.push(counter.valueOf())
@@ -298,9 +304,12 @@ class d3Line {
 				monthTicks.push(to.valueOf())
 			}
 
+			let woyFormat = 'D';
+			if (timeType === 1) {
+				woyFormat = 'HH';
+			}
 			var xAxis_woy = this.xAxis_days = d3.axisBottom(this.x)
-				// .tickFormat(d3.timeFormat("%d"))
-				.tickFormat(f => moment(f).format('D'))
+				.tickFormat(f => moment(f).format(woyFormat))
 				.tickValues(ticks);
 
 			// //Add the X axis
@@ -316,6 +325,7 @@ class d3Line {
 			var xAxis_months = this.xAxis_months = d3.axisBottom(this.x)
 				.tickFormat(d => moment(d).format('MMM'))
 				.tickValues(monthTicks)
+
 			this.xAxisMonths = this.svg.append("g")
 				.attr("transform", "translate(-8," + (height - this.margin.bottom + 26) + ")")
 				.call(xAxis_months);
@@ -346,6 +356,7 @@ class d3Line {
 						.enter()
 						.append("circle") // Uses the enter().append() method
 						.on("mouseover", function (d) {
+							console.log(d);
 							d3.select(this).attr("r", 8);
 							tooltipDiv.transition()
 								.duration(200)

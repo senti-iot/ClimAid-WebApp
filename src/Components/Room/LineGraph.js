@@ -26,6 +26,7 @@ const LineGraph = React.memo((props) => {
 	const classes = lineStyles({ id: props.id });
 	// const prevId = usePrevious(props.id);
 	let prevLoading = usePrevious(loading);
+	const room = props.room;
 
 	useEffect(() => {
 		setLoading(true);
@@ -47,10 +48,10 @@ const LineGraph = React.memo((props) => {
 					let temperatureData = null;
 					let co2Data = null;
 					if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
-						temperatureData = await getDeviceDataConverted(571, period, 'temperature');
+						temperatureData = await getDeviceDataConverted(room.devices[0].device, period, 'temperature');
 					}
 					if (key === 'co2history' || key === 'co2anbmin' || key === 'co2anbmax') {
-						co2Data = await getDeviceDataConverted(571, period, 'co2');
+						co2Data = await getDeviceDataConverted(room.devices[0].device, period, 'co2');
 					}
 
 					if (props.checkboxStates[key]) {
@@ -172,13 +173,23 @@ const LineGraph = React.memo((props) => {
 
 			switch (menuId) {
 				default:
+				case 10:
+					from = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
+					to = moment().format('YYYY-MM-DD HH:mm:ss');
+					timeType = 1;
+					break;
+				case 11:
+					from = moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+					to = moment().subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+					timeType = 1;
+					break;
 				case 1:
 					from = moment().startOf('week').format('YYYY-MM-DD HH:mm:ss');
 					to = moment().endOf('week').format('YYYY-MM-DD HH:mm:ss');
 					break;
 				case 2:
-					from = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-					to = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+					from = moment().subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+					to = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
 					break;
 				case 3:
 					from = moment().startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');

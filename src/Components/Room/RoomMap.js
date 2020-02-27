@@ -34,22 +34,30 @@ function RoomMap(props) {
 			shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 		});
 
-		const w = 1440, h = 1080;
-		const url = climaidApi.getBaseURL() + '/room/' + room.uuid + '/image';
+		// const w = 1440, h = 1080;
+		// const url = ;
 
 		if (mapRef.current !== null) {
 			var leafletMap = mapRef.current.leafletElement;
 
-			// calculate the edges of the image, in coordinate space
-			let southWest = leafletMap.unproject([0, h], leafletMap.getMaxZoom() - 1);
-			let northEast = leafletMap.unproject([w, 0], leafletMap.getMaxZoom() - 1);
-			let bounds = new L.LatLngBounds(southWest, northEast);
-			L.imageOverlay(url, bounds).addTo(leafletMap);
-			leafletMap.setMaxBounds(bounds);
+			let buildingImage = new Image();
+			buildingImage.onload = function () {
+				// calculate the edges of the image, in coordinate space
+				let southWest = leafletMap.unproject([0, this.height], leafletMap.getMaxZoom() - 1);
+				let northEast = leafletMap.unproject([this.width, 0], leafletMap.getMaxZoom() - 1);
+				let bounds = new L.LatLngBounds(southWest, northEast);
+				L.imageOverlay(buildingImage.src, bounds).addTo(leafletMap);
+				leafletMap.setMaxBounds(bounds);
+			}
+			buildingImage.src = climaidApi.getBaseURL() + '/room/' + room.uuid + '/image';
 
-			let markers = room.devices.map(device => {
-				let position = device.position.split(',');
-				return L.marker({ lat: position[0], lng: position[1] }, { icon: markerIconGood });
+			let markers = [];
+			// eslint-disable-next-line array-callback-return
+			room.devices.map(device => {
+				if (device.position.length) {
+					let position = device.position.split(',');
+					markers.push(L.marker({ lat: position[0], lng: position[1] }, { icon: markerIconGood }));
+				}
 			});
 
 			let layerGroup = L.layerGroup(markers);

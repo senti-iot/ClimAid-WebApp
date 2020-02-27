@@ -25,7 +25,7 @@ const RoomGraphContainer = (props) => {
 				room.devices.map(async device => {
 					return await Promise.all(
 						device.gauges.map(async (gauge) => {
-							let value = await getMeassurement(device.deviceId, gauge);
+							let value = await getMeassurement(device.device, gauge);
 							values[gauge.type] = value;
 						})
 					)
@@ -36,7 +36,7 @@ const RoomGraphContainer = (props) => {
 
 			if (room.devices.length) {
 				let device = room.devices[0];
-				let state = await getBatteryStatus(device.deviceId);
+				let state = await getBatteryStatus(device.device);
 				setBatteryLevel(Math.round(state));
 			}
 		}
@@ -65,7 +65,7 @@ const RoomGraphContainer = (props) => {
 
 				<Grid item xs={9}>
 					<div className={classes.graphContainer}>
-						<RoomGraph checkboxStates={checkboxStates} />
+						<RoomGraph checkboxStates={checkboxStates} room={room} />
 					</div>
 				</Grid>
 				<Grid item xs={3}>

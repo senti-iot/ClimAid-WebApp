@@ -20,7 +20,7 @@ const RoomInfo = (props) => {
 				room.devices.map(async device => {
 					return await Promise.all(
 						device.gauges.map(async (gauge) => {
-							let value = await getMeassurement(device.deviceId, gauge);
+							let value = await getMeassurement(device.device, gauge);
 							values[gauge.uuid] = value;
 						})
 					)
@@ -52,9 +52,9 @@ const RoomInfo = (props) => {
 						room.devices.map(device => {
 							return device.gauges.map((gauge, index) => {
 								let value = roomValues[gauge.uuid];
-
+								//align={index % 2 ? "right" : "left" }
 								return (
-									<ItemG xs={12} key={index} align={index % 2 ? "right" : "left" }>
+									<ItemG xs={12} key={index} align="center">
 										<GradientGauge
 											ringWidth={7}
 											maxSegmentLabels={gauge.segments}

@@ -4,7 +4,7 @@ import Card from '@material-ui/core/Card'
 import { CardContent, /* Divider */ } from '@material-ui/core'
 import moment from 'moment'
 import styled from 'styled-components';
-import { Thermometer } from 'variables/icons'
+// import { Thermometer } from 'variables/icons'
 import { capitalizeFL } from 'data/functions'
 
 const TCard = styled(Card)`
@@ -31,7 +31,7 @@ const temperatureTooltip = (props) => {
 				</ItemG>
 				<ItemG xs={6} container justify={'center'} alignItems={'flex-end'}>
 					<T variant={'h5'}>{`${parseFloat(props.tooltip.value).toFixed(1)} °C`}</T>
-					<img src={Thermometer} alt={'water drop'} height={36} width={36} style={{ margin: 4 }} />
+					{/* <img src={Thermometer} alt={'water drop'} height={36} width={36} style={{ margin: 4 }} /> */}
 				</ItemG>
 			</ItemG>
 			{/* </ItemG> */}
@@ -45,12 +45,12 @@ const temperatureTooltip = (props) => {
 
 
 const Tooltip = (props) => {
-	switch (props.id) {
-		case 'temperature':
-			return temperatureTooltip(props)
-		default:
-			return null
-	}
+	// switch (props.id) {
+	// 	case 'temperature':
+	return temperatureTooltip(props)
+	// default:
+	// 	return null
+	// }
 }
 
 export default Tooltip

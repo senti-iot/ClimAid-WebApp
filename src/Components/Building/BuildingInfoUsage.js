@@ -5,9 +5,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import buildingStyles from 'Styles/buildingStyles';
-import { Notifications } from 'variables/icons';
+// import { Notifications } from 'variables/icons';
 
-const BuildingInfoUsage = (props) => {
+const BuildingInfoUsage = () => {
 	const classes = buildingStyles();
 
 	return (
@@ -18,17 +18,17 @@ const BuildingInfoUsage = (props) => {
 					<TableRow style={{ height: 40 }}>
 						<TableCell>Energiforbrug: Fjernvarme</TableCell>
 						<TableCell></TableCell>
-						<TableCell align="right"><Notifications style={{ color: '#ccc' }} /></TableCell>
+						<TableCell align="right">{/* <Notifications style={{ color: '#ccc' }} /> */}</TableCell>
 					</TableRow>
 					<TableRow style={{ height: 40 }}>
 						<TableCell>Energiforbrug: Brugsvand</TableCell>
 						<TableCell></TableCell>
-						<TableCell align="right"><Notifications style={{ color: '#ccc' }} /></TableCell>
+						<TableCell align="right">{/* <Notifications style={{ color: '#ccc' }} /> */}</TableCell>
 					</TableRow>
 					<TableRow style={{ height: 40 }}>
 						<TableCell>Energiforbrug: Solceller</TableCell>
 						<TableCell></TableCell>
-						<TableCell align="right"><Notifications style={{ color: '#ccc' }} /></TableCell>
+						<TableCell align="right">{/* <Notifications style={{ color: '#ccc' }} /> */}</TableCell>
 					</TableRow>
 				</TableBody>
 			</Table>

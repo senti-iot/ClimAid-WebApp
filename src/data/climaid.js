@@ -96,7 +96,7 @@ export const getWeather = async (date, lat, long) => {
 
 // DEVICE DATA
 
-export const getMeassurement = async (deviceId, gauge) => {
+export const getMeassurement = async (device, gauge) => {
 	let from = 0;
 	let to = 0;
 
@@ -112,59 +112,26 @@ export const getMeassurement = async (deviceId, gauge) => {
 			break;
 	}
 
-	let data = await servicesAPI.get('/v1/devicedata-clean/' + deviceId + '/' + from + '/' + to + '/' + gauge.type + '/' + gauge.function).then(rs => rs.data);
+	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + from + '/' + to + '/' + gauge.type + '/' + gauge.function).then(rs => rs.data);
 	return data;
 };
 
-export const getBatteryStatus = async (deviceId) => {
+export const getBatteryStatus = async (device) => {
 	const startDate = moment().subtract(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
 	const endDate = moment().format('YYYY-MM-DD HH:mm:ss');
 
-	let data = await servicesAPI.get('/v1/devicedata-clean/' + deviceId + '/' + startDate + '/' + endDate + '/batteristatus/57').then(rs => rs.data);
+	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + startDate + '/' + endDate + '/batteristatus/57').then(rs => rs.data);
 	return data;
 
 };
 
-export const getDeviceDataConverted = async (deviceId, period, type) => {
-	// let from = 0;
-	// let to = 0;
-
+export const getDeviceDataConverted = async (device, period, type) => {
 	let cloudFunction = 13;
 	if (period.timeType === 1) {
 		cloudFunction = 14;
 	}
 
-	// switch (period) {
-	// 	default:
-	// 	case 'today':
-	// 		from = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		to = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		cloudFunction = 14;
-	// 		break;
-	// 	case 'yesterday':
-	// 		from = moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		to = moment().subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		cloudFunction = 14;
-	// 		break;
-	// 	case 'thisweek':
-	// 		from = moment().startOf('week').format('YYYY-MM-DD HH:mm:ss');
-	// 		to = moment().endOf('week').format('YYYY-MM-DD HH:mm:ss');
-	// 		break;
-	// 	case '7days':
-	// 		from = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		to = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		break;
-	// 	case '30days':
-	// 		from = moment().subtract(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		to = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		break;
-	// 	case '90days':
-	// 		from = moment().subtract(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		to = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
-	// 		break;
-	// }
-
-	let data = await servicesAPI.get('/v1/devicedata-clean/' + deviceId + '/' + period.from + '/' + period.to + '/' + type + '/' + cloudFunction).then(rs => rs.data);
+	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + period.from + '/' + period.to + '/' + type + '/' + cloudFunction).then(rs => rs.data);
 
 	let convertedData = [];
 	Object.keys(data).map(key => (

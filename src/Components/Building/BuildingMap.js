@@ -39,19 +39,19 @@ function BuildingMap(props) {
 			shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 		});
 
-		const w = 2550, h = 1691;
-		const url = climaidApi.getBaseURL() + '/building/' + building.uuid + '/image';
-
 		if (mapRef.current !== null) {
 			var leafletMap = mapRef.current.leafletElement;
 
-			// calculate the edges of the image, in coordinate space
-			let southWest = leafletMap.unproject([0, h], leafletMap.getMaxZoom() - 1);
-			let northEast = leafletMap.unproject([w, 0], leafletMap.getMaxZoom() - 1);
-			let bounds = new L.LatLngBounds(southWest, northEast);
-
-			L.imageOverlay(url, bounds).addTo(leafletMap);
-			leafletMap.setMaxBounds(bounds);
+			let buildingImage = new Image();
+			buildingImage.onload = function () {
+				// calculate the edges of the image, in coordinate space
+				let southWest = leafletMap.unproject([0, this.height], leafletMap.getMaxZoom() - 1);
+				let northEast = leafletMap.unproject([this.width, 0], leafletMap.getMaxZoom() - 1);
+				let bounds = new L.LatLngBounds(southWest, northEast);
+				L.imageOverlay(buildingImage.src, bounds).addTo(leafletMap);
+				leafletMap.setMaxBounds(bounds);
+			}
+			buildingImage.src = climaidApi.getBaseURL() + '/building/' + building.uuid + '/image';
 
 			let markers = [];
 			let layerGroup = L.layerGroup(markers);
@@ -65,14 +65,22 @@ function BuildingMap(props) {
 				}
 			});
 
+			leafletMap.on('click', function(e) {
+				console.log(e.latlng);
+			});
 
 			// eslint-disable-next-line array-callback-return
 			rooms.map(room => {
 				if (room.bounds.length) {
-					const rect = L.rectangle(room.bounds, { color: colors.good, weight: 1 });
-					layerGroup.addLayer(rect);
+					let roomOverlay;
+					if (room.bounds.length > 2) {
+						roomOverlay = L.polygon(room.bounds, { color: colors.good, weight: 1 });
+					} else {
+						roomOverlay = L.rectangle(room.bounds, { color: colors.good, weight: 1 });
+					}
+					layerGroup.addLayer(roomOverlay);
 
-					const marker = L.marker(rect.getBounds().getCenter(), { icon: markerIconGood }).on('click', function () {
+					const marker = L.marker(roomOverlay.getBounds().getCenter(), { icon: markerIconGood }).on('click', function () {
 						handleRoomClick(room);
 					});
 
