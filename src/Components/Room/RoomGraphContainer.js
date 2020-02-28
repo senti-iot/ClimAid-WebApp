@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, List, ListItem, ListItemText } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import Popover from '@material-ui/core/Popover';
 
 import roomStyles from 'Styles/roomStyles';
 import CurrentTemperatureBar from 'Components/Room/CurrentTemperatureBar';
@@ -9,7 +10,7 @@ import BatteryBar from 'Components/Room/BatteryBar';
 import RoomGraph from 'Components/Room/RoomGraph';
 import Weather from 'Components/Room/Weather';
 import ClimateDropdown from 'Components/Room/ClimateDropdown';
-import { getMeassurement, getBatteryStatus } from 'data/climaid';
+import { getMeassurement, getBatteryStatus, getRoomsInBuilding } from 'data/climaid';
 
 const RoomGraphContainer = (props) => {
 	const classes = roomStyles();
@@ -17,7 +18,10 @@ const RoomGraphContainer = (props) => {
 	const [roomValues, setRoomValues] = useState(null);
 	const [batteryLevel, setBatteryLevel] = useState(null);
 	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true });
-	const room = props.room;
+	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [room, setRoom] = useState(props.room);
+	const [rooms, setRooms] = useState([]);
+//	const room = props.room;
 
 	useEffect(() => {
 		async function fetchData() {
@@ -42,14 +46,24 @@ const RoomGraphContainer = (props) => {
 				setBatteryLevel(Math.round(state));
 			}
 
+			let roomsData = await getRoomsInBuilding(room.building.uuid);
+
+			if (roomsData) {
+				setRooms(roomsData);
+			}
+
 			setLoading(false);
 		}
 
 		fetchData();
 	}, [room]);
 
-	const changeRoom = () => {
+	const changeRoomOpen = event => {
+		setAnchorEl(event.currentTarget);
+	}
 
+	const changeRoomClose = () => {
+		setAnchorEl(null);
 	}
 
 	const handleCheckboxChange = (e) => {
@@ -58,13 +72,21 @@ const RoomGraphContainer = (props) => {
 		setCheckboxStates(newStates);
 	}
 
+	const changeRoom = (r) => {
+		setRoom(r);
+		changeRoomClose();
+	}
+
+	const roompopoverOpen = Boolean(anchorEl);
+	const roompopoverId = roompopoverOpen ? 'simple-popover' : undefined;
+
 	return (
 		<>
 			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2} style={{ marginTop: 30 }}>
-				<Grid item xs={2}>
+				<Grid item xs={3} xl={2}>
 					<ClimateDropdown onChange={handleCheckboxChange} checkboxStates={checkboxStates} />
 				</Grid>
-				<Grid item xs={10}>
+				<Grid item xs={9} xl={10}>
 				</Grid>
 
 				<Grid item xs={9}>
@@ -73,16 +95,18 @@ const RoomGraphContainer = (props) => {
 					</div>
 				</Grid>
 				<Grid item xs={3}>
-					<div className={classes.currentRoomContainer}>
-						<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
-							<Grid item xs={7}>
-								<div className={classes.currentRoomName}>{room.name}</div>
+					{rooms.length ?
+						<div className={classes.currentRoomContainer}>
+							<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
+								<Grid item xs={7}>
+									<div className={classes.currentRoomName}>{room.name}</div>
+								</Grid>
+								<Grid item xs={5}>
+									<Button variant="contained" onClick={changeRoomOpen}>Skift placering</Button>
+								</Grid>
 							</Grid>
-							<Grid item xs={5}>
-								<Button variant="contained" onClick={changeRoom}>Skift placering</Button>
-							</Grid>
-						</Grid>
-					</div>
+						</div>
+						: ""}
 
 					<div className={classes.currentReadingsContainer}>
 						<Grid item xs={8}>
@@ -150,6 +174,33 @@ const RoomGraphContainer = (props) => {
 					</Grid>
 				</Grid>
 			</Grid>
+			<Popover
+				id={roompopoverId}
+				open={roompopoverOpen}
+				anchorEl={anchorEl}
+				onClose={changeRoomClose}
+				anchorOrigin={{
+					vertical: 'bottom',
+					horizontal: 'center',
+				}}
+				transformOrigin={{
+					vertical: 'top',
+					horizontal: 'center',
+				}}
+				PaperProps={{
+					style: {
+						width: 310,
+					},
+				}}
+			>
+				<List dense className={classes.root}>
+					{rooms.map(r => {
+						return <ListItem key={r.uuid} style={{ cursor: 'pointer' }}>
+							<ListItemText primary={r.name} onClick={() => changeRoom(r)} />
+						</ListItem>
+					})}
+				</List>
+			</Popover>
 		</>
 	)
 }

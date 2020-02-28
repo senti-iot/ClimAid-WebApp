@@ -33,10 +33,10 @@ const Building = (props) => {
 		<>
 			{building ?
 				<GridContainer spacing={2}>
-					<ItemG xs={3}>
+					<ItemG xs={4} xl={3}>
 						<BuildingInfo history={props.history} building={building} rooms={rooms} />
 					</ItemG>
-					<ItemG xs={9}>
+					<ItemG xs={8} xl={9}>
 						<BuildingMap building={building} rooms={rooms} />
 					</ItemG>
 				</GridContainer>

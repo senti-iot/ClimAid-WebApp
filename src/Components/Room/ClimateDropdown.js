@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Popover, Checkbox, List, ListItem, ListItemText, ListItemSecondaryAction, Collapse, Divider } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 
 import roomStyles from 'Styles/roomStyles';
 
@@ -34,7 +35,7 @@ const ClimateDropdown = (props) => {
 
 	return (
 		<>
-			<Button aria-controls="climate-menu" aria-haspopup="true" className={classes.topDropdown} onClick={handleClimateMenuOpen}>
+			<Button aria-controls="climate-menu" aria-haspopup="true" className={classes.topDropdown} onClick={handleClimateMenuOpen} endIcon={<AddIcon style={{ fontSize: 28, marginLeft: 100 }} />}>
 				Indeklima
 			</Button>
 
