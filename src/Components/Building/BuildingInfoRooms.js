@@ -62,7 +62,7 @@ const BuildingInfoRooms = (props) => {
 							{props.rooms.map((room) => {
 								return (
 									<TableRow key={room.uuid} style={{ height: 40, cursor: 'pointer' }} hover onClick={() => props.handleRoomClick(room)}>
-										<TableCell align="center">{onlineStates[room.uuid] ? <FiberManualRecordIcon style={{ color: '#74d3c9' }} /> : <FiberManualRecordIcon style={{ color: '#cf565c' }} />}</TableCell>
+										{Object.keys(onlineStates).length ? <TableCell align="center">{onlineStates[room.uuid] ? <FiberManualRecordIcon style={{ color: '#74d3c9' }} /> : <FiberManualRecordIcon style={{ color: '#cf565c' }} />}</TableCell> : <TableCell></TableCell>}
 										<TableCell>{room.name}</TableCell>
 										<TableCell></TableCell>
 										<TableCell align="center">{batteryStates[room.uuid] ? <BatteryStatus charge={batteryStates[room.uuid]} /> : ''}</TableCell>

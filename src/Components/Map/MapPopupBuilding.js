@@ -24,7 +24,7 @@ const MapPopupBuilding = (props) => {
 		fetchData();
 	}, [props]);
 
-	const handleBuildingClick = (room) => {
+	const handleBuildingClick = () => {
 		props.history.push('/building/' + props.building.uuid);
 	}
 

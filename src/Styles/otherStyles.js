@@ -56,7 +56,7 @@ const otherStyles = makeStyles(theme => ({
 	},
 	mapPopupContainer: {
 		width: 400,
-		height: 550,
+		minHeight: 550,
 		background: '#fff'
 	},
 	mapPopupHeader: {
