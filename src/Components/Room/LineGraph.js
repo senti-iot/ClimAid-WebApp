@@ -52,11 +52,15 @@ const LineGraph = React.memo((props) => {
 					Object.keys(props.checkboxStates).map(async key => {
 						let temperatureData = null;
 						let co2Data = null;
+						let humidityData = null;
 						if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
 							temperatureData = await getDeviceDataConverted(room.devices[0].device, period, 'temperature');
 						}
 						if (key === 'co2history' || key === 'co2anbmin' || key === 'co2anbmax') {
 							co2Data = await getDeviceDataConverted(room.devices[0].device, period, 'co2');
+						}
+						if (key === 'humidityhistory') {
+							humidityData = await getDeviceDataConverted(room.devices[0].device, period, 'humidity');
 						}
 
 						if (props.checkboxStates[key]) {
@@ -157,6 +161,17 @@ const LineGraph = React.memo((props) => {
 											noArea: true,
 											noDots: true,
 											dashed: true
+										});
+									}
+									break;
+								case 'humidityhistory':
+									if (humidityData) {
+										graphLinesData.humidity.push({
+											unit: '%',
+											name: key,
+											median: true,
+											data: humidityData,
+											color: "#1cc933"
 										});
 									}
 									break;
@@ -273,8 +288,12 @@ const LineGraph = React.memo((props) => {
 						// minHeight: 500
 					}}>
 				</svg>
+
 				<Legend id={props.id} data={graphLines} />
-				<Tooltip tooltip={value} id={props.id} />
+
+				<Tooltip tooltip={value} id="temperature" />
+				<Tooltip tooltip={value} id="co2" />
+				<Tooltip tooltip={value} id="humidity" />
 			</div>
 	)
 });

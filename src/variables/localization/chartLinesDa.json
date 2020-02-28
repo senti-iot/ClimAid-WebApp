@@ -5,6 +5,9 @@
 		"tempanbmax": "Temperatur anbefalet maksimum",
 		"co2history": "Co2 historik",
 		"co2anbmin": "Co2 anbefalet minimum",
-		"co2anbmax": "Co2 anbefalet maksimum"
+		"co2anbmax": "Co2 anbefalet maksimum",
+		"humidityhistory": "Luftfugtighed anbefalet maksimum",
+		"humidityanbmin": "Luftfugtighed anbefalet maksimum",
+		"humidityanbmax": "Luftfugtighed anbefalet maksimum"
 	}
 }

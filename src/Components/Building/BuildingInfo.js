@@ -32,11 +32,13 @@ const BuildingInfo = (props) => {
 						<div></div>
 					</ItemG>
 				</Grid>
-				<Grid container item xs={12}>
-					<ItemG xs={12}>
-						<BuildingInfoUsage building={props.building} />
-					</ItemG>
-				</Grid>
+				{props.building.usage.length ?
+					<Grid container item xs={12}>
+						<ItemG xs={12}>
+							<BuildingInfoUsage building={props.building} />
+						</ItemG>
+					</Grid>
+					: ""}
 				<Grid container item xs={12}>
 					<ItemG xs={12}>
 						<BuildingInfoRooms handleRoomClick={handleRoomClick} building={props.building} rooms={props.rooms} />

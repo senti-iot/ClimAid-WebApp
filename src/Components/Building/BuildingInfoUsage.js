@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import buildingStyles from 'Styles/buildingStyles';
 // import { Notifications } from 'variables/icons';
 
-const BuildingInfoUsage = () => {
+const BuildingInfoUsage = (props) => {
 	const classes = buildingStyles();
 
 	return (
@@ -15,21 +15,13 @@ const BuildingInfoUsage = () => {
 			<p><b>Brugstid</b></p>
 			<Table className={classes.table} aria-label="Brugstid tabel">
 				<TableBody>
-					<TableRow style={{ height: 40 }}>
-						<TableCell>Energiforbrug: Fjernvarme</TableCell>
-						<TableCell></TableCell>
-						<TableCell align="right">{/* <Notifications style={{ color: '#ccc' }} /> */}</TableCell>
-					</TableRow>
-					<TableRow style={{ height: 40 }}>
-						<TableCell>Energiforbrug: Brugsvand</TableCell>
-						<TableCell></TableCell>
-						<TableCell align="right">{/* <Notifications style={{ color: '#ccc' }} /> */}</TableCell>
-					</TableRow>
-					<TableRow style={{ height: 40 }}>
-						<TableCell>Energiforbrug: Solceller</TableCell>
-						<TableCell></TableCell>
-						<TableCell align="right">{/* <Notifications style={{ color: '#ccc' }} /> */}</TableCell>
-					</TableRow>
+					{props.building.usage.map(usageInfo => {
+						return <TableRow style={{ height: 40 }}>
+							<TableCell>{usageInfo.text}</TableCell>
+							<TableCell align="right">{usageInfo.value} {usageInfo.unit}</TableCell>
+							<TableCell align="right">{/* <Notifications style={{ color: '#ccc' }} /> */}</TableCell>
+						</TableRow>
+					})}
 				</TableBody>
 			</Table>
 		</>

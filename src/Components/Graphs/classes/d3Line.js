@@ -185,9 +185,9 @@ class d3Line {
 						.attr('transform', `translate(${this.width - 85}, 0)`)
 						.call(d3.axisRight(this.y2));
 				}
-			}
 
-			count++;
+				count++;
+			}
 		})
 
 		if (yAxis) {
@@ -342,58 +342,59 @@ class d3Line {
 	generateDots = () => {
 		let count = 1;
 		Object.keys(this.props.data).map(key => {
-			let data = this.props.data[key]
-			const setTooltip = this.props.setTooltip
-			data.forEach((line) => {
-				if (line.prev) {
-					return
-				}
+			if (this.props.data[key].length && count <= 2) {
+				let data = this.props.data[key]
+				const setTooltip = this.props.setTooltip
+				data.forEach((line) => {
+					if (line.prev) {
+						return
+					}
 
-				if (!line.noDots) {
-					let tooltipDiv = d3.select(`#${key}tooltip`)
-					this.svg.selectAll(".dot")
-						.data(line.data)
-						.enter()
-						.append("circle") // Uses the enter().append() method
-						.on("mouseover", function (d) {
-							console.log(d);
-							d3.select(this).attr("r", 8);
-							tooltipDiv.transition()
-								.duration(200)
-								.style("opacity", 1)
-								.style('z-index', 1040);
-							tooltipDiv.style("left", (d3.event.pageX) - 235 + "px")
-								.style("top", (d3.event.pageY) - 250 + "px");
-							setTooltip(d)
+					if (!line.noDots) {
+						let tooltipDiv = d3.select(`#${key}tooltip`)
+						this.svg.selectAll(".dot")
+							.data(line.data)
+							.enter()
+							.append("circle") // Uses the enter().append() method
+							.on("mouseover", function (d) {
+								d3.select(this).attr("r", 8);
+								tooltipDiv.transition()
+									.duration(200)
+									.style("opacity", 1)
+									.style('z-index', 1040);
+								tooltipDiv.style("left", (d3.event.pageX) + "px")
+									.style("top", (d3.event.pageY) - 100 + "px");
+								setTooltip(d)
 
-						}).on("mouseout", function () {
-							d3.select(this).attr("r", 6)
-							tooltipDiv.transition()
-								.duration(500)
-								.style('z-index', -1)
-								.style("opacity", 0);
-						//}).on('click', function (d) {
-						})
-						.attr("cx", (d) => { return this.x(moment(d.date).valueOf()) })
-						.attr("cy", (d) => {
-							if (count === 1) {
-								return this.y(d.value)
-							} else {
-								return this.y2(d.value)
-							}
-						})
-						.attr("r", 0)
-						.attr("fill", line.color ? line.color : "#fff")
-						.attr('opacity', 0)
-						.transition()
-						.attr("id", `${line.name}Dots`)
-						.style("opacity", this.state[line.name] ? 0 : 1)
-						.delay((d, i) => { return i * (1500 / line.data.length) })
-						.attr("r", 6)
-				}
-			})
+							}).on("mouseout", function () {
+								d3.select(this).attr("r", 6)
+								tooltipDiv.transition()
+									.duration(500)
+									.style('z-index', -1)
+									.style("opacity", 0);
+							//}).on('click', function (d) {
+							})
+							.attr("cx", (d) => { return this.x(moment(d.date).valueOf()) })
+							.attr("cy", (d) => {
+								if (count === 1) {
+									return this.y(d.value)
+								} else {
+									return this.y2(d.value)
+								}
+							})
+							.attr("r", 0)
+							.attr("fill", line.color ? line.color : "#fff")
+							.attr('opacity', 0)
+							.transition()
+							.attr("id", `${line.name}Dots`)
+							.style("opacity", this.state[line.name] ? 0 : 1)
+							.delay((d, i) => { return i * (1500 / line.data.length) })
+							.attr("r", 6)
+					}
+				})
 
-			count++;
+				count++;
+			}
 		})
 	}
 	generateLegend = () => {

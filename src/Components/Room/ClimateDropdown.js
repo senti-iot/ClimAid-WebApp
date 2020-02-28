@@ -9,6 +9,7 @@ const ClimateDropdown = (props) => {
 	const [anchorClimateEl, setAnchorClimateEl] = React.useState(null);
 	const [temperatureOpen, setTemperatureOpen] = useState(true);
 	const [co2open, setCo2open] = useState(false);
+	const [humidityopen, setHumidityopen] = useState(false);
 	const checkboxStates = props.checkboxStates;
 
 	const handleClimateMenuOpen = event => {
@@ -19,16 +20,16 @@ const ClimateDropdown = (props) => {
 		setAnchorClimateEl(null);
 	};
 
-	// const climateCheckboxCheck = (e) => {
-	// 	console.log(e);
-	// }
-
 	const toogleTemperatureOpen = () => {
 		setTemperatureOpen(temperatureOpen ? false : true);
 	}
 
 	const toogleCo2open = () => {
 		setCo2open(co2open ? false : true);
+	}
+
+	const toogleHumidityopen = () => {
+		setHumidityopen(humidityopen ? false : true);
 	}
 
 	return (
@@ -154,6 +155,26 @@ const ClimateDropdown = (props) => {
 										onChange={props.onChange}
 										checked={checkboxStates['co2anbmax'] ? true : false}
 										inputProps={{ 'aria-labelledby': 13 }}
+									/>
+								</ListItemSecondaryAction>
+							</ListItem>
+						</Collapse>
+
+						<ListItem key={30} button style={{ backgroundColor: '#eee' }}>
+							<ListItemText id={31} primary="Luftfugtighed" onClick={toogleHumidityopen} />
+						</ListItem>
+						<Divider />
+
+						<Collapse in={humidityopen} timeout="auto" unmountOnExit>
+							<ListItem key={32} button>
+								<ListItemText id={32} primary="Historik" />
+								<ListItemSecondaryAction>
+									<Checkbox
+										edge="end"
+										value="humidityhistory"
+										onChange={props.onChange}
+										checked={checkboxStates['humidityhistory'] ? true : false}
+										inputProps={{ 'aria-labelledby': 32 }}
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>
