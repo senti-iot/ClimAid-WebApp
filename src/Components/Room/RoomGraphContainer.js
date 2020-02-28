@@ -19,16 +19,17 @@ const RoomGraphContainer = (props) => {
 	const [batteryLevel, setBatteryLevel] = useState(null);
 	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true });
 	const [anchorEl, setAnchorEl] = React.useState(null);
-	const [room, setRoom] = useState(props.room);
+	const [room, setRoom] = useState(null);
 	const [rooms, setRooms] = useState([]);
-//	const room = props.room;
 
 	useEffect(() => {
+		setRoom(props.room);
+
 		async function fetchData() {
 			setLoading(true);
 			let values = {};
 			await Promise.all(
-				room.devices.map(async device => {
+				props.room.devices.map(async device => {
 					return await Promise.all(
 						device.gauges.map(async (gauge) => {
 							let value = await getMeassurement(device.device, gauge);
@@ -40,13 +41,13 @@ const RoomGraphContainer = (props) => {
 
 			setRoomValues(values);
 
-			if (room.devices.length) {
-				let device = room.devices[0];
+			if (props.room.devices.length) {
+				let device = props.room.devices[0];
 				let state = await getBatteryStatus(device.device);
 				setBatteryLevel(Math.round(state));
 			}
 
-			let roomsData = await getRoomsInBuilding(room.building.uuid);
+			let roomsData = await getRoomsInBuilding(props.room.building.uuid);
 
 			if (roomsData) {
 				setRooms(roomsData);
@@ -56,7 +57,7 @@ const RoomGraphContainer = (props) => {
 		}
 
 		fetchData();
-	}, [room]);
+	}, [props.room]);
 
 	const changeRoomOpen = event => {
 		setAnchorEl(event.currentTarget);
@@ -82,125 +83,129 @@ const RoomGraphContainer = (props) => {
 
 	return (
 		<>
-			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2} style={{ marginTop: 30 }}>
-				<Grid item xs={3} xl={2}>
-					<ClimateDropdown onChange={handleCheckboxChange} checkboxStates={checkboxStates} />
-				</Grid>
-				<Grid item xs={9} xl={10}>
-				</Grid>
-
-				<Grid item xs={9}>
-					<div className={classes.graphContainer}>
-						<RoomGraph loading={loading} checkboxStates={checkboxStates} room={room} />
-					</div>
-				</Grid>
-				<Grid item xs={3}>
-					{rooms.length ?
-						<div className={classes.currentRoomContainer}>
-							<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
-								<Grid item xs={7}>
-									<div className={classes.currentRoomName}>{room.name}</div>
-								</Grid>
-								<Grid item xs={5}>
-									<Button variant="contained" onClick={changeRoomOpen}>Skift placering</Button>
-								</Grid>
-							</Grid>
-						</div>
-						: ""}
-
-					<div className={classes.currentReadingsContainer}>
-						<Grid item xs={8}>
-							<div className={classes.currentReadingsHeader}>Aktuel status</div>
+			{room ?
+				<>
+					<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2} style={{ marginTop: 30 }}>
+						<Grid item xs={3} xl={2}>
+							<ClimateDropdown onChange={handleCheckboxChange} checkboxStates={checkboxStates} />
 						</Grid>
-						<Grid item xs={4}>
-						</Grid>
-						
-						<Grid item xs={12}>
-							<div className={classes.comfortLevelText}>Komfort niveau</div> <div className={classes.comfortSquare}>&nbsp;</div>
+						<Grid item xs={9} xl={10}>
 						</Grid>
 
-						{roomValues && typeof roomValues['temperature'] !== 'undefined' &&
-							<Grid item xs={12}>
-								<br />
-								<div className={classes.barGraphContainer}>
-									<p className={classes.graphLabel}>TEMPERATUR</p>
+						<Grid item xs={9}>
+							<div className={classes.graphContainer}>
+								<RoomGraph loading={loading} checkboxStates={checkboxStates} room={room} />
+							</div>
+						</Grid>
+						<Grid item xs={3}>
+							{rooms.length ?
+								<div className={classes.currentRoomContainer}>
 									<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
-										<Grid item xs={10}>
-											{roomValues && <CurrentTemperatureBar roomValues={roomValues} />}
+										<Grid item xs={7}>
+											<div className={classes.currentRoomName}>{room.name}</div>
 										</Grid>
-										<Grid item xs={2} align="center">
-											<span className={classes.barGraphCurrectReading}>{roomValues['temperature'].toFixed(1)} °C</span>
+										<Grid item xs={5}>
+											<Button variant="contained" onClick={changeRoomOpen}>Skift placering</Button>
 										</Grid>
 									</Grid>
 								</div>
-							</Grid>
-						}
+								: ""}
 
-						{roomValues && typeof roomValues['co2'] !== 'undefined' &&
-							<Grid item xs={12}>
+							<div className={classes.currentReadingsContainer}>
+								<Grid item xs={8}>
+									<div className={classes.currentReadingsHeader}>Aktuel status</div>
+								</Grid>
+								<Grid item xs={4}>
+								</Grid>
+								
+								<Grid item xs={12}>
+									<div className={classes.comfortLevelText}>Komfort niveau</div> <div className={classes.comfortSquare}>&nbsp;</div>
+								</Grid>
+
+								{roomValues && typeof roomValues['temperature'] !== 'undefined' &&
+									<Grid item xs={12}>
+										<br />
+										<div className={classes.barGraphContainer}>
+											<p className={classes.graphLabel}>TEMPERATUR</p>
+											<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
+												<Grid item xs={10}>
+													{roomValues && <CurrentTemperatureBar roomValues={roomValues} />}
+												</Grid>
+												<Grid item xs={2} align="center">
+													<span className={classes.barGraphCurrectReading}>{roomValues['temperature'].toFixed(1)} °C</span>
+												</Grid>
+											</Grid>
+										</div>
+									</Grid>
+								}
+
+								{roomValues && typeof roomValues['co2'] !== 'undefined' &&
+									<Grid item xs={12}>
+										<br />
+										<div className={classes.barGraphContainer}>
+											<p className={classes.graphLabel}>LUFTKVALITET (CO2)</p>
+											<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
+												<Grid item xs={10}>
+													{roomValues && <CurrentCo2Bar roomValues={roomValues} />}
+												</Grid>
+												<Grid item xs={2} align="center">
+													<span className={classes.barGraphCurrectReading}>{Math.round(roomValues['co2'])} ppm</span>
+												</Grid>
+											</Grid>
+										</div>
+									</Grid>
+								}
 								<br />
-								<div className={classes.barGraphContainer}>
-									<p className={classes.graphLabel}>LUFTKVALITET (CO2)</p>
+							</div>
+
+							{batteryLevel && 
+								<div className={classes.batteryBarContainer}>
+									<p className={classes.batteryLabel}>BATTERI</p>
 									<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
 										<Grid item xs={10}>
-											{roomValues && <CurrentCo2Bar roomValues={roomValues} />}
+											<BatteryBar batteryLevel={batteryLevel} />
 										</Grid>
 										<Grid item xs={2} align="center">
-											<span className={classes.barGraphCurrectReading}>{Math.round(roomValues['co2'])} ppm</span>
+											<span className={classes.barGraphCurrectBatteryReading}>{batteryLevel}%</span>
 										</Grid>
 									</Grid>
 								</div>
-							</Grid>
-						}
-						<br />
-					</div>
+							}
 
-					{batteryLevel && 
-						<div className={classes.batteryBarContainer}>
-							<p className={classes.batteryLabel}>BATTERI</p>
-							<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
-								<Grid item xs={10}>
-									<BatteryBar batteryLevel={batteryLevel} />
-								</Grid>
-								<Grid item xs={2} align="center">
-									<span className={classes.barGraphCurrectBatteryReading}>{batteryLevel}%</span>
-								</Grid>
+							<Grid item xs={12}>
+								<Weather room={room} />
 							</Grid>
-						</div>
-					}
-
-					<Grid item xs={12}>
-						<Weather room={room} />
+						</Grid>
 					</Grid>
-				</Grid>
-			</Grid>
-			<Popover
-				id={roompopoverId}
-				open={roompopoverOpen}
-				anchorEl={anchorEl}
-				onClose={changeRoomClose}
-				anchorOrigin={{
-					vertical: 'bottom',
-					horizontal: 'center',
-				}}
-				transformOrigin={{
-					vertical: 'top',
-					horizontal: 'center',
-				}}
-				PaperProps={{
-					style: {
-						width: 310,
-					},
-				}}
-			>
-				<List dense className={classes.root}>
-					{rooms.map(r => {
-						return <ListItem key={r.uuid} style={{ cursor: 'pointer' }}>
-							<ListItemText primary={r.name} onClick={() => changeRoom(r)} />
-						</ListItem>
-					})}
-				</List>
-			</Popover>
+					<Popover
+						id={roompopoverId}
+						open={roompopoverOpen}
+						anchorEl={anchorEl}
+						onClose={changeRoomClose}
+						anchorOrigin={{
+							vertical: 'bottom',
+							horizontal: 'center',
+						}}
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'center',
+						}}
+						PaperProps={{
+							style: {
+								width: 310,
+							},
+						}}
+					>
+						<List dense className={classes.root}>
+							{rooms.map(r => {
+								return <ListItem key={r.uuid} style={{ cursor: 'pointer' }}>
+									<ListItemText primary={r.name} onClick={() => changeRoom(r)} />
+								</ListItem>
+							})}
+						</List>
+					</Popover>
+				</>
+				: ""}
 		</>
 	)
 }
