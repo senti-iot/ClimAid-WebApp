@@ -158,7 +158,7 @@ const RoomGraphContainer = (props) => {
 								<br />
 							</div>
 
-							{batteryLevel && 
+							{batteryLevel ? 
 								<div className={classes.batteryBarContainer}>
 									<p className={classes.batteryLabel}>BATTERI</p>
 									<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
@@ -170,7 +170,7 @@ const RoomGraphContainer = (props) => {
 										</Grid>
 									</Grid>
 								</div>
-							}
+								: ""}
 
 							<Grid item xs={12}>
 								<Weather room={room} />
