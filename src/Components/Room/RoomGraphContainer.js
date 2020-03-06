@@ -111,13 +111,13 @@ const RoomGraphContainer = (props) => {
 		setAlertImageSaveSuccess(false);
 	};
 
-	const saveGraph = async (type) => {
+	const saveGraph = (type) => {
 		const source = (new XMLSerializer()).serializeToString(d3.select('#graph').node());
 		const evcEncoded = 'data:image/svg+xml;base64,' + new Buffer(source).toString('base64');
 
 		let savecanvas = document.createElement('canvas');
-		savecanvas.width = 1500;
-		savecanvas.height = 800;
+		savecanvas.width = document.getElementById('graphContainer').offsetWidth;
+		savecanvas.height = document.getElementById('graphContainer').offsetHeight;
 
 		let img = document.createElement('img');
 		img.onload = function () {
@@ -127,7 +127,7 @@ const RoomGraphContainer = (props) => {
 
 		if (type  === 1) { //clipboard
 			try {
-				setTimeout(async function () {
+				setTimeout(function () {
 					savecanvas.toBlob(function (blob) {
 						navigator.permissions.query({ name: 'clipboard-write' }).then(result => {
 							if (result.state === 'granted') {
@@ -176,7 +176,7 @@ const RoomGraphContainer = (props) => {
 						</Grid>
 
 						<Grid item xs={9}>
-							<div className={classes.graphContainer}>
+							<div id="graphContainer" className={classes.graphContainer}>
 								<RoomGraph loading={loading} checkboxStates={checkboxStates} room={room} />
 							</div>
 						</Grid>

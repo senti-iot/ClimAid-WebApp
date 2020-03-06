@@ -1,7 +1,8 @@
 import React, { Fragment, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Divider, MenuItem, Menu, Button, Tooltip } from '@material-ui/core';
-import { T, CustomDateTime, ItemG, DSelect } from 'Components';
+// CustomDateTime
+import { T, ItemG, DSelect } from 'Components';
 import { dateTimeFormatter } from 'variables/functions';
 import moment from 'moment'
 import { DateRange } from 'variables/icons';
@@ -11,7 +12,7 @@ import lineStyles from 'Components/Custom/Styles/lineGraphStyles';
 const DateFilterMenu = (props) => {
 	const { period, label, icon, button, settings, inputType, buttonProps } = props
 	const t = useLocalization()
-	const [openCustomDate, setOpenCustomDate] = useState(false)
+	// const [openCustomDate, setOpenCustomDate] = useState(false)
 	const [actionAnchor, setActionAnchor] = useState(null)
 	const classes = lineStyles();
 
@@ -96,13 +97,13 @@ const DateFilterMenu = (props) => {
 
 	}
 
-	const handleCloseDialog = (to, from, timeType) => {
-		// const { period } = props
-		// this.setState({ openCustomDate: false, actionAnchor: null })
-		setOpenCustomDate(false)
-		setActionAnchor(null)
-		handleSetDate(6, to, from, timeType)
-	}
+	// const handleCloseDialog = (to, from, timeType) => {
+	// 	// const { period } = props
+	// 	// this.setState({ openCustomDate: false, actionAnchor: null })
+	// 	setOpenCustomDate(false)
+	// 	setActionAnchor(null)
+	// 	handleSetDate(6, to, from, timeType)
+	// }
 	/**
 	 * Menu Handling, close the menu and set the date or open Custom Date
 	 */
@@ -114,35 +115,35 @@ const DateFilterMenu = (props) => {
 		}
 		else {
 			// this.setState({ openCustomDate: true })
-			setOpenCustomDate(true)
+			// setOpenCustomDate(true)
 		}
 	}
 
-	const handleCustomCheckBox = () => {
-		// this.setState({ timeType: parseInt(e.target.value, 10) })
-		// setTimeType(parseInt(e.target.value, 10))
-	}
+	// const handleCustomCheckBox = () => {
+	// 	// this.setState({ timeType: parseInt(e.target.value, 10) })
+	// 	// setTimeType(parseInt(e.target.value, 10))
+	// }
 
-	const handleCancelCustomDate = () => {
-		// this.setState({
-		// loading: false, openCustomDate: false
-		// })
-		// setLoading(false)
-		setOpenCustomDate(false)
-	}
-	const renderCustomDateDialog = () => {
-		const { period } = props
-		return openCustomDate ? <CustomDateTime
-			openCustomDate={openCustomDate}
-			handleCloseDialog={handleCloseDialog}//
-			to={period ? period.to : undefined}
-			from={period ? period.from : undefined}
-			timeType={period ? period.timeType : undefined}
-			handleCustomCheckBox={handleCustomCheckBox}//
-			handleCancelCustomDate={handleCancelCustomDate}//
-		// t={t}
-		/> : null
-	}
+	// const handleCancelCustomDate = () => {
+	// 	// this.setState({
+	// 	// loading: false, openCustomDate: false
+	// 	// })
+	// 	// setLoading(false)
+	// 	setOpenCustomDate(false)
+	// }
+	// const renderCustomDateDialog = () => {
+	// 	const { period } = props
+	// 	return openCustomDate ? <CustomDateTime
+	// 		openCustomDate={openCustomDate}
+	// 		handleCloseDialog={handleCloseDialog}//
+	// 		to={period ? period.to : undefined}
+	// 		from={period ? period.from : undefined}
+	// 		timeType={period ? period.timeType : undefined}
+	// 		handleCustomCheckBox={handleCustomCheckBox}//
+	// 		handleCancelCustomDate={handleCancelCustomDate}//
+	// 	// t={t}
+	// 	/> : null
+	// }
 	const handleOpenMenu = e => {
 		// this.setState({ actionAnchor: e.currentTarget })
 		setActionAnchor(e.currentTarget)
@@ -193,7 +194,8 @@ const DateFilterMenu = (props) => {
 					getContentAnchorEl={null}
 					PaperProps={{
 						style: {
-							minWidth: 250
+							minWidth: 250,
+							padding: 10
 						}
 					}}>
 					<ItemG container direction={'column'}>
@@ -213,10 +215,10 @@ const DateFilterMenu = (props) => {
 						<MenuItem selected={isSelected(5)} onClick={handleDateFilter} value={5}>{t('filters.dateOptions.90days')}</MenuItem>
 						{/* <MenuItem selected={isSelected(4)} onClick={handleDateFilter} value={4}>{t('filters.dateOptions.thisYear')}</MenuItem> */}
 
-						<Divider />
-						<MenuItem selected={isSelected(6)} onClick={handleDateFilter} value={6}>{t('filters.dateOptions.custom')}</MenuItem>
+						{/* <Divider /> */}
+						{/* <MenuItem selected={isSelected(6)} onClick={handleDateFilter} value={6}>{t('filters.dateOptions.custom')}</MenuItem> */}
 					</ItemG>
-					{renderCustomDateDialog()}
+					{/* {renderCustomDateDialog()} */}
 				</Menu>
 			</Fragment>
 	)
