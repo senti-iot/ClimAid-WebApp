@@ -7,9 +7,10 @@ import RoomMap from 'Components/Room/RoomMap';
 import RoomGraphContainer from 'Components/Room/RoomGraphContainer';
 import { getRoom } from 'data/climaid';
 
-const Room = () => {
+const Room = (props) => {
 	const { roomUuid } = useParams();
 	const [room, setRoom] = useState(null);
+	const history = props.history;
 
 	useEffect(() => {
 		async function fetchData() {
@@ -23,6 +24,11 @@ const Room = () => {
 		fetchData();
 	}, [roomUuid]);
 
+	const changeRoom = (r) => {
+	//setRoom(r);
+		history.push('/building/' + r.building.uuid + '/room/' + r.uuid);
+	}
+
 	return (
 		<>
 			{room ?
@@ -34,7 +40,7 @@ const Room = () => {
 						<RoomMap room={room} />
 					</ItemG>
 					<ItemG xs={12}>
-						<RoomGraphContainer room={room} />
+						<RoomGraphContainer room={room} changeRoom={changeRoom} />
 					</ItemG>
 				</GridContainer>
 				: ""}

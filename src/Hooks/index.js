@@ -1,6 +1,7 @@
 import useEventListener from './useEventListener/useEventListener'
 import useLocalization from './useLocalization/useLocalization'
 import usePrevious from './usePrevious/usePrevious'
+import useCombinedRefs from './useCombinedRefs/useCombinedRefs'
 
 import { useState, useContext } from 'react' 
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,5 +26,6 @@ export {
 	useLocation,
 	useSelector,
 	useDispatch,
-	useEventListener
+	useEventListener,
+	useCombinedRefs
 }

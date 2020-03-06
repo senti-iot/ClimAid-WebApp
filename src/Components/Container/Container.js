@@ -3,7 +3,6 @@ import { AppBackground } from 'Styles/containerStyle';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useHistory } from 'react-router';
 import Administraion from 'Routes/Administration';
-import Settings from 'Routes/Settings';
 import Building from 'Routes/Building';
 import Room from 'Routes/Room';
 import Header from 'Components/Header';
@@ -39,11 +38,8 @@ function Container(props) {
 							<Route path={'/administration'}>
 								<Administraion />
 							</Route>
-							<Route path={'/settings'}>
-								<Settings />
-							</Route>
 							<Route path={'/building/:buildingUuid/room/:roomUuid'}>
-								<Room />
+								<Room history={history} />
 							</Route>
 							<Route path={'/building/:uuid'}>
 								<Building history={history} />

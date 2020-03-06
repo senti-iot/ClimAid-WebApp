@@ -1,6 +1,6 @@
 import { create } from 'apisauce';
 import moment from 'moment';
-import crypto from 'crypto'
+import crypto from 'crypto';
 
 import { servicesAPI, weatherApi } from './data';
 

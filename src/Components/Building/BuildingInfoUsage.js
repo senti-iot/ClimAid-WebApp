@@ -15,8 +15,8 @@ const BuildingInfoUsage = (props) => {
 			<p><b>Brugstid</b></p>
 			<Table className={classes.table} aria-label="Brugstid tabel">
 				<TableBody>
-					{props.building.usage.map(usageInfo => {
-						return <TableRow style={{ height: 40 }}>
+					{props.building.usage.map((usageInfo, index) => {
+						return <TableRow key={index} style={{ height: 40 }}>
 							<TableCell>{usageInfo.text}</TableCell>
 							<TableCell align="right">{usageInfo.value} {usageInfo.unit}</TableCell>
 							<TableCell align="right">{/* <Notifications style={{ color: '#ccc' }} /> */}</TableCell>

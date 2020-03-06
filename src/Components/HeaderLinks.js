@@ -81,7 +81,7 @@ function HeaderLinks(props) {
 					aria-haspopup='true'
 					onClick={handleProfileOpen}
 				>
-					{user ? user.img ? <img src={user.img} alt='UserProfile' className={classes.img} /> : <Gravatar default='mp' email={user.email} className={classes.img} size={75} /> : <Gravatar default='mp' email={null} className={classes.img} size={75} />}
+					{user ? user.img ? <img src={user.img} alt='UserProfile' className={classes.img} /> : <Gravatar default='mp' email={user.email} className={classes.img} size={75} /> : "" }
 				</Button>
 			</Tooltip>
 			<Menu

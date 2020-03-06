@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
-import { Popover, Checkbox, List, ListItem, ListItemText, ListItemSecondaryAction, Collapse, Divider } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Popover, Checkbox, List, ListItem, ListItemText, ListItemSecondaryAction, Collapse, Divider, IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 import roomStyles from 'Styles/roomStyles';
 
 const ClimateDropdown = (props) => {
 	const classes = roomStyles();
 	const [anchorClimateEl, setAnchorClimateEl] = React.useState(null);
-	const [temperatureOpen, setTemperatureOpen] = useState(true);
+	const [temperatureOpen, setTemperatureOpen] = useState(false);
 	const [co2open, setCo2open] = useState(false);
 	const [humidityopen, setHumidityopen] = useState(false);
+	const [popoverWidth, setPopoverWidth] = useState(310);
 	const checkboxStates = props.checkboxStates;
 
+	useEffect(() => {
+		if (checkboxStates['temphistory'] || checkboxStates['tempanbmin'] || checkboxStates['tempanbmax']) {
+			setTemperatureOpen(true);
+		}
+		if (checkboxStates['co2history'] || checkboxStates['co2anbmin'] || checkboxStates['co2anbmax']) {
+			setCo2open(true);
+		}
+		if (checkboxStates['humidityhistory'] || checkboxStates['humidityanbmin'] || checkboxStates['humidityanbmax']) {
+			setHumidityopen(true);
+		}
+	}, [checkboxStates]);
+
 	const handleClimateMenuOpen = event => {
+		setPopoverWidth(event.currentTarget.offsetWidth);
 		setAnchorClimateEl(event.currentTarget);
 	};
 
@@ -35,9 +50,16 @@ const ClimateDropdown = (props) => {
 
 	return (
 		<>
-			<Button aria-controls="climate-menu" aria-haspopup="true" className={classes.topDropdown} onClick={handleClimateMenuOpen} endIcon={<AddIcon style={{ fontSize: 28, marginLeft: 100 }} />}>
-				Indeklima
-			</Button>
+			<List dense onClick={handleClimateMenuOpen}>
+				<ListItem key={0} button className={classes.topDropdown}>
+					<Button aria-controls="climate-menu" aria-haspopup="true" fullWidth={true} className={classes.topDropdownButton}>
+						Indeklima
+					</Button>
+					<ListItemSecondaryAction>
+						<AddIcon style={{ fontSize: 28, marginTop: 5, cursor: 'pointer' }} />
+					</ListItemSecondaryAction>
+				</ListItem>
+			</List>
 
 			<Popover
 				anchorOrigin={{
@@ -50,7 +72,7 @@ const ClimateDropdown = (props) => {
 				}}
 				PaperProps={{
 					style: {
-						width: 310,
+						width: popoverWidth,
 					},
 				}}
 				id="climate-menu"
@@ -61,8 +83,13 @@ const ClimateDropdown = (props) => {
 			>
 				<>
 					<List dense className={classes.root}>
-						<ListItem key={0} button style={{ backgroundColor: '#eee' }}>
+						<ListItem key={0} button style={{ backgroundColor: '#eee' }} >
 							<ListItemText id={0} primary="Temperatur" onClick={toogleTemperatureOpen} />
+							<ListItemSecondaryAction>
+								<IconButton edge="end" onClick={toogleTemperatureOpen}>
+									{temperatureOpen ? <RemoveIcon /> : <AddIcon />}
+								</IconButton>
+							</ListItemSecondaryAction>
 						</ListItem>
 						<Divider />
 
@@ -79,18 +106,6 @@ const ClimateDropdown = (props) => {
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>
-							<ListItem key={2} button>
-								<ListItemText id={2} primary="Anbefalet maks" />
-								<ListItemSecondaryAction>
-									<Checkbox
-										edge="end"
-										value="tempanbmax"
-										onChange={props.onChange}
-										checked={checkboxStates['tempanbmax'] ? true : false}
-										inputProps={{ 'aria-labelledby': 2 }}
-									/>
-								</ListItemSecondaryAction>
-							</ListItem>
 							<ListItem key={3} button>
 								<ListItemText id={3} primary="Anbefalet min." />
 								<ListItemSecondaryAction>
@@ -100,6 +115,18 @@ const ClimateDropdown = (props) => {
 										onChange={props.onChange}
 										checked={checkboxStates['tempanbmin'] ? true : false}
 										inputProps={{ 'aria-labelledby': 3 }}
+									/>
+								</ListItemSecondaryAction>
+							</ListItem>
+							<ListItem key={2} button>
+								<ListItemText id={2} primary="Anbefalet maks" />
+								<ListItemSecondaryAction>
+									<Checkbox
+										edge="end"
+										value="tempanbmax"
+										onChange={props.onChange}
+										checked={checkboxStates['tempanbmax'] ? true : false}
+										inputProps={{ 'aria-labelledby': 2 }}
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>
@@ -119,6 +146,11 @@ const ClimateDropdown = (props) => {
 
 						<ListItem key={20} button style={{ backgroundColor: '#eee' }}>
 							<ListItemText id={10} primary="Co2 koncentration" onClick={toogleCo2open} />
+							<ListItemSecondaryAction>
+								<IconButton edge="end" onClick={toogleCo2open}>
+									{co2open ? <RemoveIcon /> : <AddIcon />}
+								</IconButton>
+							</ListItemSecondaryAction>
 						</ListItem>
 						<Divider />
 
@@ -163,6 +195,11 @@ const ClimateDropdown = (props) => {
 
 						<ListItem key={30} button style={{ backgroundColor: '#eee' }}>
 							<ListItemText id={31} primary="Luftfugtighed" onClick={toogleHumidityopen} />
+							<ListItemSecondaryAction>
+								<IconButton edge="end" onClick={toogleHumidityopen}>
+									{humidityopen ? <RemoveIcon /> : <AddIcon />}
+								</IconButton>
+							</ListItemSecondaryAction>
 						</ListItem>
 						<Divider />
 

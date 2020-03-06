@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Grid, List, ListItem, ListItemText } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Popover from '@material-ui/core/Popover';
+import * as d3 from 'd3';
+import { saveAs } from 'file-saver';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 import roomStyles from 'Styles/roomStyles';
 import CurrentTemperatureBar from 'Components/Room/CurrentTemperatureBar';
@@ -10,7 +14,9 @@ import BatteryBar from 'Components/Room/BatteryBar';
 import RoomGraph from 'Components/Room/RoomGraph';
 import Weather from 'Components/Room/Weather';
 import ClimateDropdown from 'Components/Room/ClimateDropdown';
+import ExportDropdown from 'Components/Room/ExportDropdown';
 import { getMeassurement, getBatteryStatus, getRoomsInBuilding } from 'data/climaid';
+import { CircularLoader } from 'Components';
 
 const RoomGraphContainer = (props) => {
 	const classes = roomStyles();
@@ -18,9 +24,12 @@ const RoomGraphContainer = (props) => {
 	const [roomValues, setRoomValues] = useState(null);
 	const [batteryLevel, setBatteryLevel] = useState(null);
 	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true });
-	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [anchorEl, setAnchorEl] = useState(null);
 	const [room, setRoom] = useState(null);
 	const [rooms, setRooms] = useState([]);
+	const [alertClipboardSuccess, setAlertClipboardSuccess] = useState(false);
+	const [alertClipboardFail, setAlertClipboardFail] = useState(false);
+	const [alertImageSaveSuccess, setAlertImageSaveSuccess] = useState(false);
 
 	useEffect(() => {
 		setRoom(props.room);
@@ -73,23 +82,97 @@ const RoomGraphContainer = (props) => {
 		setCheckboxStates(newStates);
 	}
 
-	const changeRoom = (r) => {
-		setRoom(r);
+	const _changeRoom = (r) => {
 		changeRoomClose();
+		props.changeRoom(r);
 	}
+
+	const handleAlertClipboardSuccessClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setAlertClipboardSuccess(false);
+	};
+
+	const handleAlertClipboardFailClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setAlertClipboardFail(false);
+	};
+
+	const handleAlertImageSaveSuccessClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setAlertImageSaveSuccess(false);
+	};
+
+	const saveGraph = async (type) => {
+		const source = (new XMLSerializer()).serializeToString(d3.select('#graph').node());
+		const evcEncoded = 'data:image/svg+xml;base64,' + new Buffer(source).toString('base64');
+
+		let savecanvas = document.createElement('canvas');
+		savecanvas.width = 1500;
+		savecanvas.height = 800;
+
+		let img = document.createElement('img');
+		img.onload = function () {
+			savecanvas.getContext('2d').drawImage(img, 0, 0);
+		}
+		img.src = evcEncoded;
+
+		if (type  === 1) { //clipboard
+			try {
+				setTimeout(async function () {
+					savecanvas.toBlob(function (blob) {
+						navigator.permissions.query({ name: 'clipboard-write' }).then(result => {
+							if (result.state === 'granted') {
+								// eslint-disable-next-line no-undef
+								navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).then(function () {
+									setAlertClipboardSuccess(true);
+								}, function (error) {
+									console.error("unable to write to clipboard. Error: ", error);
+									setAlertClipboardFail(true);
+								});
+							} else {
+								console.log("clipboard-permissoin not granted: " + result);
+								setAlertClipboardFail(true);
+							}
+						});
+					});
+				}, 1000);
+			} catch (error) {
+				console.error(error);
+			}
+		} else if (type === 2) { // png
+			setTimeout(function () {
+				savecanvas.toBlob(function (blob) {
+					saveAs(blob, "test.png");
+					setAlertImageSaveSuccess(true);
+				}, 'image/png');
+			}, 1000);
+		}
+	};
 
 	const roompopoverOpen = Boolean(anchorEl);
 	const roompopoverId = roompopoverOpen ? 'simple-popover' : undefined;
 
 	return (
 		<>
-			{room ?
+			{room && !loading ?
 				<>
 					<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2} style={{ marginTop: 30 }}>
 						<Grid item xs={3} xl={2}>
 							<ClimateDropdown onChange={handleCheckboxChange} checkboxStates={checkboxStates} />
 						</Grid>
-						<Grid item xs={9} xl={10}>
+						<Grid item xs={6} xl={8}>
+						</Grid>
+						<Grid item xs={3} xl={2}>
+							<ExportDropdown saveGraph={saveGraph} />
 						</Grid>
 
 						<Grid item xs={9}>
@@ -199,13 +282,24 @@ const RoomGraphContainer = (props) => {
 						<List dense className={classes.root}>
 							{rooms.map(r => {
 								return <ListItem key={r.uuid} style={{ cursor: 'pointer' }}>
-									<ListItemText primary={r.name} onClick={() => changeRoom(r)} />
+									<ListItemText primary={r.name} onClick={() => _changeRoom(r)} />
 								</ListItem>
 							})}
 						</List>
 					</Popover>
+
+					<Snackbar open={alertClipboardSuccess} autoHideDuration={3000} onClose={handleAlertClipboardSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+						<Alert onClose={handleAlertClipboardSuccessClose} severity="success" elevation={6} variant="filled">Billede er gemt i udklipsholderen!</Alert>
+					</Snackbar>
+					<Snackbar open={alertClipboardFail} autoHideDuration={3000} onClose={handleAlertClipboardFailClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+						<Alert onClose={handleAlertClipboardFailClose} severity="error" elevation={6} variant="filled">Der opstod en fejl med at gemme billede i udklipsholderen!</Alert>
+					</Snackbar>
+
+					<Snackbar open={alertImageSaveSuccess} autoHideDuration={3000} onClose={handleAlertImageSaveSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+						<Alert onClose={handleAlertImageSaveSuccessClose} severity="success" elevation={6} variant="filled">Billede er gemt!</Alert>
+					</Snackbar>
 				</>
-				: ""}
+				: <CircularLoader fill />}
 		</>
 	)
 }

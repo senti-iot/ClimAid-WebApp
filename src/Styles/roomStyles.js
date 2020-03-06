@@ -128,13 +128,20 @@ const roomStyles = makeStyles(theme => ({
 		marginTop: 20
 	},
 	topDropdown: {
-		width: '100%',
+		// width: '100%',
 		height: 75,
 		borderRadius: 4,
-		backgroundColor: '#ccc',
-		fontSize: 20,
+		backgroundColor: '#dddddd',
 	},
-
+	topDropdownButton: {
+		fontSize: 20,
+		"&:hover": {
+			backgroundColor: 'transparent'
+		},
+		"&:active": {
+			backgroundColor: 'transparent'
+		},
+	},
 }));
 
 export default roomStyles;
