@@ -5,7 +5,7 @@ const otherStyles = makeStyles(theme => ({
 		boxSizing: 'border-box',
 		position: 'absolute',
 		zIndex: '1000',
-		height: "1000px",
+		height: "1100px",
 		width: "800px",
 		backgroundColor: '#fff',
 		padding: 50,

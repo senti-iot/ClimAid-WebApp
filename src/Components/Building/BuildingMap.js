@@ -28,7 +28,7 @@ function BuildingMap(props) {
 	// const markerIconUnacceptable = new markerIcon({ iconUrl: '/images/marker3.svg' });
 	// const markerIconVeryUnacceptable = new markerIcon({ iconUrl: '/images/marker4.svg' });
 
-	const colors = { good: '#3fbfad', acceptable: '#e28117', unacceptable: '#d1463d', veryunacceptable: '#e56363' }
+	const colors = { good: 'rgba(63,191,173,0.8)', acceptable: 'rgba(226,129,23,0.8)', unacceptable: 'rgba(209,70,61,0.8)', veryunacceptable: 'rgba(229,99,99,0.8)' }
 
 	useEffect(() => {
 		//leaflet hack to fix marker images

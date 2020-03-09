@@ -107,7 +107,7 @@ const MapContainer = (props) => {
 	}
 
 	return (
-		<div style={{ height: "1000px", width: "100%" }}>
+		<div style={{ height: "1100px", width: "100%" }}>
 			{!displayOverlay ? 
 				<div className={classes.mapInfoContainerToggleOff} onClick={toogleOverlay}>
 					<ArrowForward style={{ color: '#b9bdbe' }} fontSize="large" />

@@ -15,21 +15,21 @@ const Footer = () => {
 					<ItemG xs={4}>
 						<b>OM CLIMAID</b>
 						<br />
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque pellentesque turpis quis nibh eleifend accumsan. Sed vel urna quis justo pellentesque eleifend sed vitae risus. Mauris suscipit placerat sem eget condimentum. Aenean eu libero sit amet diam euismod auctor. Fusce vel arcu enim. Pellentesque augue neque, hendrerit nec ante sit amet, rhoncus ullamcorper augue. Morbi nec libero felis. Aenean tristique mi at libero vulputate blandit. Etiam congue, tellus in dignissim semper, sem nulla tristique orci, vitae sodales diam magna id velit.
+						CLIMAID er stiftet af en flok indeklimanørder, men selv om vi elsker tal og excel ark så ser vi det som vores vigtigste opgave at formidler indeklima data på en intuitiv måde der er nem at reagere på.
 					</ItemG>
 					<ItemG xs={4}>
 						<b>SENESTE INDLÆG</b>
-						<br />
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque pellentesque turpis quis nibh eleifend accumsan. Sed vel urna quis justo pellentesque eleifend sed vitae risus. Mauris suscipit placerat sem eget condimentum. Aenean eu libero sit amet diam euismod auctor. Fusce vel arcu enim. Pellentesque augue neque, hendrerit nec ante sit amet, rhoncus ullamcorper augue. Morbi nec libero felis. Aenean tristique mi at libero vulputate blandit. Etiam congue, tellus in dignissim semper, sem nulla tristique orci, vitae sodales diam magna id velit.
+						<p>Til Barcelona uden speed-o-meter!</p>
+						<p>Hvad koster dit sygefravær?</p>
+						<p>5 tips til arbejdet med jeres indeklima</p>
+						<p>Hvad kan jeres virksomhed vinde ved godt indeklima?</p>
+						<p>Hvordan ændrer man bedst andres adfærd?</p>
 					</ItemG>
 					<ItemG xs={4}>
 						<b>KONTAKT</b>
-						<br />
-						Telefon: +45 31 53 71 45
-						<br />
-						E-mail: s.andersen@climaid.dk
-						<br />
-						Adresse: Erik Husfeldts vej 7, 2630 Taastrup
+						<p>Telefon: +45 31 53 71 45</p>
+						<p>Email: s.andersen@climaid.dk</p>
+						<p>Adresse: Hørskætten 6D, 2630 Taastrup</p>
 					</ItemG>
 				</Grid>
 			</div>

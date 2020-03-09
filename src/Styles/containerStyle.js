@@ -27,5 +27,4 @@ export const AppBackground = styled.div`
 	min-height: 1100px;
 	/* min-height: calc(100vh - 200px); */
 	overflow-x: hidden;
-	-webkit-overflow-scrolling: touch;
 `;
