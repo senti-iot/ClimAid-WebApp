@@ -69,10 +69,13 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 									if (temperatureData) {
 										graphLinesData.temperature.push({
 											unit: '°C',
+											maxValue: 24.5,
+											noArea: true,
 											name: key,
 											median: true,
 											data: temperatureData,
-											color: "#e28117"
+											color: "#e28117",
+											alarmColor: '#ff0000'
 										});
 									}
 									break;
@@ -118,10 +121,13 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 									if (co2Data) {
 										graphLinesData.co2.push({
 											unit: 'ppm',
+											maxValue: 1000,
+											noArea: true,
 											name: key,
 											median: true,
 											data: co2Data,
-											color: "#245bed"
+											color: "#245bed",
+											alarmColor: '#ff0000'
 										});
 									}
 									break;
@@ -167,10 +173,13 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 									if (humidityData) {
 										graphLinesData.humidity.push({
 											unit: '%',
+											maxValue: 50,
+											noArea: true,
 											name: key,
 											median: true,
 											data: humidityData,
-											color: "#1cc933"
+											color: "#1cc933",
+											alarmColor: '#ff0000'
 										});
 									}
 									break;

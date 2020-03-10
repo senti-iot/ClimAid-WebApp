@@ -351,13 +351,16 @@ class d3Line {
 					}
 
 					if (!line.noDots) {
-						let tooltipDiv = d3.select(`#${key}tooltip`)
-						this.svg.selectAll(".dot")
+						let tooltipDiv = d3.select(`#${key}tooltip`);
+
+						let g = this.svg.selectAll(".dot")
 							.data(line.data)
 							.enter()
-							.append("circle") // Uses the enter().append() method
+							.append("g");
+
+						g.append("circle") // Uses the enter().append() method
 							.on("mouseover", function (d) {
-								d3.select(this).attr("r", 8);
+								d3.select(this).attr("r", (d) => { return (d.value <= line.maxValue) ? 8 : 14 });
 								tooltipDiv.transition()
 									.duration(200)
 									.style("opacity", 1)
@@ -367,12 +370,11 @@ class d3Line {
 								setTooltip(d)
 
 							}).on("mouseout", function () {
-								d3.select(this).attr("r", 6)
+								d3.select(this).attr("r", (d) => { return (d.value <= line.maxValue) ? 6 : 12 })
 								tooltipDiv.transition()
 									.duration(500)
 									.style('z-index', -1)
 									.style("opacity", 0);
-							//}).on('click', function (d) {
 							})
 							.attr("cx", (d) => { return this.x(moment(d.date).valueOf()) })
 							.attr("cy", (d) => {
@@ -383,13 +385,29 @@ class d3Line {
 								}
 							})
 							.attr("r", 0)
-							.attr("fill", line.color ? line.color : "#fff")
+							.attr("fill", (d) => { return (d.value <= line.maxValue) ? line.color : line.alarmColor })
 							.attr('opacity', 0)
 							.transition()
 							.attr("id", `${line.name}Dots`)
 							.style("opacity", this.state[line.name] ? 0 : 1)
 							.delay((d, i) => { return i * (1500 / line.data.length) })
-							.attr("r", 6)
+							.attr("r", (d) => { return (d.value <= line.maxValue) ? 6 : 12 });
+	
+						g.append("text")
+							.attr("x", (d) => { return this.x(moment(d.date).valueOf()) })
+							.attr("y", (d) => {
+								if (count === 1) {
+									return this.y(d.value)
+								} else {
+									return this.y2(d.value)
+								}
+							})
+							.attr("dx", -2)
+							.attr("dy", 5)
+							.attr("font-size", "18px")
+							.attr("font-weight", "bold")
+							.text((d) => { return (d.value <= line.maxValue) ? '' : '!' })
+							.attr('fill', '#ffffff')
 					}
 				})
 
