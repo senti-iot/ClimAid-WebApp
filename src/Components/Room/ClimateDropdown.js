@@ -130,7 +130,7 @@ const ClimateDropdown = (props) => {
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>
-							{/* <ListItem key={4} button>
+							<ListItem key={4} button>
 								<ListItemText id={4} primary="Gennemsnit for bygningen" />
 								<ListItemSecondaryAction>
 									<Checkbox
@@ -141,7 +141,7 @@ const ClimateDropdown = (props) => {
 										inputProps={{ 'aria-labelledby': 4 }}
 									/>
 								</ListItemSecondaryAction>
-							</ListItem> */}
+							</ListItem>
 						</Collapse>
 
 						<ListItem key={20} button style={{ backgroundColor: '#eee' }}>
@@ -191,6 +191,18 @@ const ClimateDropdown = (props) => {
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>
+							<ListItem key={14} button>
+								<ListItemText id={14} primary="Gennemsnit for bygningen" />
+								<ListItemSecondaryAction>
+									<Checkbox
+										edge="end"
+										value="co2avgbuilding"
+										onChange={props.onChange}
+										checked={checkboxStates['co2avgbuilding'] ? true : false}
+										inputProps={{ 'aria-labelledby': 14 }}
+									/>
+								</ListItemSecondaryAction>
+							</ListItem>
 						</Collapse>
 
 						<ListItem key={30} button style={{ backgroundColor: '#eee' }}>
@@ -213,6 +225,18 @@ const ClimateDropdown = (props) => {
 										onChange={props.onChange}
 										checked={checkboxStates['humidityhistory'] ? true : false}
 										inputProps={{ 'aria-labelledby': 32 }}
+									/>
+								</ListItemSecondaryAction>
+							</ListItem>
+							<ListItem key={33} button>
+								<ListItemText id={33} primary="Gennemsnit for bygningen" />
+								<ListItemSecondaryAction>
+									<Checkbox
+										edge="end"
+										value="humidityavgbuilding"
+										onChange={props.onChange}
+										checked={checkboxStates['humidityavgbuilding'] ? true : false}
+										inputProps={{ 'aria-labelledby': 33 }}
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>

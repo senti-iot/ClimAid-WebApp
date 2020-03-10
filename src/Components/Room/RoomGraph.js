@@ -8,7 +8,7 @@ import d3Line from 'Components/Graphs/classes/d3Line';
 import Legend from 'Components/Graphs/Legend';
 import lineStyles from 'Components/Custom/Styles/lineGraphStyles';
 import Tooltip from 'Components/Room/Tooltip';
-import { getDeviceDataConverted } from 'data/climaid';
+import { getDeviceDataConverted, getBuildingDevices } from 'data/climaid';
 import { DateTimeFilter } from 'Components';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
@@ -50,16 +50,82 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 				await Promise.all(
 					Object.keys(props.checkboxStates).map(async key => {
 						let temperatureData = null;
+						let temperatureAvgData = [];
 						let co2Data = null;
+						let co2AvgData = [];
 						let humidityData = null;
+						let humidityAvgData = [];
+
 						if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
 							temperatureData = await getDeviceDataConverted(room.devices[0].device, period, 'temperature');
 						}
+						if (key === 'tempavgbuilding') {
+							let devices = await getBuildingDevices(room.building.uuid);
+							let combinedData = {};
+							await Promise.all(
+								devices.map(async deviceId => {
+									let deviceData = await getDeviceDataConverted(deviceId, period, 'temperature');
+									deviceData.map(data => {
+										if (!combinedData[data.date]) {
+											combinedData[data.date] = parseFloat(data.value);
+										} else {
+											combinedData[data.date] += parseFloat(data.value);
+										}
+									});
+								})
+							);
+
+							Object.entries(combinedData).map(value => {
+								temperatureAvgData.push({ date: value[0], value: value[1] / devices.length });
+							});
+						}
+
 						if (key === 'co2history' || key === 'co2anbmin' || key === 'co2anbmax') {
 							co2Data = await getDeviceDataConverted(room.devices[0].device, period, 'co2');
 						}
+						if (key === 'co2avgbuilding') {
+							let devices = await getBuildingDevices(room.building.uuid);
+							let combinedData = {};
+							await Promise.all(
+								devices.map(async deviceId => {
+									let deviceData = await getDeviceDataConverted(deviceId, period, 'co2');
+									deviceData.map(data => {
+										if (!combinedData[data.date]) {
+											combinedData[data.date] = parseFloat(data.value);
+										} else {
+											combinedData[data.date] += parseFloat(data.value);
+										}
+									});
+								})
+							);
+
+							Object.entries(combinedData).map(value => {
+								co2AvgData.push({ date: value[0], value: value[1] / devices.length });
+							});
+						}
+
 						if (key === 'humidityhistory') {
 							humidityData = await getDeviceDataConverted(room.devices[0].device, period, 'humidity');
+						}
+						if (key === 'humidityavgbuilding') {
+							let devices = await getBuildingDevices(room.building.uuid);
+							let combinedData = {};
+							await Promise.all(
+								devices.map(async deviceId => {
+									let deviceData = await getDeviceDataConverted(deviceId, period, 'humidity');
+									deviceData.map(data => {
+										if (!combinedData[data.date]) {
+											combinedData[data.date] = parseFloat(data.value);
+										} else {
+											combinedData[data.date] += parseFloat(data.value);
+										}
+									});
+								})
+							);
+
+							Object.entries(combinedData).map(value => {
+								humidityAvgData.push({ date: value[0], value: value[1] / devices.length });
+							});
 						}
 
 						if (props.checkboxStates[key]) {
@@ -117,6 +183,20 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										});
 									}
 									break;
+								case 'tempavgbuilding':
+									if (temperatureAvgData.length) {
+										graphLinesData.temperature.push({
+											unit: '°C',
+											maxValue: 24.5,
+											name: key,
+											median: true,
+											data: temperatureAvgData,
+											color: "#e26f17",
+											alarmColor: '#ff0000',
+											noDots: true
+										});
+									}
+									break;
 								case 'co2history':
 									if (co2Data) {
 										graphLinesData.co2.push({
@@ -169,6 +249,20 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										});
 									}
 									break;
+								case 'co2avgbuilding':
+									if (co2AvgData.length) {
+										graphLinesData.temperature.push({
+											unit: 'ppm',
+											maxValue: 1000,
+											name: key,
+											median: true,
+											data: co2AvgData,
+											color: "#2400ed",
+											alarmColor: '#ff0000',
+											noDots: true
+										});
+									}
+									break;
 								case 'humidityhistory':
 									if (humidityData) {
 										graphLinesData.humidity.push({
@@ -180,6 +274,20 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											data: humidityData,
 											color: "#1cc933",
 											alarmColor: '#ff0000'
+										});
+									}
+									break;
+								case 'humidityavgbuilding':
+									if (humidityAvgData.length) {
+										graphLinesData.temperature.push({
+											unit: '%',
+											maxValue: 50,
+											name: key,
+											median: true,
+											data: humidityAvgData,
+											color: "#009b33",
+											alarmColor: '#ff0000',
+											noDots: true
 										});
 									}
 									break;

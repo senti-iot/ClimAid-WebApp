@@ -76,6 +76,12 @@ export const getBuildingImage = async (uuid) => {
 	return data;
 };
 
+export const getBuildingDevices = async (uuid) => {
+	let data = await climaidApi.get('/building/' + uuid + '/devices').then(rs => rs.data);
+	// console.log(data);
+	return data;
+};
+
 export const getRoom = async (uuid) => {
 	let data = await climaidApi.get('/room/' + uuid).then(rs => rs.data);
 	// console.log(data);
