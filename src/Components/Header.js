@@ -19,13 +19,9 @@ function Header({ ...props }) {
 			focusRipple
 			className={classes.image}
 			focusVisibleClassName={classes.focusVisible}
-			style={{ width: '200px' }}
 			onClick={goHome}
 		>
-			<span
-				className={classes.imageSrc}
-				style={{ backgroundImage: `url(${logo})` }}
-			/>
+			<img src={`${logo}`} alt="Logo" className={classes.imageSrc} />
 		</ButtonBase>
 	);
 

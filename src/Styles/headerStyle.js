@@ -56,14 +56,7 @@ const headerStyles = makeStyles(theme => ({
 	},
 	focusVisible: {},
 	imageSrc: {
-		position: "absolute",
-		left: 0,
-		right: 0,
-		top: 0,
-		bottom: 0,
-		backgroundSize: "195px 34px",
-		backgroundRepeat: "no-repeat",
-		backgroundPosition: "50% 50%",
+		maxWidth: 200
 	},
 	container: {
 		height: 120,
