@@ -66,7 +66,12 @@ const MapContainer = (props) => {
 			} else {
 				const map = mapRef.current.leafletElement;
 				const group = groupRef.current.leafletElement;
-				map.fitBounds(group.getBounds());
+
+				try {
+					map.fitBounds(group.getBounds());
+				} catch (e) {
+					console.log('Could not fit bouds: ', e);
+				}
 			}
 		}
 
