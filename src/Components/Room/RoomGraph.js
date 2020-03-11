@@ -39,7 +39,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 		const graphLinesData = {
 			temperature: [],
 			co2: [],
-			humidity: []
+			humidity: [],
+			battery: []
 		}
 
 		async function fetchData() {
@@ -55,12 +56,18 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						let co2AvgData = [];
 						let humidityData = null;
 						let humidityAvgData = [];
+						let batteryData = null;
+						let batteryAvgData = [];
+
+						let devices = null;
+						if (key === 'tempavgbuilding' || key === 'co2avgbuilding' || key === 'humidityavgbuilding' || key === 'batteryavgbuilding') {
+							devices = await getBuildingDevices(room.building.uuid);
+						}
 
 						if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
 							temperatureData = await getDeviceDataConverted(room.devices[0].device, period, 'temperature');
 						}
 						if (key === 'tempavgbuilding') {
-							let devices = await getBuildingDevices(room.building.uuid);
 							let combinedData = {};
 							await Promise.all(
 								devices.map(async deviceId => {
@@ -84,7 +91,6 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							co2Data = await getDeviceDataConverted(room.devices[0].device, period, 'co2');
 						}
 						if (key === 'co2avgbuilding') {
-							let devices = await getBuildingDevices(room.building.uuid);
 							let combinedData = {};
 							await Promise.all(
 								devices.map(async deviceId => {
@@ -108,7 +114,6 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							humidityData = await getDeviceDataConverted(room.devices[0].device, period, 'humidity');
 						}
 						if (key === 'humidityavgbuilding') {
-							let devices = await getBuildingDevices(room.building.uuid);
 							let combinedData = {};
 							await Promise.all(
 								devices.map(async deviceId => {
@@ -125,6 +130,29 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 							Object.entries(combinedData).map(value => {
 								humidityAvgData.push({ date: value[0], value: value[1] / devices.length });
+							});
+						}
+
+						if (key === 'batteryhistory') {
+							batteryData = await getDeviceDataConverted(room.devices[0].device, period, 'batteristatus');
+						}
+						if (key === 'batteryavgbuilding') {
+							let combinedData = {};
+							await Promise.all(
+								devices.map(async deviceId => {
+									let deviceData = await getDeviceDataConverted(deviceId, period, 'batteristatus');
+									deviceData.map(data => {
+										if (!combinedData[data.date]) {
+											combinedData[data.date] = parseFloat(data.value);
+										} else {
+											combinedData[data.date] += parseFloat(data.value);
+										}
+									});
+								})
+							);
+
+							Object.entries(combinedData).map(value => {
+								batteryAvgData.push({ date: value[0], value: value[1] / devices.length });
 							});
 						}
 
@@ -251,7 +279,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 									break;
 								case 'co2avgbuilding':
 									if (co2AvgData.length) {
-										graphLinesData.temperature.push({
+										graphLinesData.co2.push({
 											unit: 'ppm',
 											maxValue: 1000,
 											name: key,
@@ -279,7 +307,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 									break;
 								case 'humidityavgbuilding':
 									if (humidityAvgData.length) {
-										graphLinesData.temperature.push({
+										graphLinesData.humidity.push({
 											unit: '%',
 											maxValue: 50,
 											name: key,
@@ -287,6 +315,31 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											data: humidityAvgData,
 											color: "#009b33",
 											alarmColor: '#ff0000',
+											noDots: true
+										});
+									}
+									break;
+								case 'batteryhistory':
+									if (batteryData) {
+										graphLinesData.battery.push({
+											unit: '%',
+											maxValue: 1000,
+											noArea: true,
+											name: key,
+											median: true,
+											data: batteryData,
+											color: "#1cc933"
+										});
+									}
+									break;
+								case 'batteryavgbuilding':
+									if (batteryAvgData.length) {
+										graphLinesData.humidity.push({
+											unit: '%',
+											name: key,
+											median: true,
+											data: batteryAvgData,
+											color: "#1c9d33",
 											noDots: true
 										});
 									}
@@ -425,6 +478,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 				<Tooltip tooltip={value} id="temperature" />
 				<Tooltip tooltip={value} id="co2" />
 				<Tooltip tooltip={value} id="humidity" />
+				<Tooltip tooltip={value} id="battery" />
 			</div>
 	)
 }));

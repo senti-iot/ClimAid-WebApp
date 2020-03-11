@@ -12,6 +12,7 @@ const ClimateDropdown = (props) => {
 	const [temperatureOpen, setTemperatureOpen] = useState(false);
 	const [co2open, setCo2open] = useState(false);
 	const [humidityopen, setHumidityopen] = useState(false);
+	const [batteryopen, setBatteryopen] = useState(false);
 	const [popoverWidth, setPopoverWidth] = useState(310);
 	const checkboxStates = props.checkboxStates;
 
@@ -24,6 +25,9 @@ const ClimateDropdown = (props) => {
 		}
 		if (checkboxStates['humidityhistory'] || checkboxStates['humidityanbmin'] || checkboxStates['humidityanbmax']) {
 			setHumidityopen(true);
+		}
+		if (checkboxStates['batteryhistory']) {
+			setBatteryopen(true);
 		}
 	}, [checkboxStates]);
 
@@ -46,6 +50,10 @@ const ClimateDropdown = (props) => {
 
 	const toogleHumidityopen = () => {
 		setHumidityopen(humidityopen ? false : true);
+	}
+
+	const toogleBatteryopen = () => {
+		setBatteryopen(batteryopen ? false : true);
 	}
 
 	return (
@@ -237,6 +245,43 @@ const ClimateDropdown = (props) => {
 										onChange={props.onChange}
 										checked={checkboxStates['humidityavgbuilding'] ? true : false}
 										inputProps={{ 'aria-labelledby': 33 }}
+									/>
+								</ListItemSecondaryAction>
+							</ListItem>
+						</Collapse>
+
+						<ListItem key={40} button style={{ backgroundColor: '#eee' }}>
+							<ListItemText id={41} primary="Batteri" onClick={toogleBatteryopen} />
+							<ListItemSecondaryAction>
+								<IconButton edge="end" onClick={toogleBatteryopen}>
+									{batteryopen ? <RemoveIcon /> : <AddIcon />}
+								</IconButton>
+							</ListItemSecondaryAction>
+						</ListItem>
+						<Divider />
+
+						<Collapse in={batteryopen} timeout="auto" unmountOnExit>
+							<ListItem key={42} button>
+								<ListItemText id={42} primary="Historik" />
+								<ListItemSecondaryAction>
+									<Checkbox
+										edge="end"
+										value="batteryhistory"
+										onChange={props.onChange}
+										checked={checkboxStates['batteryhistory'] ? true : false}
+										inputProps={{ 'aria-labelledby': 42 }}
+									/>
+								</ListItemSecondaryAction>
+							</ListItem>
+							<ListItem key={43} button>
+								<ListItemText id={43} primary="Gennemsnit for bygningen" />
+								<ListItemSecondaryAction>
+									<Checkbox
+										edge="end"
+										value="batteryavgbuilding"
+										onChange={props.onChange}
+										checked={checkboxStates['batteryavgbuilding'] ? true : false}
+										inputProps={{ 'aria-labelledby': 43 }}
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>

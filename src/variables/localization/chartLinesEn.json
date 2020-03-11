@@ -11,6 +11,8 @@
 		"humidityhistory": "Luftfugtighed anbefalet maksimum",
 		"humidityanbmin": "Luftfugtighed anbefalet maksimum",
 		"humidityanbmax": "Luftfugtighed anbefalet maksimum",
-		"humidityavgbuilding": "Luftfugtighed gennemsnit for bygning"
+		"humidityavgbuilding": "Luftfugtighed gennemsnit for bygning",
+		"batteryhistory": "Batteri historik",
+		"batteryavgbuilding": "Batteri gennemsnit for bygningen"
 	}
 }
