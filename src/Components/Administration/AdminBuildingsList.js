@@ -11,7 +11,6 @@ import Button from '@material-ui/core/Button';
 
 import { Add } from 'variables/icons';
 import { getBuildings } from 'data/climaid';
-// import adminStyles from 'Styles/adminStyles';
 
 const useStyles = makeStyles({
 	table: {

@@ -8,7 +8,6 @@ import Alert from '@material-ui/lab/Alert';
 import { climaidApi } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
 import { getBuilding, addBuildingImage } from 'data/climaid';
-// import AdminBuildingViewImage from 'Components/Administration/AdminBuildingsViewImage';
 
 const AdminBuildingsView = (props) => {
 	const { uuid } = useParams();

@@ -8,7 +8,6 @@ import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 import buildingStyles from 'Styles/buildingStyles';
 import { getBatteryStatus, getDeviceOnlineStatus } from 'data/climaid';
-// import { Notifications } from 'variables/icons';
 import BatteryStatus from 'Components/BatteryStatus';
 
 const BuildingInfoRooms = (props) => {

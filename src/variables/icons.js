@@ -10,22 +10,7 @@ import Language from '@material-ui/icons/Language'
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew'
 import InsertChart from '@material-ui/icons/InsertChart'
 import Wifi from '@material-ui/icons/Wifi'
-import Droplet from 'assets/icons/droplet.svg'
-import Thermometer from 'assets/icons/thermometer.svg'
-import Pipe from 'assets/icons/pipe.svg'
 import Google from 'assets/icons/google.svg'
-//#region weather Icons
-// import ClearDay from 'assets/weather/clear_day.svg'
-// import ClearNight from 'assets/weather/clear_night.svg'
-// import Cloudy from 'assets/weather/cloudy.svg'
-// import Fog from 'assets/weather/fog.svg'
-// import PartlyCloudyDay from 'assets/weather/partly_cloudy_day.svg'
-// import PartlyCloudyNight from 'assets/weather/partly_cloudy_night.svg'
-// import Rain from 'assets/weather/rain.svg'
-// import Sleet from 'assets/weather/sleet.svg'
-// import Snow from 'assets/weather/snow.svg'
-// import Wind from 'assets/weather/wind.svg'
-//#endregion
 import StorageIcon from '@material-ui/icons/Storage'
 import Cake from '@material-ui/icons/Cake'
 import Star from '@material-ui/icons/Star'
@@ -107,14 +92,12 @@ import WhatsHot from '@material-ui/icons/Whatshot'
 import Compare from '@material-ui/icons/Compare'
 import EventNote from '@material-ui/icons/EventNote'
 import FullscreenOutlined from '@material-ui/icons/FullscreenOutlined'
-// import ContentCopy from 'assets/icons/ContentCopy'
 import SettingsApplications from '@material-ui/icons/SettingsApplications'
 import InputIcon from '@material-ui/icons/Input'
 import Memory from '@material-ui/icons/Memory'
 import CellWifi from '@material-ui/icons/CellWifi'
 import LocalOffer from '@material-ui/icons/LocalOffer'
 import Airplay from '@material-ui/icons/Airplay'
-// import GaugeIcon from 'assets/icons/Gauge'
 import Https from '@material-ui/icons/Https'
 import Palette from '@material-ui/icons/Palette'
 import ImportExport from '@material-ui/icons/ImportExport'
@@ -123,16 +106,12 @@ import MeetingRoom from '@material-ui/icons/MeetingRoom';
 import ArrowForward from '@material-ui/icons/ArrowForwardIos';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
 export {
-	Droplet,
-	Thermometer,
-	Pipe,
 	ImportExport,
 	Share,
 	StorageIcon,
 	Wifi,
 	Palette,
 	Https,
-	// GaugeIcon,
 	InsertChart,
 	Airplay,
 	LocalOffer,
@@ -141,7 +120,6 @@ export {
 	Memory,
 	InputIcon,
 	SettingsApplications,
-	// ContentCopy,
 	PowerSettingsNew,
 	Language,
 	Call,
@@ -161,18 +139,6 @@ export {
 	ArrowUpward,
 	ZoomOut,
 	Cake,
-	//Weather Icons
-	// ClearDay,
-	// ClearNight,
-	// Cloudy,
-	// Fog,
-	// PartlyCloudyDay,
-	// PartlyCloudyNight,
-	// Rain,
-	// Sleet,
-	// Snow,
-	// Wind,
-	//End Weather Icons
 	Star,
 	StarBorder,
 	CloudDownload,

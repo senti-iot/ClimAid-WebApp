@@ -1,8 +1,7 @@
 
 import loc from 'variables/localization/index'
 import { saveSettingsOnServ } from './settings';
-// import { saveSettingsOnServ } from './settings';
-// import { getDaysOfInterest } from './doi';
+
 var forEach = require('for-each');
 
 const changeLangAction = 'changeLanguage'

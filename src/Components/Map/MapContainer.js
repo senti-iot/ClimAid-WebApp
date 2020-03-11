@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import { useLocalization } from 'Hooks';
 import { Map, TileLayer, ZoomControl, Marker, Popup, FeatureGroup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';

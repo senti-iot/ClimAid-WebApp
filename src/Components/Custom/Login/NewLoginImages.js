@@ -1,14 +1,8 @@
 import React from 'react'
-// import { T } from 'Components';
-// import loginImages from 'assets/imgs/loginImages/loader'
-// import sentiIpadIMG from 'assets/imgs/senti-ipad.png'
 import ImgTexture from 'assets/imgs/texture_inverted2.png'
-// import sentiWaterWorks from 'assets/senti.waterworks.svg'
-// import { useLocalization, useSelector } from 'Hooks';
 import { makeStyles } from '@material-ui/styles';
 import { sideBarColor } from 'Styles/mainStyles';
 import styled from 'styled-components';
-// import { bgColors } from 'Styles/backgroundColors';
 
 const Background = styled.div`
 	width: 100%;

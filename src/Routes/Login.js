@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment';
 import logo from 'assets/logo.png'
-// import { Link } from 'react-router-dom'
 import cookie from 'react-cookies';
 
 // Components
@@ -26,16 +25,13 @@ function Login() {
 	const [user, setUser] = useState('')
 	const [pass, setPass] = useState('')
 	const [orgId, setOrgId] = useState('')
-	// const [language, setLanguage] = useState('da')
 	const [loggingIn, setLoggingIn] = useState(false)
-	// const [loggingInGoogle, setLoggingInGoogle] = useState(false)
 	const [cookies, setCookies] = useState(false)
 	const [privacy, setPrivacy] = useState(false)
 	const [showPassword, setShowPassword] = useState(false)
 	const setError = val => {
 		setEError(val)
 	}
-	// const inputRef = useRef(null)
 	const location = useLocation()
 	const history = useHistory()
 	const dispatch = useDispatch()

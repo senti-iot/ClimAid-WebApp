@@ -37,7 +37,7 @@ const PrivacyDialog = (props) => {
 				<T b>{t('privacy.responsible')}</T>
  				<Caption>Senti </Caption>
  				<Caption>c/o WebHouse ApS</Caption>
- 				<Caption>Alexander Foss Gade 13, 3. th</Caption>
+ 				<Caption>C. A. Olesens gade 4</Caption>
  				<Caption>DK-9000 Aalborg</Caption>
  				<Caption>{t('privacy.contactEmail')}privacy@senti.io</Caption>
  				<Caption className={classes.p}>CVR-nr. 21221198</Caption>

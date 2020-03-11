@@ -1,5 +1,4 @@
 import React from 'react';
-// import { useLocalization } from 'Hooks';
 import footerStyles from 'Styles/footerStyle';
 import { Grid } from '@material-ui/core';
 import { ItemG } from 'Components';

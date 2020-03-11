@@ -3,18 +3,7 @@ import size from './themes/mediaQueries';
 import Paper from '@material-ui/core/Paper';
 import { IconButton, ButtonBase, Button } from '@material-ui/core';
 import { ItemG, Muted, T, TextF } from 'Components';
-// import { container, primaryColor } from "assets/jss/material-dashboard-react";
-// import teal from '@material-ui/core/colors/teal'
 
-// wrapper: {
-// 	display: 'flex',
-// 		// height: '100vh',
-// 		overflow: 'auto',
-// 			// position: 'fixed',
-// 			[theme.breakpoints.up('md')]: {
-// 		height: '100vh'
-// 	}
-// },
 export const LoginWrapper = styled.div`
 	display: flex;
 	overflow: auto;

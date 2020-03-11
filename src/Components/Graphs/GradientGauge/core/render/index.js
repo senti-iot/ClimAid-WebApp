@@ -1,8 +1,3 @@
-// import {
-// 	select as d3Select,
-// 	line as d3Line,
-// 	curveMonotoneX as d3CurveMonotoneX,
-// } from "d3"
 import * as d3 from "d3";
 
 import {

@@ -7,7 +7,6 @@ import * as serviceWorker from './serviceWorker';
 import whyDidYouRender from "@welldone-software/why-did-you-render";
 import store from 'Redux/store';
 import { updateServiceworker } from 'Redux/serviceWorkerRedux';
-// import NewContent from 'Components/Loaders/NewContent';
 
 if (process.env.NODE_ENV !== 'production') {
 	whyDidYouRender(React, {

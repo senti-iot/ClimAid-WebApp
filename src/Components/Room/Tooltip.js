@@ -4,7 +4,6 @@ import Card from '@material-ui/core/Card'
 import { CardContent, /* Divider */ } from '@material-ui/core'
 import moment from 'moment'
 import styled from 'styled-components';
-// import { Thermometer } from 'variables/icons'
 import { capitalizeFL } from 'data/functions'
 
 const TCard = styled(Card)`

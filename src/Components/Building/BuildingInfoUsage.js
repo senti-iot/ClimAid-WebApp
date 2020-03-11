@@ -5,7 +5,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import buildingStyles from 'Styles/buildingStyles';
-// import { Notifications } from 'variables/icons';
 
 const BuildingInfoUsage = (props) => {
 	const classes = buildingStyles();
