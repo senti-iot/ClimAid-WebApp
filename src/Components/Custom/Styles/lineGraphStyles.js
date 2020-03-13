@@ -5,14 +5,14 @@ const lineStyles = makeStyles(theme => ({
 		stroke: 'none'
 	},
 	axisText: {
-		fill: 'currentColor',
-		fontWeight: 600,
-		fontSize: '1rem'
+		fill: '#ffffff',
+		fontWeight: 400,
+		fontSize: '16px'
 	},
 	axisTick: {
-		fill: 'currentColor',
-		fontWeight: 600,
-		fontSize: '0.75rem'
+		fill: '#ffffff',
+		fontWeight: 400,
+		fontSize: '16px'
 	},
 	hiddenMedianLine: {
 		stroke: '#fff',

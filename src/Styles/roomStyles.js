@@ -56,7 +56,8 @@ const roomStyles = makeStyles(theme => ({
 	currentReadingsHeader: {
 		fontSize: 24,
 		fontWeight: 'bold',
-		marginBottom: 20,
+		color: '#3c3b4e',
+		marginBottom: 10,
 	},
 	comfortLevelText: {
 		float: 'left',
@@ -126,6 +127,20 @@ const roomStyles = makeStyles(theme => ({
 		borderRadius: 4,
 		padding: 20,
 		marginTop: 20
+	},
+	weatherOnMapContainer: {
+		position: 'absolute',
+		bottom: 20,
+		right: 20,
+		boxSizing: 'border-box',
+		width: 400,
+		fontSize: 14,
+		color: '#afb8c9',
+		// backgroundColor: 'rgba(204, 204, 204, 0.4)',
+		backgroundColor: '#f5f5f5',
+		zIndex: 1200,
+		padding: 20,
+		borderRadius: 4
 	},
 	topDropdown: {
 		// width: '100%',

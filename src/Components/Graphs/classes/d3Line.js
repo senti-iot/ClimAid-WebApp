@@ -106,8 +106,9 @@ class d3Line {
 			}
 		})
 
+		this.generateBackground()
 		this.generateLines()
-		this.generateMedian()
+		// this.generateMedian()
 		this.generateLegend()
 		this.generateDots()
 	}
@@ -138,10 +139,37 @@ class d3Line {
 		this.generateXAxis()
 		this.generateYAxis()
 		this.generateLines()
-		this.generateMedian()
+		// this.generateMedian()
 		this.generateLegend()
 		this.generateDots()
 		// this.yAxis.call(d3.axisLeft(this.y))
+	}
+	generateBackground = () => {
+		var defs = this.svg.append('defs');
+
+		var lg = defs.append('linearGradient')
+			.attr('id', 'Gradient2')
+			.attr('x1', 0)
+			.attr('x2', 0)
+			.attr('y1', 0)
+			.attr('y2', 1);
+
+		lg.append('stop')
+			.attr('offset', '0%')
+			.attr('stop-opacity', '0%')
+			.attr('stop-color', '#fff');
+
+		lg.append('stop')
+			.attr('offset', '100%')
+			.attr('stop-opacity', '20%')
+			.attr('stop-color', '#fff');
+
+		this.svg.append("rect")
+			.attr("x", 85)
+			.attr("y", 45)
+			.attr("width", 'calc(100% - 170px)')
+			.attr("height", 550)
+			.style("fill", "url(#Gradient2)");
 	}
 	generateYAxis = (noDomain) => {
 
@@ -169,7 +197,7 @@ class d3Line {
 
 					yAxis = this.yAxis = this.svg.append("g")
 						.attr('transform', `translate(${this.margin.top + 40}, 0)`)
-						.call(d3.axisLeft(this.y));
+						.call(d3.axisLeft(this.y).tickPadding(10).tickSizeInner(-(this.width - 180)))
 				} else if (count === 2) {
 					if (this.y2 === undefined) {
 						let allData = [].concat(...data.map(d => d.data))
@@ -183,7 +211,7 @@ class d3Line {
 
 					yAxis2 = this.yAxis2 = this.svg.append("g")
 						.attr('transform', `translate(${this.width - 85}, 0)`)
-						.call(d3.axisRight(this.y2));
+						.call(d3.axisRight(this.y2).tickSize(0).tickPadding(10));
 				}
 
 				count++;
@@ -197,7 +225,7 @@ class d3Line {
 
 			if (yAxisType) {
 				yAxis.append('text')
-					.attr('transform', `translate(-40, ${height / 2})`)
+					.attr('transform', `translate(-15, 55)`)
 					.attr('class', classes.axisText)
 					.html(yAxisType)
 			}
@@ -209,7 +237,7 @@ class d3Line {
 
 			if (yAxis2Type) {
 				yAxis2.append('text')
-					.attr('transform', `translate(40, ${height / 2})`)
+					.attr('transform', `translate(5, 55)`)
 					.attr('class', classes.axisText)
 					.html(yAxis2Type)
 			}
@@ -315,7 +343,7 @@ class d3Line {
 			// //Add the X axis
 			this.xAxis = this.svg.append("g")
 				.attr("transform", `translate(0,  ${(height - this.margin.bottom + 5)})`)
-				.call(xAxis_woy);
+				.call(xAxis_woy.tickSize(0));
 
 			// //Append style
 			this.xAxis.selectAll('path').attr('class', classes.axis)
@@ -328,7 +356,7 @@ class d3Line {
 
 			this.xAxisMonths = this.svg.append("g")
 				.attr("transform", "translate(-8," + (height - this.margin.bottom + 26) + ")")
-				.call(xAxis_months);
+				.call(xAxis_months.tickSize(0));
 			this.xAxisMonths.selectAll('path').attr('class', classes.axis)
 			this.xAxisMonths.selectAll('line').attr('class', classes.axis)
 			this.xAxisMonths.selectAll('text').attr('class', classes.axisText)
@@ -670,68 +698,67 @@ class d3Line {
 
 	}
 
-	generateMedian = () => {
-		const { setMedianTooltip } = this.props
-		const classes = this.classes
-		//Median tooltip
-		let data = this.props.data['temperature']
-		var medianTooltip = this.medianTooltip
-		data.forEach((line) => {
+	// generateMedian = () => {
+	// 	const { setMedianTooltip } = this.props
+	// 	const classes = this.classes
+	// 	//Median tooltip
+	// 	let data = this.props.data['temperature']
+	// 	var medianTooltip = this.medianTooltip
+	// 	data.forEach((line) => {
 
-			//Median line
-			if (line.median & !line.noMedianLegend) {
-				let medianData = getMedianLineData(line.data)
-				let medianLine = this.svg.append('path')
-					.data([medianData])
-					// .attr('class', classes.medianLine)
-					.attr('d', this.valueLine)
-					.attr('id', `${line.name}MedianL`)
-					.attr('opacity', this.state[`${line.name}Median`] ? 0 : 1)
-					.attr('stroke-width', '4px')
-					.attr('stroke', line.color)
-					.attr('stroke-dasharray', ("3, 3"))
+	// 		//Median line
+	// 		if (line.median & !line.noMedianLegend) {
+	// 			let medianData = getMedianLineData(line.data)
+	// 			let medianLine = this.svg.append('path')
+	// 				.data([medianData])
+	// 				// .attr('class', classes.medianLine)
+	// 				.attr('d', this.valueLine)
+	// 				.attr('id', `${line.name}MedianL`)
+	// 				.attr('opacity', this.state[`${line.name}Median`] ? 0 : 1)
+	// 				.attr('stroke-width', '4px')
+	// 				.attr('stroke', line.color)
+	// 				.attr('stroke-dasharray', ("3, 3"))
 
-				// Hidden overlay for Median tooltip
-				this.svg.append('path')
-					.data([medianData])
-					.attr('class', classes.hiddenMedianLine)
-					.attr('d', this.valueLine)
-					.attr('id', `${line.name}MedianH`)
-					.style('display', this.state[line.name] ? 'none' : undefined)
-					.on("mouseover", (d) => {
-						if (!this.state[`${line.name}Median`]) {
+	// 			// Hidden overlay for Median tooltip
+	// 			this.svg.append('path')
+	// 				.data([medianData])
+	// 				.attr('class', classes.hiddenMedianLine)
+	// 				.attr('d', this.valueLine)
+	// 				.attr('id', `${line.name}MedianH`)
+	// 				.style('display', this.state[line.name] ? 'none' : undefined)
+	// 				.on("mouseover", (d) => {
+	// 					if (!this.state[`${line.name}Median`]) {
 
-							medianLine.transition()
-								.duration(100)
-								.style('stroke-width', '7px')
+	// 						medianLine.transition()
+	// 							.duration(100)
+	// 							.style('stroke-width', '7px')
 
-							medianTooltip.transition()
-								.duration(200)
-								.style("opacity", 1)
-								.style('z-index', 1040);
+	// 						medianTooltip.transition()
+	// 							.duration(200)
+	// 							.style("opacity", 1)
+	// 							.style('z-index', 1040);
 
-							medianTooltip.style("left", (d3.event.pageX) - 82 + "px")
-								.style("top", (d3.event.pageY) - 41 + "px");
+	// 						medianTooltip.style("left", (d3.event.pageX) - 82 + "px")
+	// 							.style("top", (d3.event.pageY) - 41 + "px");
 
-							setMedianTooltip(d[0])
-						}
+	// 						setMedianTooltip(d[0])
+	// 					}
 
-					}).on("mouseout", function () {
-						// setExpand(false)
-						medianLine.transition()
-							.duration(100)
-							.style('stroke-width', '4px')
-						medianTooltip.transition()
-							.duration(500)
-							.style('z-index', -1)
-							.style("opacity", 0);
-					}).on('click', function () {
-						// setExpand(true)
-					});
-			}
-		})
-
-	}
+	// 				}).on("mouseout", function () {
+	// 					// setExpand(false)
+	// 					medianLine.transition()
+	// 						.duration(100)
+	// 						.style('stroke-width', '4px')
+	// 					medianTooltip.transition()
+	// 						.duration(500)
+	// 						.style('z-index', -1)
+	// 						.style("opacity", 0);
+	// 				}).on('click', function () {
+	// 					// setExpand(true)
+	// 				});
+	// 		}
+	// 	})
+	// }
 	destroy = () => {
 		// this.svg.remove()
 		this.svg.selectAll("*").remove()

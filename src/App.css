@@ -71,3 +71,8 @@ body {
     padding-top: 0px;
     padding-bottom: 0px;
 }
+
+.tick line {
+	stroke: #83c6c3;
+	height: 4px;
+}
