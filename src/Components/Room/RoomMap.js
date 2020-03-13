@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Map, ZoomControl } from 'react-leaflet';
+import { Map } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 
 import buildingStyles from 'Styles/buildingStyles';
 import { climaidApi } from 'data/climaid';
+import WeatherOnMap from 'Components/Room/WeatherOnMap';
 
 function RoomMap(props) {
 	const classes = buildingStyles();
@@ -94,11 +95,14 @@ function RoomMap(props) {
 			zoomControl={false}
 			crs={L.CRS.Simple}
 			scrollWheelZoom={false}
+			touchZoom={false}
+			doubleClickZoom={false}
 			dragging={draggable}
 			className={classes.buildingMap}
 			attributionControl={false}
+			style={{ backgroundColor: '#f5f5f5' }}
 		>
-			<ZoomControl position="bottomright" />
+			<WeatherOnMap room={room} />
 		</Map>
 	);
 }
