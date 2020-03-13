@@ -1,32 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, List, ListItem, ListItemText } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Popover from '@material-ui/core/Popover';
+//, List, ListItem, ListItemText
+import { Grid } from '@material-ui/core';
+// import Button from '@material-ui/core/Button';
+// import Popover from '@material-ui/core/Popover';
 import * as d3 from 'd3';
 import { saveAs } from 'file-saver';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 
 import roomStyles from 'Styles/roomStyles';
-import CurrentTemperatureBar from 'Components/Room/CurrentTemperatureBar';
-import CurrentCo2Bar from 'Components/Room/CurrentCo2Bar';
-import BatteryBar from 'Components/Room/BatteryBar';
+// import CurrentTemperatureBar from 'Components/Room/CurrentTemperatureBar';
+// import CurrentCo2Bar from 'Components/Room/CurrentCo2Bar';
+// import BatteryBar from 'Components/Room/BatteryBar';
 import RoomGraph from 'Components/Room/RoomGraph';
-import Weather from 'Components/Room/Weather';
+// import Weather from 'Components/Room/Weather';
 import ClimateDropdown from 'Components/Room/ClimateDropdown';
 import ExportDropdown from 'Components/Room/ExportDropdown';
-import { getMeassurement, getBatteryStatus, getRoomsInBuilding } from 'data/climaid';
+// import { getMeassurement, getBatteryStatus, getRoomsInBuilding } from 'data/climaid';
 import { CircularLoader } from 'Components';
 
 const RoomGraphContainer = (props) => {
 	const classes = roomStyles();
 	const [loading, setLoading] = useState(false);
-	const [roomValues, setRoomValues] = useState(null);
-	const [batteryLevel, setBatteryLevel] = useState(null);
+	// const [roomValues, setRoomValues] = useState(null);
+	// const [batteryLevel, setBatteryLevel] = useState(null);
 	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true });
-	const [anchorEl, setAnchorEl] = useState(null);
+	// const [anchorEl, setAnchorEl] = useState(null);
 	const [room, setRoom] = useState(null);
-	const [rooms, setRooms] = useState([]);
+	// const [rooms, setRooms] = useState([]);
 	const [alertClipboardSuccess, setAlertClipboardSuccess] = useState(false);
 	const [alertClipboardFail, setAlertClipboardFail] = useState(false);
 	const [alertImageSaveSuccess, setAlertImageSaveSuccess] = useState(false);
@@ -36,31 +37,31 @@ const RoomGraphContainer = (props) => {
 
 		async function fetchData() {
 			setLoading(true);
-			let values = {};
-			await Promise.all(
-				props.room.devices.map(async device => {
-					return await Promise.all(
-						device.gauges.map(async (gauge) => {
-							let value = await getMeassurement(device.device, gauge);
-							values[gauge.type] = value;
-						})
-					)
-				})
-			)
+			// let values = {};
+			// await Promise.all(
+			// 	props.room.devices.map(async device => {
+			// 		return await Promise.all(
+			// 			device.gauges.map(async (gauge) => {
+			// 				let value = await getMeassurement(device.device, gauge);
+			// 				values[gauge.type] = value;
+			// 			})
+			// 		)
+			// 	})
+			// )
 
-			setRoomValues(values);
+			// setRoomValues(values);
 
-			if (props.room.devices.length) {
-				let device = props.room.devices[0];
-				let state = await getBatteryStatus(device.device);
-				setBatteryLevel(Math.round(state));
-			}
+			// if (props.room.devices.length) {
+			// 	let device = props.room.devices[0];
+			// 	let state = await getBatteryStatus(device.device);
+			// 	setBatteryLevel(Math.round(state));
+			// }
 
-			let roomsData = await getRoomsInBuilding(props.room.building.uuid);
+			// let roomsData = await getRoomsInBuilding(props.room.building.uuid);
 
-			if (roomsData) {
-				setRooms(roomsData);
-			}
+			// if (roomsData) {
+			// 	setRooms(roomsData);
+			// }
 
 			setLoading(false);
 		}
@@ -68,13 +69,13 @@ const RoomGraphContainer = (props) => {
 		fetchData();
 	}, [props.room]);
 
-	const changeRoomOpen = event => {
-		setAnchorEl(event.currentTarget);
-	}
+	// const changeRoomOpen = event => {
+	// 	setAnchorEl(event.currentTarget);
+	// }
 
-	const changeRoomClose = () => {
-		setAnchorEl(null);
-	}
+	// const changeRoomClose = () => {
+	// 	setAnchorEl(null);
+	// }
 
 	const handleCheckboxChange = (e) => {
 		let newStates = { ...checkboxStates };
@@ -82,10 +83,10 @@ const RoomGraphContainer = (props) => {
 		setCheckboxStates(newStates);
 	}
 
-	const _changeRoom = (r) => {
-		changeRoomClose();
-		props.changeRoom(r);
-	}
+	// const _changeRoom = (r) => {
+	// 	changeRoomClose();
+	// 	props.changeRoom(r);
+	// }
 
 	const handleAlertClipboardSuccessClose = (event, reason) => {
 		if (reason === 'clickaway') {
@@ -158,8 +159,8 @@ const RoomGraphContainer = (props) => {
 		}
 	};
 
-	const roompopoverOpen = Boolean(anchorEl);
-	const roompopoverId = roompopoverOpen ? 'simple-popover' : undefined;
+	// const roompopoverOpen = Boolean(anchorEl);
+	// const roompopoverId = roompopoverOpen ? 'simple-popover' : undefined;
 
 	return (
 		<>
@@ -175,12 +176,12 @@ const RoomGraphContainer = (props) => {
 							<ExportDropdown saveGraph={saveGraph} />
 						</Grid>
 
-						<Grid item xs={9}>
+						<Grid item xs={12}>
 							<div id="graphContainer" className={classes.graphContainer}>
 								<RoomGraph loading={loading} checkboxStates={checkboxStates} room={room} />
 							</div>
 						</Grid>
-						<Grid item xs={3}>
+						{/* <Grid item xs={3}>
 							{rooms.length ?
 								<div className={classes.currentRoomContainer}>
 									<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
@@ -257,10 +258,10 @@ const RoomGraphContainer = (props) => {
 
 							<Grid item xs={12}>
 								<Weather room={room} />
-							</Grid>
-						</Grid>
+							</Grid> */}
+						{/* </Grid> */}
 					</Grid>
-					<Popover
+					{/* <Popover
 						id={roompopoverId}
 						open={roompopoverOpen}
 						anchorEl={anchorEl}
@@ -286,7 +287,7 @@ const RoomGraphContainer = (props) => {
 								</ListItem>
 							})}
 						</List>
-					</Popover>
+					</Popover> */}
 
 					<Snackbar open={alertClipboardSuccess} autoHideDuration={3000} onClose={handleAlertClipboardSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
 						<Alert onClose={handleAlertClipboardSuccessClose} severity="success" elevation={6} variant="filled">Billede er gemt i udklipsholderen!</Alert>
