@@ -165,9 +165,9 @@ class d3Line {
 			.attr('stop-color', '#fff');
 
 		this.svg.append("rect")
-			.attr("x", 85)
+			.attr("x", 90)
 			.attr("y", 45)
-			.attr("width", 'calc(100% - 170px)')
+			.attr("width", 'calc(100% - 180px)')
 			.attr("height", 550)
 			.style("fill", "url(#Gradient2)");
 	}
@@ -197,7 +197,7 @@ class d3Line {
 
 					yAxis = this.yAxis = this.svg.append("g")
 						.attr('transform', `translate(${this.margin.top + 40}, 0)`)
-						.call(d3.axisLeft(this.y).tickPadding(10).tickSizeInner(-(this.width - 180)))
+						.call(d3.axisLeft(this.y).tickPadding(5).tickSizeInner(-(this.width - 180)))
 				} else if (count === 2) {
 					if (this.y2 === undefined) {
 						let allData = [].concat(...data.map(d => d.data))
@@ -211,7 +211,7 @@ class d3Line {
 
 					yAxis2 = this.yAxis2 = this.svg.append("g")
 						.attr('transform', `translate(${this.width - 85}, 0)`)
-						.call(d3.axisRight(this.y2).tickSize(0).tickPadding(10));
+						.call(d3.axisRight(this.y2).tickSize(0).tickPadding(5));
 				}
 
 				count++;
@@ -225,7 +225,7 @@ class d3Line {
 
 			if (yAxisType) {
 				yAxis.append('text')
-					.attr('transform', `translate(-15, 55)`)
+					.attr('transform', `translate(-15, 40)`)
 					.attr('class', classes.axisText)
 					.html(yAxisType)
 			}
@@ -237,7 +237,7 @@ class d3Line {
 
 			if (yAxis2Type) {
 				yAxis2.append('text')
-					.attr('transform', `translate(5, 55)`)
+					.attr('transform', `translate(5, 40)`)
 					.attr('class', classes.axisText)
 					.html(yAxis2Type)
 			}
@@ -343,7 +343,7 @@ class d3Line {
 			// //Add the X axis
 			this.xAxis = this.svg.append("g")
 				.attr("transform", `translate(0,  ${(height - this.margin.bottom + 5)})`)
-				.call(xAxis_woy.tickSize(0));
+				.call(xAxis_woy.tickSize(0).tickPadding(5));
 
 			// //Append style
 			this.xAxis.selectAll('path').attr('class', classes.axis)
@@ -356,7 +356,7 @@ class d3Line {
 
 			this.xAxisMonths = this.svg.append("g")
 				.attr("transform", "translate(-8," + (height - this.margin.bottom + 26) + ")")
-				.call(xAxis_months.tickSize(0));
+				.call(xAxis_months.tickSize(0).tickPadding(5));
 			this.xAxisMonths.selectAll('path').attr('class', classes.axis)
 			this.xAxisMonths.selectAll('line').attr('class', classes.axis)
 			this.xAxisMonths.selectAll('text').attr('class', classes.axisText)
