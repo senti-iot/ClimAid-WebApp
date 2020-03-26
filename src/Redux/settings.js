@@ -113,7 +113,7 @@ export const saveSettingsOnServ = () => {
 		user.aux = user.aux ? user.aux : {}
 		user.aux.sentiWaterworks = user.aux.sentiWaterworks ? user.aux.sentiWaterworks : {}
 		user.aux.sentiWaterworks.settings = settings
-		user.aux.odeum.language = s.language
+		user.internal.odeum.language = s.language
 		var saved = await saveSettings(user);
 		dispatch({
 			type: SAVESETTINGS,
@@ -125,7 +125,7 @@ export const getSettings = async () => {
 	return async (dispatch, getState) => {
 		var sessionCookie = cookie.load('SESSION') ? cookie.load('SESSION') : null
 		if (sessionCookie) {
-			let vSession = await getValidSession(sessionCookie.userID).then(rs => rs.status)
+			let vSession = await getValidSession().then(rs => rs.status)
 			if (vSession === 200) {
 
 				let exp = moment().add('1', 'day')
@@ -138,7 +138,7 @@ export const getSettings = async () => {
 		}
 
 		var userId = cookie.load('SESSION') ? cookie.load('SESSION').userID : 0
-		var user = userId !== 0 ? await getUser(userId) : null
+		var user = userId !== 0 ? await getUser() : null
 
 		var settings = get('settings') ? get('settings') :
 			user ?
@@ -156,21 +156,21 @@ export const getSettings = async () => {
 		if (user) {
 			// dispatch(await getAllData(true, user.org.id, user.privileges.apisuperuser ? true : false))
 			if (settings) {
-				moment.locale(user.aux.odeum.language === 'en' ? 'en-gb' : user.aux.odeum.language)
+				moment.locale(user.internal.odeum.language === 'en' ? 'en-gb' : user.internal.odeum.language)
 				dispatch({
 					type: GetSettings,
 					settings: {
 						...user.aux.sentiWaterworks.settings,
-						language: user.aux.odeum.language
+						language: user.internal.odeum.language
 					},
 					user
 				})
 			}
 			else {
-				moment.locale(user.aux.odeum.language === 'en' ? 'en-gb' : user.aux.odeum.language)
+				moment.locale(user.internal.odeum.language === 'en' ? 'en-gb' : user.internal.odeum.language)
 				let s = {
 					...getState().settings,
-					language: user.aux.odeum.language
+					language: user.internal.odeum.language
 				}
 				dispatch({
 					type: NOSETTINGS,

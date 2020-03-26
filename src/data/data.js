@@ -17,15 +17,9 @@ const encrypt = (text) => {
 
 let backendHost;
 
-const hostname = window && window.location && window.location.hostname;
+//const hostname = window && window.location && window.location.hostname;
 
-if (hostname === 'console.senti.cloud') {
-	backendHost = 'https://senti.cloud/rest/';
-} else if (hostname === 'beta.senti.cloud') {
-	backendHost = 'https://betabackend.senti.cloud/rest/';
-} else {
-	backendHost = 'https://betabackend.senti.cloud/rest/';
-}
+backendHost = 'https://dev.services.senti.cloud/core';
 
 export const loginApi = create({
 	baseURL: backendHost,
@@ -79,16 +73,16 @@ export const api = create({
 	headers: {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
-		'ODEUMAuthToken': '',
+		'Authorization': '',
 		// 'Cache-Control': 'public, max-age=86400'
 	},
 })
 
 export const setToken = () => {
 	try {
-		var OAToken = cookie.load('SESSION').sessionID
-		api.setHeader('ODEUMAuthToken', OAToken)
-		return true
+		let token = cookie.load('SESSION').token;
+		api.setHeader('Authorization', 'Bearer ' + token);
+		return true;
 	}
 	catch (error) {
 		return false
@@ -100,7 +94,7 @@ setToken()
 //#region Senti Services
 
 export const servicesAPI = create({
-	baseURL: 'https://services.senti.cloud/databroker',
+	baseURL: 'https://dev.services.senti.cloud/databroker',
 	timeout: 30000,
 	headers: {
 		'auth': encrypt(process.env.REACT_APP_ENCRYPTION_KEY),

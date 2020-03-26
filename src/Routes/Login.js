@@ -50,15 +50,15 @@ function Login() {
 	//TODO
 	const handleLoginUser = async () => {
 		await loginUser(user, pass, orgId).then(async rs => {
+			console.log(rs);
 			if (rs) {
+				
 				let exp = moment().add('1', 'day')
 				cookie.save('SESSION', rs, { path: '/', expires: exp.toDate() })
-				if (rs.isLoggedIn) {
-					if (setToken()) {
-						await redux.getSettings()
-						var prevURL = location.state ? location.state.prevURL : null
-						history.push(prevURL ? prevURL : /* defaultRoute */ '/')
-					}
+				if (setToken()) {
+					await redux.getSettings()
+					var prevURL = location.state ? location.state.prevURL : null
+					history.push(prevURL ? prevURL : /* defaultRoute */ '/')
 				}
 			}
 			else {

@@ -11,19 +11,17 @@ export const getAllUsers = async () => {
 	})
 	return data
 }
-export const getValidSession = async (userId) => {
-	var data = await api.get(`core/user/${userId}`).then(rs => rs)
+export const getValidSession = async () => {
+	var data = await api.get(`/v2/auth`).then(rs => rs)
 	return data
 }
-export const getUser = async (userId) => {
-	var data = await api.get(`core/user/${userId}`).then(rs => rs.data)
+export const getUser = async () => {
+	var data = await api.get(`/v2/auth/user`).then(rs => rs.data)
 	return data
 }
-export const createUser = async (user) => {
-	let response = await api.post(`core/user`, user).then(rs => rs)
-	return response.data ? response.data : response.status
-}
-
-
+// export const createUser = async (user) => {
+// 	let response = await api.post(`core/user`, user).then(rs => rs)
+// 	return response.data ? response.data : response.status
+// }
 
 //#endregion

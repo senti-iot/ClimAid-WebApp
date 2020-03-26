@@ -134,10 +134,10 @@ export const getDeviceOnlineStatus = async (device) => {
 	const startDate = moment().subtract(20, 'minutes').format('YYYY-MM-DD HH:mm:ss');
 	const endDate = moment().format('YYYY-MM-DD HH:mm:ss');
 
-	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + startDate + '/' + endDate + '/temperature').then(rs => rs.data);
+	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + startDate + '/' + endDate + '/temperature/0').then(rs => rs.data);
 
 	let status = false;
-	if (data.length) {
+	if (data && Object.keys(data).length) {
 		status = true;
 	}
 

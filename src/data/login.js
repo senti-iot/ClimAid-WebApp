@@ -7,7 +7,7 @@ import cookie from 'react-cookies';
  * @param {String} password
  */
 export const loginUser = async (username, password, organisationId) => {
-	var session = await loginApi.post('odeum/auth/organization', JSON.stringify({ username: username, password: password, orgNickname: organisationId })).then(rs => rs.data)
+	var session = await loginApi.post('/v2/auth/organisation', JSON.stringify({ username: username, password: password, orgNickname: organisationId })).then(rs => rs.data)
 	return session
 }
 export const loginUserViaGoogle = async (token) => {
@@ -19,7 +19,7 @@ export const loginUserViaGoogle = async (token) => {
  */
 export const logOut = async () => {
 	var session = cookie.load('SESSION')
-	var data = await loginApi.delete(`odeum/auth/${session.sessionID}`)
+	var data = await loginApi.delete(`/v2/auth/${session.token}`)
 	cookie.remove('SESSION')
 	return data
 }
@@ -28,20 +28,20 @@ export const logOut = async () => {
  * @param {object} obj
  * @param {String} obj.email User's e-mail
  */
-export const resetPassword = async (obj) => {
-	let response = await api.post(`/core/user/forgotpassword`, obj).then(rs => rs)
-	return response.ok ? response.data : response.status
-}
+// export const resetPassword = async (obj) => {
+// 	let response = await api.post(`/user/forgotpassword`, obj).then(rs => rs)
+// 	return response.ok ? response.data : response.status
+// }
 /**
  *
  * @param {object} obj
  * @param {String} obj.newPassword New Password
  * @param {String} obj.passwordToken Confirm new password token
  */
-export const confirmPassword = async (obj) => {
-	let response = await api.post(`/core/user/forgotpassword/set`, obj).then(rs => rs)
-	return response.ok ? response.data : response.status
-}
+// export const confirmPassword = async (obj) => {
+// 	let response = await api.post(`/user/forgotpassword/set`, obj).then(rs => rs)
+// 	return response.ok ? response.data : response.status
+// }
 /**
  *
  * @param {object} obj
@@ -49,10 +49,10 @@ export const confirmPassword = async (obj) => {
  * @param {String} obj.oldPassword Old Password - Not required
  * @param {String} obj.newPassword New Password
  */
-export const setPassword = async (obj) => {
-	let data = await api.post(`/core/user/setpassword`, obj).then(rs => rs.data)
-	return data
-}
+// export const setPassword = async (obj) => {
+// 	let data = await api.post(`/user/setpassword`, obj).then(rs => rs.data)
+// 	return data
+// }
 /**
  *
  * @param {object} user
@@ -61,6 +61,6 @@ export const setPassword = async (obj) => {
  * @param {object} user.aux.odeum
  */
 export const saveSettings = async (user) => {
-	var data = await api.put(`/core/user/${user.id}`, user).then(rs => rs.data)
+	var data = await api.put(`/user/${user.id}`, user).then(rs => rs.data)
 	return data
 }
