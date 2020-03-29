@@ -25,7 +25,7 @@ const WeatherOnMap = (props) => {
 
 	return (
 		<>
-			{weather &&
+			{weather ? 
 				<div className={classes.weatherOnMapContainer}>
 					<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
 						<Grid item xs={9}><div className={classes.currentReadingsHeader}>Vejret</div></Grid>
@@ -38,7 +38,7 @@ const WeatherOnMap = (props) => {
 						<Grid item xs={7}>Fugtighed: {weather.currently.humidity * 100}%</Grid>
 					</Grid>
 				</div>
-			}
+				: '' }
 		</>
 	)
 }

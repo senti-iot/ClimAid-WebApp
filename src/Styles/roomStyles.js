@@ -138,7 +138,7 @@ const roomStyles = makeStyles(theme => ({
 		color: '#afb8c9',
 		// backgroundColor: 'rgba(204, 204, 204, 0.4)',
 		backgroundColor: '#f5f5f5',
-		zIndex: 1200,
+		zIndex: 1000,
 		padding: 20,
 		borderRadius: 4
 	},
