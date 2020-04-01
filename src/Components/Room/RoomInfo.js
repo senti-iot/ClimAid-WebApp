@@ -18,12 +18,14 @@ const RoomInfo = (props) => {
 			let values = {};
 			await Promise.all(
 				room.devices.map(async device => {
-					return await Promise.all(
-						device.gauges.map(async (gauge) => {
-							let value = await getMeassurement(device.device, gauge);
-							values[gauge.uuid] = value;
-						})
-					)
+					if (device.gauges && device.gauges.length) {
+						return await Promise.all(
+							device.gauges.map(async (gauge) => {
+								let value = await getMeassurement(device.device, gauge);
+								values[gauge.uuid] = value;
+							})
+						)
+					}
 				})
 			)
 
@@ -49,27 +51,30 @@ const RoomInfo = (props) => {
 					</ItemG>
 
 					{roomValues ?
+						// eslint-disable-next-line array-callback-return
 						room.devices.map(device => {
-							return device.gauges.map((gauge, index) => {
-								let value = roomValues[gauge.uuid];
-								//align={index % 2 ? "right" : "left" }
-								return (
-									<ItemG xs={12} key={index} align="center">
-										{value && <GradientGauge
-											ringWidth={7}
-											maxSegmentLabels={gauge.segments}
-											segments={1}
-											minValue={gauge.minValue}
-											maxValue={gauge.maxValue}
-											value={value}
-											valueTextFontSize="35"
-											width={250}
-											height={240}
-											topLabel={gauge.topLabel}
-											unitLabel={gauge.unitLabel}
-										/>}
-									</ItemG>
-								)})
+							if (device.gauges && device.gauges.length) {
+								return device.gauges.map((gauge, index) => {
+									let value = roomValues[gauge.uuid];
+									//align={index % 2 ? "right" : "left" }
+									return (
+										<ItemG xs={12} key={index} align="center">
+											{value && <GradientGauge
+												ringWidth={7}
+												maxSegmentLabels={gauge.segments}
+												segments={1}
+												minValue={gauge.minValue}
+												maxValue={gauge.maxValue}
+												value={value}
+												valueTextFontSize="35"
+												width={250}
+												height={240}
+												topLabel={gauge.topLabel}
+												unitLabel={gauge.unitLabel}
+											/>}
+										</ItemG>
+									)})
+							}
 						})
 						: <CircularLoader fill />}
 				</Grid>

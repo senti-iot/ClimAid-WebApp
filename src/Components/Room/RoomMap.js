@@ -59,7 +59,7 @@ function RoomMap(props) {
 			let markers = [];
 			// eslint-disable-next-line array-callback-return
 			room.devices.map(device => {
-				if (device.position.length) {
+				if (device.position && device.position.length) {
 					let position = device.position.split(',');
 					markers.push(L.marker({ lat: position[0], lng: position[1] }, { icon: markerIconGood }));
 				}

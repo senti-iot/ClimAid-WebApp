@@ -82,6 +82,7 @@ export const setToken = () => {
 	try {
 		let token = cookie.load('SESSION').token;
 		api.setHeader('Authorization', 'Bearer ' + token);
+		servicesAPI.setHeader('Authorization', 'Bearer ' + token);
 		return true;
 	}
 	catch (error) {
@@ -89,9 +90,7 @@ export const setToken = () => {
 	}
 
 }
-setToken()
 
-//#region Senti Services
 
 export const servicesAPI = create({
 	baseURL: 'https://dev.services.senti.cloud/databroker',
@@ -114,4 +113,5 @@ export const dataExportAPI = create({
 		'Content-Type': 'application/json'
 	}
 })
-//#endregion
+
+setToken();

@@ -118,7 +118,7 @@ export const getMeassurement = async (device, gauge) => {
 			break;
 	}
 
-	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + from + '/' + to + '/' + gauge.type + '/' + gauge.function).then(rs => rs.data);
+	let data = await servicesAPI.get('/v2/devicedata-clean/' + device + '/' + from + '/' + to + '/' + gauge.type + '/' + gauge.function).then(rs => rs.data);
 	return data;
 };
 
@@ -126,7 +126,7 @@ export const getBatteryStatus = async (device) => {
 	const startDate = moment().subtract(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
 	const endDate = moment().format('YYYY-MM-DD HH:mm:ss');
 
-	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + startDate + '/' + endDate + '/batteristatus/57').then(rs => rs.data);
+	let data = await servicesAPI.get('/v2/devicedata-clean/' + device + '/' + startDate + '/' + endDate + '/batteristatus/57').then(rs => rs.data);
 	return data;
 };
 
@@ -134,7 +134,7 @@ export const getDeviceOnlineStatus = async (device) => {
 	const startDate = moment().subtract(20, 'minutes').format('YYYY-MM-DD HH:mm:ss');
 	const endDate = moment().format('YYYY-MM-DD HH:mm:ss');
 
-	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + startDate + '/' + endDate + '/temperature/0').then(rs => rs.data);
+	let data = await servicesAPI.get('/v2/devicedata-clean/' + device + '/' + startDate + '/' + endDate + '/temperature/0').then(rs => rs.data);
 
 	let status = false;
 	if (data && Object.keys(data).length) {
@@ -150,7 +150,7 @@ export const getDeviceDataConverted = async (device, period, type) => {
 		cloudFunction = 14;
 	}
 
-	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + period.from + '/' + period.to + '/' + type + '/' + cloudFunction).then(rs => rs.data);
+	let data = await servicesAPI.get('/v2/devicedata-clean/' + device + '/' + period.from + '/' + period.to + '/' + type + '/' + cloudFunction).then(rs => rs.data);
 
 	let convertedData = [];
 	Object.keys(data).map(key => (
@@ -160,3 +160,41 @@ export const getDeviceDataConverted = async (device, period, type) => {
 	return convertedData;
 };
 
+export const getbuildingColorData = async (devices, period) => {
+	const from = moment().startOf(period).format('YYYY-MM-DD HH:mm:ss');
+	const to = moment().endOf(period).format('YYYY-MM-DD HH:mm:ss');
+
+	const config = {
+		"T_ben1": 19,
+		"T_ben2": 20,
+		"T_ben3": 21,
+		"T_ben4": 22,
+		"T_ben5": 24.5,
+		"T_ben6": 26,
+		"T_an_min": 21,
+		"T_an_max": 24.5,
+		"RH_ben1": 15,
+		"RH_ben2": 25,
+		"RH_ben3": 30,
+		"RH_ben4": 65,
+		"RH_ben5": 75,
+		"RH_ben6": 85,
+		"RH_an_min": null,
+		"RH_an_max": null,
+		"CO2_ben1": 800,
+		"CO2_ben2": 1000,
+		"CO2_ben3": 1200,
+		"CO2_an_max": 1000
+	};
+
+	let data = await servicesAPI.post('/v2/climaidinsight/colorstate/building/' + from + '/' + to + '/', { "devices": devices, "config": config }).then(rs => rs.data);
+	return data;
+}
+
+// export const getLatestReading = async (device, type) => {
+// 	const from = moment().subtract(5, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+// 	const to = moment().format('YYYY-MM-DD HH:mm:ss');
+
+// 	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + from + '/' + to + '/' + type + '/0').then(rs => rs.data);
+// 	return data;
+// }

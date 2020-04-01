@@ -11,13 +11,13 @@ import { Grid } from '@material-ui/core';
 
 import { MeetingRoom, ArrowForward, ArrowBack } from 'variables/icons';
 import otherStyles from 'Styles/otherStyles';
-import { getBuildings } from 'data/climaid';
+import { getBuildings, getbuildingColorData, getBuildingDevices } from 'data/climaid';
 import MapPopupBuilding from 'Components/Map/MapPopupBuilding';
 import { useSelector } from 'Hooks';
 import { ItemG } from 'Components';
 
 const MapContainer = (props) => {
-	const [buildings, setBuildings] = useState([]);
+	const [buildings, setBuildings] = useState(null);
 	const [displayOverlay, setDisplayOverlay] = useState(false);
 	const mapRef = useRef(null);
 	const groupRef = useRef(null);
@@ -33,17 +33,40 @@ const MapContainer = (props) => {
 		}
 	});
 
-	const markerIconGood = new markerIcon({ iconUrl: '/images/marker1.svg' });
-	// const markerIconAcceptable = new markerIcon({ iconUrl: '/images/marker2.svg' });
-	// const markerIconUnacceptable = new markerIcon({ iconUrl: '/images/marker3.svg' });
-	// const markerIconVeryUnacceptable = new markerIcon({ iconUrl: '/images/marker4.svg' });
-
 	useEffect(() => {
 		async function fetchData() {
 			const data = await getBuildings();
 
 			if (data) {
-				setBuildings(data);
+				let buildingsWithColor = [];
+
+				await Promise.all(
+					data.map(async building => {
+						let devicesFiltered = [];
+						const devices = await getBuildingDevices(building.uuid);
+						// eslint-disable-next-line array-callback-return
+						devices.map(device => {
+							if (device.type === 'data') {
+								devicesFiltered.push(device.device);
+							}
+						})
+						console.log(devicesFiltered);
+						if (devicesFiltered.length) {
+							let colorData = await getbuildingColorData(devicesFiltered, 'hour');
+
+							if (colorData && colorData.length) {
+								console.log(colorData[0].color);
+								building.color = colorData[0].color;
+							} else {
+								building.color = 1;
+							}
+						}
+
+						buildingsWithColor.push(building);
+					})
+				);
+
+				setBuildings(buildingsWithColor);
 			}
 		}
 
@@ -169,7 +192,7 @@ const MapContainer = (props) => {
 					<FeatureGroup ref={groupRef}>
 						{buildings.map(building => {
 							return (
-								<Marker key={building.uuid} position={building.latlong.split(',')} icon={markerIconGood}>
+								<Marker key={building.uuid} position={building.latlong.split(',')} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })}>
 									<Popup maxWidth={400} maxHeight={550} closeButton="">
 										<MapPopupBuilding building={building} history={props.history} />
 									</Popup>
