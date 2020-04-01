@@ -10,7 +10,7 @@ import { getRoomsInBuilding } from 'data/climaid';
 const MapPopupBuilding = (props) => {
 	const classes = otherStyles();
 	const building = props.building;
-	const [rooms, setRooms] = useState([]);
+	const [rooms, setRooms] = useState(null);
 
 	useEffect(() => {
 		async function fetchData() {
@@ -45,7 +45,7 @@ const MapPopupBuilding = (props) => {
 			
 			<BuildingInfoUsage building={building} />
 
-			{rooms && <BuildingInfoRoom handleRoomClick={handleRoomClick} building={building} rooms={rooms} />}
+			{rooms ? <BuildingInfoRoom handleRoomClick={handleRoomClick} building={building} rooms={rooms} /> : ""}
 		</div>
 	)
 }

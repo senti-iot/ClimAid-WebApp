@@ -15,8 +15,9 @@ import roomStyles from 'Styles/roomStyles';
 import RoomGraph from 'Components/Room/RoomGraph';
 // import Weather from 'Components/Room/Weather';
 import ClimateDropdown from 'Components/Room/ClimateDropdown';
+import UserExperienceDropdown from 'Components/Room/UserExperienceDropdown';
 import ExportDropdown from 'Components/Room/ExportDropdown';
-// import { getMeassurement, getBatteryStatus, getRoomsInBuilding } from 'data/climaid';
+import { getRoomsInBuilding } from 'data/climaid';
 import { CircularLoader } from 'Components';
 
 const RoomGraphContainer = (props) => {
@@ -24,10 +25,10 @@ const RoomGraphContainer = (props) => {
 	const [loading, setLoading] = useState(false);
 	// const [roomValues, setRoomValues] = useState(null);
 	// const [batteryLevel, setBatteryLevel] = useState(null);
-	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true });
+	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true, 'userexperience': [] });
 	// const [anchorEl, setAnchorEl] = useState(null);
 	const [room, setRoom] = useState(null);
-	// const [rooms, setRooms] = useState([]);
+	const [rooms, setRooms] = useState([]);
 	const [alertClipboardSuccess, setAlertClipboardSuccess] = useState(false);
 	const [alertClipboardFail, setAlertClipboardFail] = useState(false);
 	const [alertImageSaveSuccess, setAlertImageSaveSuccess] = useState(false);
@@ -57,11 +58,11 @@ const RoomGraphContainer = (props) => {
 			// 	setBatteryLevel(Math.round(state));
 			// }
 
-			// let roomsData = await getRoomsInBuilding(props.room.building.uuid);
+			let roomsData = await getRoomsInBuilding(props.room.building.uuid);
 
-			// if (roomsData) {
-			// 	setRooms(roomsData);
-			// }
+			if (roomsData) {
+				setRooms(roomsData);
+			}
 
 			setLoading(false);
 		}
@@ -80,6 +81,12 @@ const RoomGraphContainer = (props) => {
 	const handleCheckboxChange = (e) => {
 		let newStates = { ...checkboxStates };
 		newStates[e.target.value] = (newStates[e.target.value]) ? false : true;
+		setCheckboxStates(newStates);
+	}
+
+	const handleuserExperienceChange = (e) => {
+		let newStates = { ...checkboxStates };
+		newStates['userexperience'][e.target.value] = (newStates['userexperience'][e.target.value]) ? false : true;
 		setCheckboxStates(newStates);
 	}
 
@@ -170,7 +177,10 @@ const RoomGraphContainer = (props) => {
 						<Grid item xs={3} xl={2}>
 							<ClimateDropdown onChange={handleCheckboxChange} checkboxStates={checkboxStates} />
 						</Grid>
-						<Grid item xs={6} xl={8}>
+						<Grid item xs={3} xl={2}>
+							{rooms ? <UserExperienceDropdown onChange={handleuserExperienceChange} checkboxStates={checkboxStates} rooms={rooms} /> : ""}
+						</Grid>
+						<Grid item xs={3} xl={6}>
 						</Grid>
 						<Grid item xs={3} xl={2}>
 							<ExportDropdown saveGraph={saveGraph} />

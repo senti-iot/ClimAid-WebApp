@@ -24,6 +24,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 	const t = useLocalization();
 	const classes = lineStyles({ id: props.id });
 	const room = props.room;
+	const checkboxStates = props.checkboxStates;
 
 	useEffect(() => {
 		setLoading(true);
@@ -70,15 +71,17 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						if (key === 'tempavgbuilding') {
 							let combinedData = {};
 							await Promise.all(
-								devices.map(async deviceId => {
-									let deviceData = await getDeviceDataConverted(deviceId, period, 'temperature');
-									deviceData.map(data => {
-										if (!combinedData[data.date]) {
-											combinedData[data.date] = parseFloat(data.value);
-										} else {
-											combinedData[data.date] += parseFloat(data.value);
-										}
-									});
+								devices.map(async device => {
+									if (device.type === 'data') {
+										let deviceData = await getDeviceDataConverted(device.device, period, 'temperature');
+										deviceData.map(data => {
+											if (!combinedData[data.date]) {
+												combinedData[data.date] = parseFloat(data.value);
+											} else {
+												combinedData[data.date] += parseFloat(data.value);
+											}
+										});
+									}
 								})
 							);
 
@@ -93,15 +96,17 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						if (key === 'co2avgbuilding') {
 							let combinedData = {};
 							await Promise.all(
-								devices.map(async deviceId => {
-									let deviceData = await getDeviceDataConverted(deviceId, period, 'co2');
-									deviceData.map(data => {
-										if (!combinedData[data.date]) {
-											combinedData[data.date] = parseFloat(data.value);
-										} else {
-											combinedData[data.date] += parseFloat(data.value);
-										}
-									});
+								devices.map(async device => {
+									if (device.type === 'data') {
+										let deviceData = await getDeviceDataConverted(device.device, period, 'co2');
+										deviceData.map(data => {
+											if (!combinedData[data.date]) {
+												combinedData[data.date] = parseFloat(data.value);
+											} else {
+												combinedData[data.date] += parseFloat(data.value);
+											}
+										});
+									}
 								})
 							);
 
@@ -116,15 +121,17 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						if (key === 'humidityavgbuilding') {
 							let combinedData = {};
 							await Promise.all(
-								devices.map(async deviceId => {
-									let deviceData = await getDeviceDataConverted(deviceId, period, 'humidity');
-									deviceData.map(data => {
-										if (!combinedData[data.date]) {
-											combinedData[data.date] = parseFloat(data.value);
-										} else {
-											combinedData[data.date] += parseFloat(data.value);
-										}
-									});
+								devices.map(async device => {
+									if (device.type === 'data') {
+										let deviceData = await getDeviceDataConverted(device.device, period, 'humidity');
+										deviceData.map(data => {
+											if (!combinedData[data.date]) {
+												combinedData[data.date] = parseFloat(data.value);
+											} else {
+												combinedData[data.date] += parseFloat(data.value);
+											}
+										});
+									}
 								})
 							);
 
@@ -139,21 +146,58 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						if (key === 'batteryavgbuilding') {
 							let combinedData = {};
 							await Promise.all(
-								devices.map(async deviceId => {
-									let deviceData = await getDeviceDataConverted(deviceId, period, 'batteristatus');
-									deviceData.map(data => {
-										if (!combinedData[data.date]) {
-											combinedData[data.date] = parseFloat(data.value);
-										} else {
-											combinedData[data.date] += parseFloat(data.value);
-										}
-									});
+								devices.map(async device => {
+									if (device.type === 'data') {
+										let deviceData = await getDeviceDataConverted(device.device, period, 'batteristatus');
+										deviceData.map(data => {
+											if (!combinedData[data.date]) {
+												combinedData[data.date] = parseFloat(data.value);
+											} else {
+												combinedData[data.date] += parseFloat(data.value);
+											}
+										});
+									}
 								})
 							);
 
 							Object.entries(combinedData).map(value => {
 								batteryAvgData.push({ date: value[0], value: value[1] / devices.length });
 							});
+						}
+
+						if (key === 'userexperience') {
+							let combinedData = {};
+							if (checkboxStates['userexperience']['warm'] ||
+								checkboxStates['userexperience']['cold'] ||
+								checkboxStates['userexperience']['windy'] ||
+								checkboxStates['userexperience']['heavyair'] ||
+								checkboxStates['userexperience']['concentration'] ||
+								checkboxStates['userexperience']['tired'] ||
+								checkboxStates['userexperience']['itchyeyes'] ||
+								checkboxStates['userexperience']['lighting'] ||
+								checkboxStates['userexperience']['blinded'] ||
+								checkboxStates['userexperience']['noise']) {
+								devices = await getBuildingDevices(room.building.uuid);
+								console.log(checkboxStates['userexperience']);
+								await Promise.all(
+									checkboxStates['userexperience'].map(type => {
+										console.log(type);
+										devices.map(async device => {
+											if (device.type === 'userdata') {
+												let deviceData = await getDeviceDataConverted(device.device, period, type);
+												deviceData.map(data => {
+													if (!combinedData[type][data.date]) {
+														combinedData[type][data.date] = parseInt(data.value);
+													} else {
+														combinedData[type][data.date] += parseInt(data.value);
+													}
+												});
+											}
+										})
+									})
+								)
+								console.log(combinedData);
+							}
 						}
 
 						if (props.checkboxStates[key]) {

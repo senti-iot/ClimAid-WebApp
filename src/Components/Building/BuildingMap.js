@@ -3,14 +3,18 @@ import { Map, ZoomControl } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import CloseTwoToneIcon from '@material-ui/icons/CloseTwoTone';
+import Button from '@material-ui/core/Button';
+import Backdrop from '@material-ui/core/Backdrop';
 
 import buildingStyles from 'Styles/buildingStyles';
 import RoomInfo from 'Components/Room/RoomInfo';
-import { climaidApi } from 'data/climaid';
+import { climaidApi, getRoomColorData } from 'data/climaid';
+import ComfortChart from 'Components/Building/ComfortChart';
 
 function BuildingMap(props) {
 	const [showingRoom, setShowingRoom] = useState(null);
 	const [draggable, setDraggable] = useState(false);
+	const [comfortDiagramOpen, setComfortDiagramOpen] = useState(false);
 	const classes = buildingStyles();
 	const mapRef = useRef(null);
 	const building = props.building;
@@ -23,12 +27,7 @@ function BuildingMap(props) {
 		}
 	});
 
-	const markerIconGood = new markerIcon({ iconUrl: '/images/marker1.svg' });
-	// const markerIconAcceptable = new markerIcon({ iconUrl: '/images/marker2.svg' });
-	// const markerIconUnacceptable = new markerIcon({ iconUrl: '/images/marker3.svg' });
-	// const markerIconVeryUnacceptable = new markerIcon({ iconUrl: '/images/marker4.svg' });
-
-	const colors = { good: 'rgba(63,191,173,0.8)', acceptable: 'rgba(226,129,23,0.8)', unacceptable: 'rgba(209,70,61,0.8)', veryunacceptable: 'rgba(229,99,99,0.8)' }
+	const colors = ['rgba(63,191,173,0.8)', 'rgba(226,129,23,0.8)', 'rgba(209,70,61,0.8)', 'rgba(229,99,99,0.8)'];
 
 	useEffect(() => {
 		//leaflet hack to fix marker images
@@ -75,17 +74,28 @@ function BuildingMap(props) {
 			});
 
 			// eslint-disable-next-line array-callback-return
-			rooms.map(room => {
+			rooms.map(async room => {
 				if (room.bounds.length) {
+					let device = null;
+					let color = 0;
+					if (room.devices.length) {
+						device = room.devices[0];
+						let colorData = await getRoomColorData([device.device]);
+
+						if (colorData) {
+							color = colorData.color;
+						}
+					}
+
 					let roomOverlay;
 					if (room.bounds.length > 2) {
-						roomOverlay = L.polygon(room.bounds, { color: colors.good, weight: 1 });
+						roomOverlay = L.polygon(room.bounds, { color: colors[color - 1], weight: 1 });
 					} else {
-						roomOverlay = L.rectangle(room.bounds, { color: colors.good, weight: 1 });
+						roomOverlay = L.rectangle(room.bounds, { color: colors[color - 1], weight: 1 });
 					}
 					layerGroup.addLayer(roomOverlay);
 
-					const marker = L.marker(roomOverlay.getBounds().getCenter(), { icon: markerIconGood }).on('click', function () {
+					const marker = L.marker(roomOverlay.getBounds().getCenter(), { icon: new markerIcon({ iconUrl: '/images/marker' + color + '.svg' }) }).on('click', function () {
 						handleRoomClick(room);
 					});
 
@@ -97,23 +107,19 @@ function BuildingMap(props) {
 	}, [climaidApi, building, rooms]);
 
 	const handleRoomClick = (room) => {
-		console.log(showingRoom);
 		setShowingRoom(room);
-		// if (showingRoom && room.uuid !== showingRoom.uuid) {
-		// 	setShowingRoom(null);
-		// 	setShowingRoom(room);
-		// 	console.log(4);
-		// } else if (!showingRoom) {
-		// 	console.log(3);
-		// 	setShowingRoom(room);
-		// } else {
-		// 	console.log(2);
-		// 	setShowingRoom(null);
-		// }
 	}
 
 	const closeRoomInfo = () => {
 		setShowingRoom(null);
+	}
+
+	const openComfortDiagram = () => {
+		setComfortDiagramOpen(true);
+	}
+
+	const closeComfortDiagram = () => {
+		setComfortDiagramOpen(false);
 	}
 
 	return (
@@ -132,6 +138,10 @@ function BuildingMap(props) {
 				attributionControl={false}
 			>
 				<ZoomControl position="bottomright" />
+
+				<div style={{ float: 'right', marginTop: 20, marginRight: 20 }}>
+					<Button variant="contained" onClick={openComfortDiagram} color="primary">Komfort diagram</Button>
+				</div>
 			</Map>
 
 			{showingRoom && 
@@ -140,6 +150,10 @@ function BuildingMap(props) {
 					<RoomInfo room={showingRoom} />
 				</div>
 			}
+
+			<Backdrop style={{ zIndex: 2000 }} open={comfortDiagramOpen} onClick={closeComfortDiagram}>
+				<ComfortChart building={building} rooms={rooms} />
+			</Backdrop>
 		</>
 	);
 }

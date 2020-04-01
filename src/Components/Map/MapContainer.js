@@ -11,7 +11,7 @@ import { Grid } from '@material-ui/core';
 
 import { MeetingRoom, ArrowForward, ArrowBack } from 'variables/icons';
 import otherStyles from 'Styles/otherStyles';
-import { getBuildings, getbuildingColorData, getBuildingDevices } from 'data/climaid';
+import { getBuildings, getBuildingColorData, getBuildingDevices } from 'data/climaid';
 import MapPopupBuilding from 'Components/Map/MapPopupBuilding';
 import { useSelector } from 'Hooks';
 import { ItemG } from 'Components';
@@ -50,12 +50,11 @@ const MapContainer = (props) => {
 								devicesFiltered.push(device.device);
 							}
 						})
-						console.log(devicesFiltered);
+
 						if (devicesFiltered.length) {
-							let colorData = await getbuildingColorData(devicesFiltered, 'hour');
+							let colorData = await getBuildingColorData(devicesFiltered, 'hour');
 
 							if (colorData && colorData.length) {
-								console.log(colorData[0].color);
 								building.color = colorData[0].color;
 							} else {
 								building.color = 1;
