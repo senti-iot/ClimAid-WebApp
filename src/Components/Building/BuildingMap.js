@@ -26,7 +26,7 @@ function BuildingMap(props) {
 			iconAnchor: [25, 84]
 		}
 	});
-
+console.log(building);
 	const colors = ['rgba(63,191,173,0.8)', 'rgba(226,129,23,0.8)', 'rgba(209,70,61,0.8)', 'rgba(229,99,99,0.8)'];
 
 	useEffect(() => {
@@ -69,13 +69,13 @@ function BuildingMap(props) {
 				}
 			});
 
-			leafletMap.on('click', function(e) {
-				console.log(e.latlng);
-			});
+			// leafletMap.on('click', function(e) {
+			// 	console.log(e.latlng);
+			// });
 
 			// eslint-disable-next-line array-callback-return
 			rooms.map(async room => {
-				if (room.bounds.length) {
+				if (room.bounds && room.bounds.length) {
 					let device = null;
 					let color = 0;
 					if (room.devices.length) {
@@ -104,7 +104,7 @@ function BuildingMap(props) {
 			});
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [climaidApi, building, rooms]);
+	}, [building, rooms]);
 
 	const handleRoomClick = (room) => {
 		setShowingRoom(room);

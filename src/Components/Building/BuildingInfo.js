@@ -14,7 +14,7 @@ const BuildingInfo = (props) => {
 	const handleRoomClick = (room) => {
 		history.push('/building/' + props.building.uuid + '/room/' + room.uuid);
 	}
-
+	console.log(props.building);
 	return (
 		<Paper elevation={3} className={classes.buildInfoContainer}>
 			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
@@ -56,5 +56,5 @@ const BuildingInfo = (props) => {
 		</Paper>
 	);
 }
-
+//BuildingInfo.whyDidYouRender = true
 export default BuildingInfo;

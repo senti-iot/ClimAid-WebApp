@@ -2,25 +2,29 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Map } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
+import Backdrop from '@material-ui/core/Backdrop';
+import Button from '@material-ui/core/Button';
 
 import buildingStyles from 'Styles/buildingStyles';
 import { climaidApi } from 'data/climaid';
 import WeatherOnMap from 'Components/Room/WeatherOnMap';
+import ComfortChart from 'Components/Building/ComfortChart';
 
 function RoomMap(props) {
 	const classes = buildingStyles();
 	const mapRef = useRef(null);
 	const room = props.room;
 	const [draggable, setDraggable] = useState(false);
+	const [comfortDiagramOpen, setComfortDiagramOpen] = useState(false);
 
-	const markerIcon = L.Icon.extend({
-		options: {
-			iconSize: [50, 84],
-			iconAnchor: [25, 84]
-		}
-	});
+	// const markerIcon = L.Icon.extend({
+	// 	options: {
+	// 		iconSize: [50, 84],
+	// 		iconAnchor: [25, 84]
+	// 	}
+	// });
 
-	const markerIconGood = new markerIcon({ iconUrl: '/images/marker1.svg' });
+	// const markerIconGood = new markerIcon({ iconUrl: '/images/marker1.svg' });
 	// const markerIconAcceptable = new markerIcon({ iconUrl: '/images/marker2.svg' });
 	// const markerIconUnacceptable = new markerIcon({ iconUrl: '/images/marker3.svg' });
 	// const markerIconVeryUnacceptable = new markerIcon({ iconUrl: '/images/marker4.svg' });
@@ -58,12 +62,12 @@ function RoomMap(props) {
 
 			let markers = [];
 			// eslint-disable-next-line array-callback-return
-			room.devices.map(device => {
-				if (device.position && device.position.length) {
-					let position = device.position.split(',');
-					markers.push(L.marker({ lat: position[0], lng: position[1] }, { icon: markerIconGood }));
-				}
-			});
+			// room.devices.map(device => {
+			// 	if (device.position && device.position.length) {
+			// 		let position = device.position.split(',');
+			// 		markers.push(L.marker({ lat: position[0], lng: position[1] }, { icon: markerIconGood }));
+			// 	}
+			// });
 
 			let layerGroup = L.layerGroup(markers);
 			layerGroup.addTo(leafletMap);
@@ -85,25 +89,43 @@ function RoomMap(props) {
 		}
 	});
 
+	const openComfortDiagram = () => {
+		setComfortDiagramOpen(true);
+	}
+
+	const closeComfortDiagram = () => {
+		setComfortDiagramOpen(false);
+	}
+
 	return (
-		<Map
-			ref={mapRef}
-			center={[0, 0]}
-			minZoom={3}
-			maxZoom={4}
-			zoom={3}
-			zoomControl={false}
-			crs={L.CRS.Simple}
-			scrollWheelZoom={false}
-			touchZoom={false}
-			doubleClickZoom={false}
-			dragging={draggable}
-			className={classes.buildingMap}
-			attributionControl={false}
-			style={{ backgroundColor: '#f5f5f5' }}
-		>
-			<WeatherOnMap room={room} />
-		</Map>
+		<>
+			<Map
+				ref={mapRef}
+				center={[0, 0]}
+				minZoom={3}
+				maxZoom={4}
+				zoom={3}
+				zoomControl={false}
+				crs={L.CRS.Simple}
+				scrollWheelZoom={false}
+				touchZoom={false}
+				doubleClickZoom={false}
+				dragging={draggable}
+				className={classes.buildingMap}
+				attributionControl={false}
+				style={{ backgroundColor: '#f5f5f5' }}
+			>
+				<WeatherOnMap room={room} />
+
+				<div style={{ float: 'right', marginTop: 20, marginRight: 20 }}>
+					<Button variant="contained" onClick={openComfortDiagram} color="primary">Komfort diagram</Button>
+				</div>
+			</Map>
+
+			<Backdrop style={{ zIndex: 2000 }} open={comfortDiagramOpen} onClick={closeComfortDiagram}>
+				<ComfortChart rooms={[room]} />
+			</Backdrop>
+		</>
 	);
 }
 

@@ -8,10 +8,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import moment from 'moment';
 import { Grid } from '@material-ui/core';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 import { MeetingRoom, ArrowForward, ArrowBack } from 'variables/icons';
 import otherStyles from 'Styles/otherStyles';
-import { getBuildings, getBuildingColorData, getBuildingDevices } from 'data/climaid';
+import { getBuildings, getBuildingColorData, getBuildingDevices, getDeviceOnlineStatus } from 'data/climaid';
 import MapPopupBuilding from 'Components/Map/MapPopupBuilding';
 import { useSelector } from 'Hooks';
 import { ItemG } from 'Components';
@@ -19,6 +20,7 @@ import { ItemG } from 'Components';
 const MapContainer = (props) => {
 	const [buildings, setBuildings] = useState(null);
 	const [displayOverlay, setDisplayOverlay] = useState(false);
+	const [onlineStates, setOnlineStates] = useState({});
 	const mapRef = useRef(null);
 	const groupRef = useRef(null);
 	const position = [57.0488, 9.9217];
@@ -39,6 +41,7 @@ const MapContainer = (props) => {
 
 			if (data) {
 				let buildingsWithColor = [];
+				let onlineStatesData = {};
 
 				await Promise.all(
 					data.map(async building => {
@@ -52,6 +55,26 @@ const MapContainer = (props) => {
 						})
 
 						if (devicesFiltered.length) {
+							let online = 0;
+							let offline = 0;
+							await Promise.all(
+								devicesFiltered.map(async device => {
+									let onlineState = await getDeviceOnlineStatus(device);
+
+									if (onlineState) {
+										online++;
+									} else {
+										offline++;
+									}
+								})
+							);
+
+							if (offline > online / 3) { //more than 30% of the devices has to be online
+								onlineStatesData[building.uuid] = 0;
+							} else {
+								onlineStatesData[building.uuid] = 1;
+							}
+
 							let colorData = await getBuildingColorData(devicesFiltered, 'hour');
 
 							if (colorData && colorData.length) {
@@ -65,6 +88,7 @@ const MapContainer = (props) => {
 					})
 				);
 
+				setOnlineStates(onlineStatesData);
 				setBuildings(buildingsWithColor);
 			}
 		}
@@ -160,7 +184,9 @@ const MapContainer = (props) => {
 							<TableBody>
 								{buildings.map((building, index) => (
 									<TableRow key={building.uuid} style={{ backgroundColor: index % 2 ? '#f6f7ff' : '#ffffff', height: 40, cursor: 'pointer' }}>
-										<TableCell style={{ borderBottom: "none", borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }}></TableCell>
+										<TableCell style={{ borderBottom: "none", borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }} align="center">
+											{Object.keys(onlineStates).length ? <>{onlineStates[building.uuid] ? <FiberManualRecordIcon style={{ color: '#74d3c9' }} /> : <FiberManualRecordIcon style={{ color: '#cf565c' }} />}</> : <></>}
+										</TableCell>
 										<TableCell style={{ borderBottom: "none" }} onClick={() => handleGoToBuilding(building.uuid)}>
 											{building.name}
 										</TableCell>

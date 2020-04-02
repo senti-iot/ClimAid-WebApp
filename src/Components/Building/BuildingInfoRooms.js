@@ -50,7 +50,7 @@ const BuildingInfoRooms = (props) => {
 		}
 
 		fetchData();
-	}, [props]);
+	}, [props.rooms]);
 
 	return (
 		<>
