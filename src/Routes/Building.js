@@ -53,6 +53,6 @@ const Building = () => {
 		</>
 	);
 }
-Building.whyDidYouRender = true
+// Building.whyDidYouRender = true
 
 export default Building;

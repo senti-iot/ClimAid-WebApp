@@ -87,7 +87,7 @@ function RoomMap(props) {
 			// });
 
 		}
-	});
+	}, [room.uuid]);
 
 	const openComfortDiagram = () => {
 		setComfortDiagramOpen(true);

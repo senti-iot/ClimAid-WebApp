@@ -1,7 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { AppBackground } from 'Styles/containerStyle';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { useHistory } from 'react-router';
 import Administraion from 'Routes/Administration';
 import Building from 'Routes/Building';
 import Room from 'Routes/Room';
@@ -16,7 +15,6 @@ function Container(props) {
 	const colorTheme = useSelector((state) => state.settings.colorTheme)
 	const dispatch = useDispatch()
 	const [loading, setLoading] = useState(true)
-	const history = useHistory();
 
 	useEffect(() => {
 		const getSetting = async () => dispatch(await getSettings())
@@ -39,13 +37,13 @@ function Container(props) {
 								<Administraion />
 							</Route>
 							<Route path={'/building/:buildingUuid/room/:roomUuid'}>
-								<Room history={history} />
+								<Room />
 							</Route>
 							<Route path={'/building/:uuid'}>
 								<Building />
 							</Route>
 							<Route exact path={'/'}>
-								<MapContainer history={history} />
+								<MapContainer />
 							</Route>
 							<Redirect path={'*'} to={'/'}></Redirect>
 						</Switch>

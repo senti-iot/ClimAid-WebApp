@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import moment from 'moment';
 import { Grid } from '@material-ui/core';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import { useHistory } from 'react-router';
 
 import { MeetingRoom, ArrowForward, ArrowBack } from 'variables/icons';
 import otherStyles from 'Styles/otherStyles';
@@ -26,6 +27,7 @@ const MapContainer = (props) => {
 	const position = [57.0488, 9.9217];
 	const classes = otherStyles();
 	const user = useSelector(state => state.settings.user)
+	const history = useHistory();
 
 	const markerIcon = L.Icon.extend({
 		options: {
@@ -124,7 +126,7 @@ const MapContainer = (props) => {
 	}, []);
 
 	const handleGoToBuilding = (uuid) => {
-		props.history.push('/building/' + uuid);
+		history.push('/building/' + uuid);
 	}
 
 	const toogleOverlay = () => {
@@ -219,7 +221,7 @@ const MapContainer = (props) => {
 							return (
 								<Marker key={building.uuid} position={building.latlong.split(',')} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })}>
 									<Popup maxWidth={400} maxHeight={550} closeButton="">
-										<MapPopupBuilding building={building} history={props.history} />
+										<MapPopupBuilding building={building} />
 									</Popup>
 								</Marker>
 							);

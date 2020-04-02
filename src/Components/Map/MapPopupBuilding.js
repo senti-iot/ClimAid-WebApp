@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import { useHistory } from 'react-router';
 
 import otherStyles from 'Styles/otherStyles';
 import BuildingInfoRoom from 'Components/Building/BuildingInfoRooms';
@@ -11,6 +12,7 @@ const MapPopupBuilding = (props) => {
 	const classes = otherStyles();
 	const building = props.building;
 	const [rooms, setRooms] = useState(null);
+	const history = useHistory();
 
 	useEffect(() => {
 		async function fetchData() {
@@ -25,11 +27,11 @@ const MapPopupBuilding = (props) => {
 	}, [props]);
 
 	const handleBuildingClick = () => {
-		props.history.push('/building/' + props.building.uuid);
+		history.push('/building/' + props.building.uuid);
 	}
 
 	const handleRoomClick = (room) => {
-		props.history.push('/building/' + props.building.uuid + '/room/' + room.uuid);
+		history.push('/building/' + props.building.uuid + '/room/' + room.uuid);
 	}
 
 	return (
