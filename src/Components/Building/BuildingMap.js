@@ -26,7 +26,7 @@ function BuildingMap(props) {
 			iconAnchor: [25, 84]
 		}
 	});
-console.log(building);
+
 	const colors = ['rgba(63,191,173,0.8)', 'rgba(226,129,23,0.8)', 'rgba(209,70,61,0.8)', 'rgba(229,99,99,0.8)'];
 
 	useEffect(() => {
