@@ -42,7 +42,7 @@ function Container(props) {
 								<Room history={history} />
 							</Route>
 							<Route path={'/building/:uuid'}>
-								<Building history={history} />
+								<Building />
 							</Route>
 							<Route exact path={'/'}>
 								<MapContainer history={history} />

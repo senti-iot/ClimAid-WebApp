@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Paper } from '@material-ui/core';
 import moment from 'moment';
+import { useHistory } from 'react-router'
 
 import buildingStyles from 'Styles/buildingStyles';
 import { ItemG } from 'Components';
@@ -9,7 +10,7 @@ import BuildingInfoUsage from 'Components/Building/BuildingInfoUsage';
 
 const BuildingInfo = (props) => {
 	const classes = buildingStyles();
-	const history = props.history;
+	const history = useHistory();
 
 	const handleRoomClick = (room) => {
 		history.push('/building/' + props.building.uuid + '/room/' + room.uuid);

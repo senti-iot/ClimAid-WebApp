@@ -12,9 +12,12 @@ const Building = () => {
 	const prevUuid = usePrevious(uuid);
 	const [building, setBuilding] = useState(null);
 	const [rooms, setRooms] = useState(null);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		async function fetchData() {
+			setLoading(true);
+
 			const data = await getBuilding(uuid);
 
 			if (data) {
@@ -26,16 +29,18 @@ const Building = () => {
 
 				setBuilding(data);
 			}
+
+			setLoading(false);
 		}
 
 		if (prevUuid !== uuid) {
 			fetchData();
 		}
 	}, [uuid, prevUuid]);
-console.log(building);
+
 	return (
 		<>
-			{(building && rooms) ?
+			{!loading ?
 				<GridContainer spacing={2}>
 					<ItemG xs={4} xl={3}>
 						<BuildingInfo building={building} rooms={rooms} />
@@ -48,6 +53,6 @@ console.log(building);
 		</>
 	);
 }
-//Building.whyDidYouRender = true
+Building.whyDidYouRender = true
 
 export default Building;
