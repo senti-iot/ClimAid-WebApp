@@ -2,6 +2,9 @@
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import moment from 'moment';
 import { Grid } from '@material-ui/core';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import IconButton from '@material-ui/core/IconButton';
 
 import { useLocalization } from 'Hooks';
 import d3Line from 'Components/Graphs/classes/d3Line';
@@ -18,6 +21,10 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 	const [value, setValue] = useState({ value: null, date: null });
 	const [period, setPeriod] = useState(null);
 	const [selectedPeriod, setSelectedPeriod] = useState(2);
+	const [didSetCustomDate, setDidSetCustomDate] = useState(false);
+	const [from, setFrom] = useState(null);
+	const [to, setTo] = useState(null);
+	const [timeType, setTimeType] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [graphLines, setGraphLines] = useState({});
 	const lineChartContainer = useRef(null);
@@ -63,6 +70,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						let devices = null;
 						if (key === 'tempavgbuilding' || key === 'co2avgbuilding' || key === 'humidityavgbuilding' || key === 'batteryavgbuilding') {
 							devices = await getBuildingDevices(room.building.uuid);
+							console.log(devices);
 						}
 
 						if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
@@ -177,14 +185,16 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 								checkboxStates['userexperience']['lighting'] ||
 								checkboxStates['userexperience']['blinded'] ||
 								checkboxStates['userexperience']['noise']) {
+
 								devices = await getBuildingDevices(room.building.uuid);
-								console.log(checkboxStates['userexperience']);
+
 								await Promise.all(
-									checkboxStates['userexperience'].map(type => {
+									Object.keys(checkboxStates['userexperience']).map(type => {
 										console.log(type);
 										devices.map(async device => {
 											if (device.type === 'userdata') {
 												let deviceData = await getDeviceDataConverted(device.device, period, type);
+												console.log(deviceData);
 												deviceData.map(data => {
 													if (!combinedData[type][data.date]) {
 														combinedData[type][data.date] = parseInt(data.value);
@@ -399,51 +409,66 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 		}
 
 		const getPeriod = (menuId) => {
-			let from = 0;
-			let to = 0;
-			let timeType = 2;
+			let thisfrom = 0;
+			let thisto = 0;
+			let thistimetype;
 
-			setSelectedPeriod(menuId);
+			if (!from || !to) {
+				setSelectedPeriod(menuId);
 
-			switch (menuId) {
-				default:
-				case 10:
-					from = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
-					to = moment().format('YYYY-MM-DD HH:mm:ss');
-					timeType = 1;
-					break;
-				case 11:
-					from = moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-					to = moment().subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
-					timeType = 1;
-					break;
-				case 1:
-					from = moment().startOf('week').format('YYYY-MM-DD HH:mm:ss');
-					to = moment().endOf('week').format('YYYY-MM-DD HH:mm:ss');
-					break;
-				case 2:
-					from = moment().subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-					to = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
-					break;
-				case 3:
-					from = moment().startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-					to = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss');
-					break;
-				case 5:
-					from = moment().subtract(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-					to = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
-					break;
-				case 7:
-					from = moment().subtract(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-					to = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
-					break;
+				switch (menuId) {
+					default:
+					case 10:
+						thisfrom = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thisto = moment().format('YYYY-MM-DD HH:mm:ss');
+						thistimetype = 1;
+						break;
+					case 11:
+						thisfrom = moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thisto = moment().subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thistimetype = 1;
+						break;
+					case 1:
+						thisfrom = moment().startOf('week').format('YYYY-MM-DD HH:mm:ss');
+						thisto = moment().endOf('week').format('YYYY-MM-DD HH:mm:ss');
+						thistimetype = 2;
+						break;
+					case 2:
+						thisfrom = moment().subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thisto = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thistimetype = 2;
+						break;
+					case 3:
+						thisfrom = moment().startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thisto = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss');
+						thistimetype = 2;
+						break;
+					case 5:
+						thisfrom = moment().subtract(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thisto = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thistimetype = 2;
+						break;
+					case 7:
+						thisfrom = moment().subtract(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thisto = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
+						thistimetype = 2;
+						break;
+				}
+
+				setFrom(thisfrom);
+				setTo(thisto);
+				setTimeType(thistimetype);
+			} else {
+				thisfrom = from;
+				thisto = to;
+				thistimetype = timeType;
 			}
 
 			return {
 				menuId: menuId,
-				from: from,
-				to: to,
-				timeType: timeType
+				from: thisfrom,
+				to: thisto,
+				timeType: thistimetype
 			};
 		}
 
@@ -494,8 +519,96 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 	const customSetDate = (menuId, to, from, defaultT) => {
 		setSelectedPeriod(menuId);
+		setFrom(null);
+		setTo(null);
+		setDidSetCustomDate(false);
 		setLoading(true);
-		console.log('customSetDate');
+	}
+
+	const goForward = () => {
+		let thisfrom = 0;
+		let thisto = 0;
+
+		switch (selectedPeriod) {
+			default:
+			case 10:
+				thisfrom = moment(from).add(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).add(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 11:
+				thisfrom = moment(from).add(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).add(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 1:
+				thisfrom = moment(from).add(1, 'week').startOf('week').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).add(1, 'week').endOf('week').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 2:
+				thisfrom = moment(from).add(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).add(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 3:
+				thisfrom = moment(from).add(1, 'month').startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).add(1, 'month').endOf('month').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 5:
+				thisfrom = moment(from).add(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).add(90, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 7:
+				thisfrom = moment(from).add(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).add(30, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+		}
+
+		setFrom(thisfrom);
+		setTo(thisto);
+
+		setDidSetCustomDate(true);
+		setLoading(true);
+	}
+
+	const goBack = () => {
+		let thisfrom = 0;
+		let thisto = 0;
+
+		switch (selectedPeriod) {
+			default:
+			case 10:
+				thisfrom = moment(from).subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 11:
+				thisfrom = moment(from).subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 1:
+				thisfrom = moment(from).subtract(1, 'week').startOf('week').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).subtract(1, 'week').endOf('week').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 2:
+				thisfrom = moment(from).subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 3:
+				thisfrom = moment(from).subtract(1, 'month').startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).subtract(1, 'month').endOf('month').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 5:
+				thisfrom = moment(from).subtract(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).subtract(90, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+			case 7:
+				thisfrom = moment(from).subtract(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(to).subtract(30, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				break;
+		}
+
+		setFrom(thisfrom);
+		setTo(thisto);
+
+		setDidSetCustomDate(true);
+		setLoading(true);
 	}
 
 	return (
@@ -503,9 +616,17 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 			:
 			<div style={{ width: '100%', height: '100%' }}>
 				<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2}>
-					<Grid item xs={10}></Grid>
-					<Grid item xs={2}>
-						<DateTimeFilter period={period} customSetDate={customSetDate} />
+					<Grid item xs={8} xl={10}></Grid>
+					<Grid item xs={4} xl={2}>
+						<Grid container justify={'space-between'} alignItems={'flex-start'} spacing={2}>
+							<IconButton aria-label="Gå tilbage" onClick={goBack}>
+								<KeyboardArrowLeftIcon fontSize="large" style={{ color: '#fff' }} />
+							</IconButton>
+							<DateTimeFilter period={period} customSetDate={customSetDate} didSetCustomDate={didSetCustomDate} />
+							<IconButton aria-label="Gå frem" onClick={goForward}>
+								<KeyboardArrowRightIcon fontSize="large" style={{ color: '#fff' }} />
+							</IconButton>
+						</Grid>
 					</Grid>
 				</Grid>
 

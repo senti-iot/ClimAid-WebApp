@@ -21,7 +21,7 @@ const DateFilterMenu = (props) => {
 		{ value: 11, label: t('filters.dateOptions.yesterday') },
 		{ value: 1, label: t('filters.dateOptions.thisWeek') },
 		{ value: 2, label: t('filters.dateOptions.7days') },
-		{ value: 3, label: t('filters.dateOptions.month') },
+		{ value: 3, label: t('filters.dateOptions.thisMonth') },
 		{ value: 4, label: t('filters.dateOptions.year') },
 		{ value: 5, label: t('filters.dateOptions.90days') },
 		{ value: 6, label: t('filters.dateOptions.custom') },
@@ -31,7 +31,7 @@ const DateFilterMenu = (props) => {
 		{ id: 11, label: t('filters.dateOptions.yesterday') },
 		{ id: 1, label: t('filters.dateOptions.thisWeek') },
 		{ id: 2, label: t('filters.dateOptions.7days') },
-		{ id: 3, label: t('filters.dateOptions.month') },
+		{ id: 3, label: t('filters.dateOptions.thisMonth') },
 		{ id: 4, label: t('filters.dateOptions.year') },
 		{ id: 5, label: t('filters.dateOptions.90days') },
 		{ id: 6, label: t('filters.dateOptions.custom') },
@@ -180,7 +180,7 @@ const DateFilterMenu = (props) => {
 					<div className={classes.periodLabelsContainer} onClick={handleOpenMenu}>
 						<div className={classes.periodLabels}>{displayFrom}</div>
 						<div className={classes.periodLabels}>{displayTo}</div>
-						<div className={classes.periodLabels}>{ options[options.findIndex(d => d.id === period.menuId ? true : false)].label }</div>
+						{!props.didSetCustomDate ? <div className={classes.periodLabels}>{ options[options.findIndex(d => d.id === period.menuId ? true : false)].label }</div> : ""}
 					</div>
 				</Tooltip>}
 				<Menu
@@ -201,7 +201,7 @@ const DateFilterMenu = (props) => {
 					<ItemG container direction={'column'}>
 						{!settings && period && <Fragment>
 							<ItemG>
-								<T>{options[options.findIndex(d => d.id === period.menuId ? true : false)].label}</T>
+								{!props.didSetCustomDate ? <T>{options[options.findIndex(d => d.id === period.menuId ? true : false)].label}</T> : ""}
 								<T>{`${displayFrom} - ${displayTo}`}</T>
 							</ItemG>
 							<Divider />
