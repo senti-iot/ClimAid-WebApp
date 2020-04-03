@@ -140,7 +140,7 @@ function BuildingMap(props) {
 				<ZoomControl position="bottomright" />
 
 				<div style={{ float: 'right', marginTop: 20, marginRight: 20 }}>
-					<Button variant="contained" onClick={openComfortDiagram} color="primary">Komfort diagram</Button>
+					<Button variant="contained" onClick={openComfortDiagram} style={{ backgroundColor: "#006367", color: '#fff' }}>Komfort diagram</Button>
 				</div>
 			</Map>
 
