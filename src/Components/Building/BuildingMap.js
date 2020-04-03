@@ -152,7 +152,7 @@ function BuildingMap(props) {
 			}
 
 			<Backdrop style={{ zIndex: 2000 }} open={comfortDiagramOpen} onClick={closeComfortDiagram}>
-				<ComfortChart building={building} rooms={rooms} />
+				<ComfortChart rooms={rooms} type="building" />
 			</Backdrop>
 		</>
 	);

@@ -34,8 +34,8 @@ const ComfortChart = (props) => {
 	}, []);
 
 	const generateChart = (data) => {
-		let margin = { top: 30, right: 0, bottom: 100, left: 30 };
-		let width = 810 - margin.left - margin.right;
+		let margin = { top: 30, right: 0, bottom: 100, left: 60 };
+		let width = 830 - margin.left - margin.right;
 		let height = 800 - margin.top - margin.bottom;
 		let gridSize = 25;
 		// let legendElementWidth = gridSize * 2;
@@ -76,7 +76,7 @@ const ComfortChart = (props) => {
 		// 	.range(colors);
 
 		let cards = svg.selectAll(".hour")
-			.data(data, function (d) { return moment(d.ts.split(' ')[0]).format("D") + ':' + d.ts.split(' ')[1]; });
+			.data(data, function (d) { return d.ts ? moment(d.ts.split(' ')[0]).format("D") + ':' + d.ts.split(' ')[1] : '' });
 
 		// cards.append("title");
 		const daysInMonth = moment().daysInMonth();
@@ -93,8 +93,8 @@ const ComfortChart = (props) => {
 		}
 
 		cards.enter().append("rect")
-			.attr("x", function (d) { return (moment(d.ts.split(' ')[0]).format("D") - 1) * gridSize; })
-			.attr("y", function (d) { return (d.ts.split(' ')[1]) * gridSize; })
+			.attr("x", function (d) { return d.ts ? (moment(d.ts.split(' ')[0]).format("D") - 1) * gridSize : '' })
+			.attr("y", function (d) { return d.ts ? (d.ts.split(' ')[1]) * gridSize : '' })
 			.attr("class", classes.rectbordered)
 			.attr("width", gridSize)
 			.attr("height", gridSize)
@@ -158,7 +158,12 @@ const ComfortChart = (props) => {
 	};
 
 	return (
-		<div id="chart" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2000, backgroundColor: '#fff' }}></div>
+		<>
+			<div id="chart" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2000, backgroundColor: '#fff' }}>
+				<div style={{ position: 'absolute', top: '50%', left: -30, transform: 'rotate(270deg)', color: '#000' }}>Time på døgnet</div>
+				<div style={{ textAlign: 'center', maxWidth: 750, margin: '0 auto' }}>{props.type === 'building' ? <><h2>KOMFORT DIAGRAM - BYGNING</h2><p>Hver firkant er en vurdering af indeklimaet i hele bygningen.<br />Time firkantens farve bestemmes af indeklima målingerne og viser om og hvornår indeklimaet har brug for ekstra opmærksomhed.</p></> : <><h2> KOMFORT DIAGRAM - LOKALE</h2><p>Hver firkant er en vurdering af indeklimaet i lokalet.<br />Time firkantens farve bestemmes af indeklima målingerne og viser hvordan det samlede indeklima har været.</p></>}</div>
+			</div>
+		</>
 	);
 }
 
