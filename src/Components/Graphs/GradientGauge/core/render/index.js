@@ -77,9 +77,22 @@ function _renderSVG({ container, config }) {
 }
 
 function _renderArcs({ config, svg, centerTx, type }) {
-	const tickData = configureTickData(config)
-	const arc = configureArc(config)
-	var gradientDefs = svg.append("svg:defs");
+	const tickData = configureTickData(config);
+	// var gradientDefs = svg.append("svg:defs");
+
+	let minAngle, maxAngle;
+	if (type === 'temperature') {
+		minAngle = 12;
+		maxAngle = 61;
+	} else if (type === 'co2') {
+		minAngle = -88;
+		maxAngle = -25;
+	} else if (type === 'humidity') {
+		minAngle = -40;
+		maxAngle = 40;
+	}
+
+	const arc = configureArc(config, minAngle, maxAngle);
 
 	let arcs = svg
 		.append("g")
@@ -91,98 +104,96 @@ function _renderArcs({ config, svg, centerTx, type }) {
 		.data(tickData)
 		.enter()
 		.append("path")
-		.attr("class", "speedo-segment")
-		// .style("fill", "url(#linear-gradient)")
-		// .attr("fill", (d, i) => {
-		// 	return config.arcColorFn(d * i)
-		// })
-		.attr("fill", (d, i) => {
-			let newGrad = gradientDefs.append("svg:linearGradient")
-				.attr("id", function () { return "linear-gradient-" + type; })
-				.attr("spreadMethod", "pad");
+		.attr("fill", "#3fbfad")
+		.attr("d", arc);
 
-			// Define the gradient color stops
-			if (type === 'temperature') {
-				newGrad.append("svg:stop")
-					.attr("offset", "0%")
-					.attr("stop-color", "#d1463d")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "44%")
-					.attr("stop-color", "#e28117")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "50%")
-					.attr("stop-color", "#3fbfad")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "67%")
-					.attr("stop-color", "#3fbfad")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "78%")
-					.attr("stop-color", "#e28117")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "89%")
-					.attr("stop-color", "#e56363")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "100%")
-					.attr("stop-color", "#d1463d")
-					.attr("stop-opacity", 1);
-			}
+	// .attr("fill", (d, i) => {
+	// 	let newGrad = gradientDefs.append("svg:linearGradient")
+	// 		.attr("id", function () { return "linear-gradient-" + type; })
+	// 		.attr("spreadMethod", "pad");
 
-			if (type === 'co2') {
-				console.log(1);
-				newGrad.append("svg:stop")
-					.attr("offset", "0%")
-					.attr("stop-color", "#3fbfad")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "56%")
-					.attr("stop-color", "#3fbfad")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "78%")
-					.attr("stop-color", "#e28117")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "89%")
-					.attr("stop-color", "#e56363")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "100%")
-					.attr("stop-color", "#d1463d")
-					.attr("stop-opacity", 1);
-			}
+	// 	// Define the gradient color stops
+	// 	if (type === 'temperature') {
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "0%")
+	// 			.attr("stop-color", "#d1463d")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "44%")
+	// 			.attr("stop-color", "#e28117")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "50%")
+	// 			.attr("stop-color", "#3fbfad")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "67%")
+	// 			.attr("stop-color", "#3fbfad")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "78%")
+	// 			.attr("stop-color", "#e28117")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "89%")
+	// 			.attr("stop-color", "#e56363")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "100%")
+	// 			.attr("stop-color", "#d1463d")
+	// 			.attr("stop-opacity", 1);
+	// 	}
 
-			if (type === 'humidity') {
-				newGrad.append("svg:stop")
-					.attr("offset", "0%")
-					.attr("stop-color", "#e56363")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "56%")
-					.attr("stop-color", "#e28117")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "78%")
-					.attr("stop-color", "#e28117")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "89%")
-					.attr("stop-color", "#e56363")
-					.attr("stop-opacity", 1);
-				newGrad.append("svg:stop")
-					.attr("offset", "100%")
-					.attr("stop-color", "#d1463d")
-					.attr("stop-opacity", 1);
-			}
+	// 	if (type === 'co2') {
+	// 		console.log(1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "0%")
+	// 			.attr("stop-color", "#3fbfad")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "56%")
+	// 			.attr("stop-color", "#3fbfad")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "78%")
+	// 			.attr("stop-color", "#e28117")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "89%")
+	// 			.attr("stop-color", "#e56363")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "100%")
+	// 			.attr("stop-color", "#d1463d")
+	// 			.attr("stop-opacity", 1);
+	// 	}
 
-			return "url(#" + newGrad.attr("id") + ")";
-		})
-		.attr("d", arc)
+	// 	if (type === 'humidity') {
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "0%")
+	// 			.attr("stop-color", "#e56363")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "56%")
+	// 			.attr("stop-color", "#e28117")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "78%")
+	// 			.attr("stop-color", "#e28117")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "89%")
+	// 			.attr("stop-color", "#e56363")
+	// 			.attr("stop-opacity", 1);
+	// 		newGrad.append("svg:stop")
+	// 			.attr("offset", "100%")
+	// 			.attr("stop-color", "#d1463d")
+	// 			.attr("stop-opacity", 1);
+	// 	}
+
+	// 	return "url(#" + newGrad.attr("id") + ")";
+	// })
+	// .attr("d", arc)
 }
 
 function _renderLabels({ config, svg, centerTx, r }) {
