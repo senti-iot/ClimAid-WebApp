@@ -51,6 +51,7 @@ class GradientGauge extends PureComponent {
 		this.d3_refs = render({
 			container: this.gaugeDiv,
 			config: this.config,
+			type: this.props.type
 		})
 
 		update({

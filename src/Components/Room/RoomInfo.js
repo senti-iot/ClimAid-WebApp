@@ -60,6 +60,7 @@ const RoomInfo = (props) => {
 									return (
 										<ItemG xs={12} key={index} align="center">
 											{value && <GradientGauge
+												type={gauge.type}
 												ringWidth={7}
 												maxSegmentLabels={gauge.segments}
 												segments={1}

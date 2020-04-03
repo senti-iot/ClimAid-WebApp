@@ -28,7 +28,7 @@ export const update = ({ d3_refs, newValue, config }) => {
 	d3_refs.current_value_text.text(formatCurrentValueText(newValue, config))
 }
 
-export const render = ({ container, config }) => {
+export const render = ({ container, config, type }) => {
 	const r = getRadius(config)
 	const centerTx = centerTranslation(
 		r,
@@ -48,7 +48,7 @@ export const render = ({ container, config }) => {
 	svg.append("rect")
 		.attr("fill", "url(#bg)");
 
-	_renderArcs({ config, svg, centerTx })
+	_renderArcs({ config, svg, centerTx, type })
 	_renderLabels({ config, svg, centerTx, r })
 	_renderInfoLabels({ config, svg })
 
@@ -76,7 +76,7 @@ function _renderSVG({ container, config }) {
 	)
 }
 
-function _renderArcs({ config, svg, centerTx }) {
+function _renderArcs({ config, svg, centerTx, type }) {
 	const tickData = configureTickData(config)
 	const arc = configureArc(config)
 	var gradientDefs = svg.append("svg:defs");
@@ -98,26 +98,87 @@ function _renderArcs({ config, svg, centerTx }) {
 		// })
 		.attr("fill", (d, i) => {
 			let newGrad = gradientDefs.append("svg:linearGradient")
-				.attr("id", function () { return "linear-gradient"; })
+				.attr("id", function () { return "linear-gradient-" + type; })
 				.attr("spreadMethod", "pad");
 
 			// Define the gradient color stops
-			newGrad.append("svg:stop")
-				.attr("offset", "0%")
-				.attr("stop-color", "#4ebfad")
-				.attr("stop-opacity", 1);
-			newGrad.append("svg:stop")
-				.attr("offset", "33%")
-				.attr("stop-color", "#e28116")
-				.attr("stop-opacity", 1);
-			newGrad.append("svg:stop")
-				.attr("offset", "66%")
-				.attr("stop-color", "#e56363")
-				.attr("stop-opacity", 1);
-			newGrad.append("svg:stop")
-				.attr("offset", "100%")
-				.attr("stop-color", "#d1463d")
-				.attr("stop-opacity", 1);
+			if (type === 'temperature') {
+				newGrad.append("svg:stop")
+					.attr("offset", "0%")
+					.attr("stop-color", "#d1463d")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "44%")
+					.attr("stop-color", "#e28117")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "50%")
+					.attr("stop-color", "#3fbfad")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "67%")
+					.attr("stop-color", "#3fbfad")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "78%")
+					.attr("stop-color", "#e28117")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "89%")
+					.attr("stop-color", "#e56363")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "100%")
+					.attr("stop-color", "#d1463d")
+					.attr("stop-opacity", 1);
+			}
+
+			if (type === 'co2') {
+				console.log(1);
+				newGrad.append("svg:stop")
+					.attr("offset", "0%")
+					.attr("stop-color", "#3fbfad")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "56%")
+					.attr("stop-color", "#3fbfad")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "78%")
+					.attr("stop-color", "#e28117")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "89%")
+					.attr("stop-color", "#e56363")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "100%")
+					.attr("stop-color", "#d1463d")
+					.attr("stop-opacity", 1);
+			}
+
+			if (type === 'humidity') {
+				newGrad.append("svg:stop")
+					.attr("offset", "0%")
+					.attr("stop-color", "#e56363")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "56%")
+					.attr("stop-color", "#e28117")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "78%")
+					.attr("stop-color", "#e28117")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "89%")
+					.attr("stop-color", "#e56363")
+					.attr("stop-opacity", 1);
+				newGrad.append("svg:stop")
+					.attr("offset", "100%")
+					.attr("stop-color", "#d1463d")
+					.attr("stop-opacity", 1);
+			}
 
 			return "url(#" + newGrad.attr("id") + ")";
 		})
