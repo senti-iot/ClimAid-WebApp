@@ -52,6 +52,18 @@ const BuildingInfoRooms = (props) => {
 		fetchData();
 	}, [props.rooms]);
 
+	const getOnlineColorState = (uuid) => {
+		if (Object.keys(onlineStates).length && onlineStates[uuid]) {
+			let color = '';
+			if (onlineStates[uuid]) {
+				color = '#74d3c9';
+			} else {
+				color = '#cf565c';
+			}
+			return <FiberManualRecordIcon style={{ color: color }} />;
+		}
+	}
+
 	return (
 		<>
 			{props.rooms.length ?
@@ -71,7 +83,7 @@ const BuildingInfoRooms = (props) => {
 							{props.rooms.map((room) => {
 								return (
 									<TableRow key={room.uuid} style={{ height: 40, cursor: 'pointer' }} hover onClick={() => props.handleRoomClick(room)}>
-										{Object.keys(onlineStates).length ? <TableCell align="center">{onlineStates[room.uuid] ? <FiberManualRecordIcon style={{ color: '#74d3c9' }} /> : <FiberManualRecordIcon style={{ color: '#cf565c' }} />}</TableCell> : <TableCell></TableCell>}
+										<TableCell align="center">{getOnlineColorState(room.uuid)}</TableCell>
 										<TableCell>{room.name}</TableCell>
 										<TableCell align="center">{colorStates[room.uuid] ? <BuildingInfoRoomDot color={colorStates[room.uuid]} /> : ''}</TableCell>
 										<TableCell align="center">{batteryStates[room.uuid] ? <BatteryStatus charge={batteryStates[room.uuid]} /> : ''}</TableCell>
