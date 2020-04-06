@@ -49,7 +49,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 			temperature: [],
 			co2: [],
 			humidity: [],
-			battery: []
+			battery: [],
+			userexperience: []
 		}
 
 		async function fetchData() {
@@ -77,11 +78,12 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						let humidityAvgData = [];
 						let batteryData = null;
 						let batteryAvgData = [];
+						let userexperienceData = [];
 
 						let devices = null;
 						if (key === 'tempavgbuilding' || key === 'co2avgbuilding' || key === 'humidityavgbuilding' || key === 'batteryavgbuilding') {
 							devices = await getBuildingDevices(room.building.uuid);
-							console.log(devices);
+							// console.log(devices);
 						}
 
 						if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
@@ -185,7 +187,6 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						}
 
 						if (key === 'userexperience') {
-							let combinedData = {};
 							if (checkboxStates['userexperience']['warm'] ||
 								checkboxStates['userexperience']['cold'] ||
 								checkboxStates['userexperience']['windy'] ||
@@ -197,27 +198,40 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 								checkboxStates['userexperience']['blinded'] ||
 								checkboxStates['userexperience']['noise']) {
 
-								devices = await getBuildingDevices(room.building.uuid);
+								// devices = await getBuildingDevices(room.building.uuid);
 
-								await Promise.all(
-									Object.keys(checkboxStates['userexperience']).map(type => {
-										console.log(type);
-										devices.map(async device => {
-											if (device.type === 'userdata') {
-												let deviceData = await getDeviceDataConverted(device.device, period, type);
-												console.log(deviceData);
-												deviceData.map(data => {
-													if (!combinedData[type][data.date]) {
-														combinedData[type][data.date] = parseInt(data.value);
-													} else {
-														combinedData[type][data.date] += parseInt(data.value);
-													}
-												});
-											}
-										})
-									})
-								)
-								console.log(combinedData);
+								// await Promise.all(
+								// 	Object.keys(checkboxStates['userexperience']).map(type => {
+								// 		console.log(type);
+								// 		devices.map(async device => {
+								// 			if (device.type === 'userdata') {
+								// 				let deviceData = await getDeviceDataConverted(device.device, period, type);
+								// 				console.log(deviceData);
+								// 				deviceData.map(data => {
+								// 					if (!userexperienceData[data.date][type]) {
+								// 						userexperienceData[data.date][type] = parseInt(data.value);
+								// 					} else {
+								// 						userexperienceData[data.date][type] += parseInt(data.value);
+								// 					}
+								// 				});
+								// 			}
+								// 		})
+								// 	})
+								// )
+
+								userexperienceData.push({
+									date: moment("2020-04-01 00:00:00").valueOf(),
+									"cold": 1,
+									"warm": 2,
+									"noisy": 0,
+									"tired": 0,
+									"windy": 10,
+									"blinded": 0,
+									"heavyair": 0,
+									"lighting": 0,
+									"itchyeyes": 0,
+									"concentration": 0
+								});
 							}
 						}
 
@@ -409,6 +423,17 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										});
 									}
 									break;
+							}
+
+							if (key === 'userexperience' && Object.keys(props.checkboxStates['userexperience']).length) {
+								graphLinesData.userexperience.push({
+									noArea: true,
+									isBar: true,
+									name: key,
+									median: true,
+									data: userexperienceData,
+									noDots: true
+								});
 							}
 						}
 					})

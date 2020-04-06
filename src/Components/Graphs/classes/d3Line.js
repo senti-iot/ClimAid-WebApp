@@ -180,15 +180,14 @@ class d3Line {
 		let yAxis2 = null;
 		let yAxis2Type = null;
 		let count = 1;
+
 		Object.keys(this.props.data).map(key => {
 			if (this.props.data[key].length && count <= 2) {
 				let data = this.props.data[key]
 				if (count === 1) {
 					if (this.y === undefined) {
-						
 						let allData = [].concat(...data.map(d => d.data))
-						this.y = d3.scaleLinear().range([height - this.margin.top, this.margin.bottom]);
-						this.y.domain([getMin(allData), getMax(allData)]);
+						this.y = d3.scaleLinear().domain([getMin(allData), getMax(allData)]).range([height - this.margin.top, this.margin.bottom]);
 					}
 
 					if (data.length && !yAxisType) {
@@ -199,10 +198,32 @@ class d3Line {
 						.attr('transform', `translate(${this.margin.top + 40}, 0)`)
 						.call(d3.axisLeft(this.y).tickPadding(5).tickSizeInner(-(this.width - 180)))
 				} else if (count === 2) {
+					let min, max;
+					if (key === 'userexperience') {
+						min = 0;
+						max = 0;
+
+						let tmpMax;
+						data[0].data.map(d => {
+							tmpMax = 0;
+							Object.keys(d).map((key, i) => {
+								if (i > 0) {
+									tmpMax += d[key];
+								}
+							});
+
+							if (tmpMax > max) {
+								max = tmpMax;
+							}
+						});
+					} else {
+						let allData = [].concat(...data.map(d => d.data));
+						min = getMin(allData);
+						max = getMax(allData);
+					}
+
 					if (this.y2 === undefined) {
-						let allData = [].concat(...data.map(d => d.data))
-						this.y2 = d3.scaleLinear().range([height - this.margin.top, this.margin.bottom]);
-						this.y2.domain([getMin(allData), getMax(allData)]);
+						this.y2 = d3.scaleLinear().domain([min, max]).range([height - this.margin.top, this.margin.bottom]);
 					}
 
 					if (data.length && !yAxis2Type) {
@@ -665,27 +686,61 @@ class d3Line {
 								.transition().duration(1500)
 								.attr("stroke-dashoffset", 0);
 						} else {
-							this.svg.append('path')
-								.data([line.data])
-								.attr('id', line.name)
-								// .attr('class', classes[line.name])
-								.attr('fill', 'none')
-								.attr('stroke', line.color)
-								.attr('stroke-width', '4px')
-								.attr('d', count === 1 ? this.valueLine : this.valueLine2)
-								.attr("stroke-dasharray", function () {
-									return this.getTotalLength()
-								})
-								.attr("stroke-dashoffset", function () {
-									return this.getTotalLength()
-								})
-								.attr("opacity", this.state[line.name] ? 0 : 1)
-								.transition()
-								.duration(1500)
-								.attr('stroke-dashoffset', 0)
-								.transition()
-								.duration(100)
-								.style("stroke-dasharray", undefined)
+							if (line.isBar === true) {
+								const keys = ["cold",
+								 		"warm",
+								 		"noisy",
+								 		"tired",
+								 		"windy",
+								 		"blinded",
+								 		"heavyair",
+								 		"lighting",
+								 		"itchyeyes",
+								 		"concentration"];
+
+								var stackedData = d3.stack().keys(keys)(line.data);
+								var color = d3.scaleOrdinal().domain(keys).range(['red', 'blue', 'green', 'yellow', 'purple', 'brown', 'white', 'black', 'grey', 'orange']);
+								var xScale = this.x;
+								var y2Scale = this.y2;
+
+								this.svg.append("g")
+									.selectAll("g")
+									// Enter in the stack data = loop key per key = group per group
+									.data(stackedData)
+									.enter().append("g")
+									.attr("fill", function (d) { return color(d.key); })
+									.selectAll("rect")
+									// enter a second time = loop subgroup per subgroup to add all rectangles
+									.data(function (d) { return d; })
+									.enter().append("rect")
+									.attr("x", function (d) { return xScale(d.data.date); })
+									.attr("y", function (d) { return y2Scale(d[1]); })
+									.attr("height", function (d) { return y2Scale(d[0]) - y2Scale(d[1]); })
+									// .attr("width", x.bandwidth())
+									.attr("width", 20)
+							} else {
+								this.svg.append('path')
+									.data([line.data])
+									.attr('id', line.name)
+									// .attr('class', classes[line.name])
+									.attr('fill', 'none')
+									.attr('stroke', line.color)
+									.attr('stroke-width', '4px')
+									.attr('d', count === 1 ? this.valueLine : this.valueLine2)
+									.attr("stroke-dasharray", function () {
+										return this.getTotalLength()
+									})
+									.attr("stroke-dashoffset", function () {
+										return this.getTotalLength()
+									})
+									.attr("opacity", this.state[line.name] ? 0 : 1)
+									.transition()
+									.duration(1500)
+									.attr('stroke-dashoffset', 0)
+									.transition()
+									.duration(100)
+									.style("stroke-dasharray", undefined)
+							}
 						}
 
 						//#endregion
