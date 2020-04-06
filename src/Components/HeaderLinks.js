@@ -14,6 +14,7 @@ import { getBuildings, getRooms } from 'data/climaid';
 function HeaderLinks(props) {
 	const [anchorBuildingEl, setAnchorBuildingEl] = React.useState(null);
 	const [anchorRoomsEl, setAnchorRoomsEl] = React.useState(null);
+	const [anchorBurgerEl, setAnchorBurgerEl] = React.useState(null);
 	const [anchorProfile, setAnchorProfile] = useState(null);
 	const [buildings, setBuildings] = useState(null);
 	const [rooms, setRooms] = useState(null);
@@ -145,6 +146,20 @@ function HeaderLinks(props) {
 		handleRoomsMenuClose();
 	}
 
+	const goToBurgerPage = page => {
+		history.push('/' + page + '/');
+
+		handleBurgerMenuClose();
+	}
+
+	const handleBurgerMenuOpen = event => {
+		setAnchorBurgerEl(event.currentTarget);
+	};
+
+	const handleBurgerMenuClose = () => {
+		setAnchorBurgerEl(null);
+	};
+
 	const { t } = props;
 
 	return (
@@ -186,7 +201,9 @@ function HeaderLinks(props) {
 					</Button>
 				</ItemG>
 				<ItemG xs={1} className={classes.burgerMenuIconWrapper}>
-					<MenuIcon className={classes.burgerMenuIcon} />
+					<Button aria-controls="building-menu" aria-haspopup="true" onClick={handleBurgerMenuOpen}>
+						<MenuIcon className={classes.burgerMenuIcon} />
+					</Button>
 				</ItemG>
 			</Grid>
 			<Menu
@@ -236,6 +253,28 @@ function HeaderLinks(props) {
 						})}
 					</span>
 					: ""}
+			</Menu>
+			<Menu
+				style={{ marginTop: 45 }}
+				PaperProps={{
+					style: {
+						maxHeight: 800,
+						width: 200,
+						backgroundColor: '#ffffff',
+						color: '#000000'
+					},
+				}}
+				id="rooms-menu"
+				anchorEl={anchorBurgerEl}
+				keepMounted
+				open={Boolean(anchorBurgerEl)}
+				onClose={handleBurgerMenuClose}
+			>
+				<span>
+					<MenuItem key="1" style={{ marginTop: 10, marginBottom: 20 }} onClick={() => goToBurgerPage('usermanual')}>BRUGSANVISNING</MenuItem>
+					<MenuItem key="2" style={{ marginBottom: 20 }} onClick={() => goToBurgerPage('support')}>SUPPORT</MenuItem>
+					<MenuItem key="3" style={{ marginBottom: 10 }} onClick={() => goToBurgerPage('climaid')}>CLIMAID</MenuItem>
+				</span>
 			</Menu>
 		</div>
 	);
