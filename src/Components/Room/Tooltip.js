@@ -5,6 +5,7 @@ import { CardContent, /* Divider */ } from '@material-ui/core'
 import moment from 'moment'
 import styled from 'styled-components';
 import { capitalizeFL } from 'data/functions'
+import cookie from 'react-cookies';
 
 const TCard = styled(Card)`
 	min-width: 300px;
@@ -18,6 +19,13 @@ const TCard = styled(Card)`
 `
 
 const temperatureTooltip = (props) => {
+	let cookiePeriod = cookie.load('graph_period');
+
+	let timeFormat = 'll';
+	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+		timeFormat = 'lll';
+	}
+
 	return <TCard id='temperaturetooltip'>
 		<CardContent>
 			<ItemG container xs={12}>
@@ -26,7 +34,7 @@ const temperatureTooltip = (props) => {
 						<T variant={'h6'}>{capitalizeFL(moment(props.tooltip.date).format('dddd'))}</T>
 					</ItemG>
 					<ItemG xs={12}>
-						<T varinat={'body2'}>{moment(props.tooltip.date).format('ll')}</T>
+						<T varinat={'body2'}>{moment(props.tooltip.date).format(timeFormat)}</T>
 					</ItemG>
 				</ItemG>
 				<ItemG xs={6} container justify={'center'} alignItems={'flex-end'}>
@@ -39,6 +47,13 @@ const temperatureTooltip = (props) => {
 }
 
 const co2Tooltip = (props) => {
+	let cookiePeriod = cookie.load('graph_period');
+
+	let timeFormat = 'll';
+	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+		timeFormat = 'lll';
+	}
+
 	return <TCard id='co2tooltip'>
 		<CardContent>
 			<ItemG container xs={12}>
@@ -47,7 +62,7 @@ const co2Tooltip = (props) => {
 						<T variant={'h6'}>{capitalizeFL(moment(props.tooltip.date).format('dddd'))}</T>
 					</ItemG>
 					<ItemG xs={12}>
-						<T varinat={'body2'}>{moment(props.tooltip.date).format('ll')}</T>
+						<T varinat={'body2'}>{moment(props.tooltip.date).format(timeFormat)}</T>
 					</ItemG>
 				</ItemG>
 				<ItemG xs={6} container justify={'center'} alignItems={'flex-end'}>
@@ -60,6 +75,13 @@ const co2Tooltip = (props) => {
 }
 
 const humidityTooltip = (props) => {
+	let cookiePeriod = cookie.load('graph_period');
+
+	let timeFormat = 'll';
+	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+		timeFormat = 'lll';
+	}
+
 	return <TCard id='humiditytooltip'>
 		<CardContent>
 			<ItemG container xs={12}>
@@ -68,7 +90,7 @@ const humidityTooltip = (props) => {
 						<T variant={'h6'}>{capitalizeFL(moment(props.tooltip.date).format('dddd'))}</T>
 					</ItemG>
 					<ItemG xs={12}>
-						<T varinat={'body2'}>{moment(props.tooltip.date).format('ll')}</T>
+						<T varinat={'body2'}>{moment(props.tooltip.date).format(timeFormat)}</T>
 					</ItemG>
 				</ItemG>
 				<ItemG xs={6} container justify={'center'} alignItems={'flex-end'}>
@@ -81,6 +103,13 @@ const humidityTooltip = (props) => {
 }
 
 const batteryTooltip = (props) => {
+	let cookiePeriod = cookie.load('graph_period');
+
+	let timeFormat = 'll';
+	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+		timeFormat = 'lll';
+	}
+
 	return <TCard id='batterytooltip'>
 		<CardContent>
 			<ItemG container xs={12}>
@@ -89,7 +118,7 @@ const batteryTooltip = (props) => {
 						<T variant={'h6'}>{capitalizeFL(moment(props.tooltip.date).format('dddd'))}</T>
 					</ItemG>
 					<ItemG xs={12}>
-						<T varinat={'body2'}>{moment(props.tooltip.date).format('ll')}</T>
+						<T varinat={'body2'}>{moment(props.tooltip.date).format(timeFormat)}</T>
 					</ItemG>
 				</ItemG>
 				<ItemG xs={6} container justify={'center'} alignItems={'flex-end'}>
