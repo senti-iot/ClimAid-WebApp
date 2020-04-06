@@ -5,6 +5,7 @@ import { Grid } from '@material-ui/core';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import IconButton from '@material-ui/core/IconButton';
+import cookie from 'react-cookies';
 
 import { useLocalization } from 'Hooks';
 import d3Line from 'Components/Graphs/classes/d3Line';
@@ -52,8 +53,18 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 		}
 
 		async function fetchData() {
-			const period = getPeriod(selectedPeriod);
+			let cookiePeriod = cookie.load('graph_period');
+			let period = selectedPeriod;
+			if (cookiePeriod) {
+				period = cookiePeriod;
+				setDidSetCustomDate(true);
+			} else {
+				period = getPeriod(selectedPeriod);
+			}
+
 			setPeriod(period);
+
+			cookie.save('graph_period', period, { path: '/', expires: moment().add('1', 'day').toDate() })
 
 			if (room.devices.length) {
 				await Promise.all(
@@ -518,6 +529,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 	}, [loading])
 
 	const customSetDate = (menuId, to, from, defaultT) => {
+		cookie.remove('graph_period', { path: '/' });
+
 		setSelectedPeriod(menuId);
 		setFrom(null);
 		setTo(null);
@@ -564,6 +577,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 		setFrom(thisfrom);
 		setTo(thisto);
 
+		cookie.remove('graph_period', { path: '/' });
+
 		setDidSetCustomDate(true);
 		setLoading(true);
 	}
@@ -606,6 +621,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 		setFrom(thisfrom);
 		setTo(thisto);
+
+		cookie.remove('graph_period', { path: '/' });
 
 		setDidSetCustomDate(true);
 		setLoading(true);
