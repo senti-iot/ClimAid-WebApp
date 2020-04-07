@@ -9,7 +9,7 @@ import roomStyles from 'Styles/roomStyles';
 const UserExperienceDropdown = (props) => {
 	const classes = roomStyles();
 	const [popoverWidth, setPopoverWidth] = useState(310);
-	const [anchorExportEl, setAnchorExportEl] = React.useState(null);
+	const [anchorUserExperienceEl, setAnchorUserExperienceEl] = React.useState(null);
 	const [tooColdOpen, setTooColdOpen] = useState(false);
 	const [tooWarmOpen, setTooWarmOpen] = useState(false);
 	const [windyOpen, setWindyOpen] = useState(false);
@@ -56,13 +56,13 @@ const UserExperienceDropdown = (props) => {
 		}
 	}, [checkboxStates]);
 
-	const handleExportMenuOpen = event => {
+	const handleUserExperienceMenuOpen = event => {
 		setPopoverWidth(event.currentTarget.offsetWidth);
-		setAnchorExportEl(event.currentTarget);
+		setAnchorUserExperienceEl(event.currentTarget);
 	};
 
-	const handleExportMenuClose = () => {
-		setAnchorExportEl(null);
+	const handleUserExperienceMenuClose = () => {
+		setAnchorUserExperienceEl(null);
 	};
 
 	const toogleTooColdOpen = () => {
@@ -107,7 +107,7 @@ const UserExperienceDropdown = (props) => {
 
 	return (
 		<>
-			<List dense onClick={handleExportMenuOpen}>
+			<List dense onClick={handleUserExperienceMenuOpen}>
 				<ListItem key={0} button className={classes.topDropdown}>
 					<Button aria-controls="climate-menu" aria-haspopup="true" fullWidth={true} className={classes.topDropdownButton}>
 						Brugeroplevelse
@@ -133,10 +133,10 @@ const UserExperienceDropdown = (props) => {
 					},
 				}}
 				id="climate-menu"
-				anchorEl={anchorExportEl}
+				anchorEl={anchorUserExperienceEl}
 				keepMounted
-				open={Boolean(anchorExportEl)}
-				onClose={handleExportMenuClose}
+				open={Boolean(anchorUserExperienceEl)}
+				onClose={handleUserExperienceMenuClose}
 			>
 				<>
 					<List dense className={classes.root}>
