@@ -88,6 +88,11 @@ export const getRoom = async (uuid) => {
 	return data;
 };
 
+export const getRoomDevices = async (uuid) => {
+	let data = await climaidApi.get('/room/' + uuid + '/devices').then(rs => rs.data);
+	return data;
+};
+
 export const getRooms = async () => {
 	let data = await climaidApi.get('/rooms').then(rs => rs.data);
 	// console.log(data);
@@ -159,6 +164,16 @@ export const getDeviceDataConverted = async (device, period, type) => {
 
 	return convertedData;
 };
+
+export const getQualitativeData = async (devices, period) => {
+	let sort = 'byhour';
+	if (period.timeType === 2) {
+		sort = 'byday';
+	}
+	// console.log('/v2/climaidinsight/qualitative/' + sort + '/' + period.from + '/' + period.to);
+	let data = await servicesAPI.post('/v2/climaidinsight/qualitative/' + sort + '/' + period.from + '/' + period.to, { "devices": devices }).then(rs => rs.data);
+	return data;
+}
 
 export const getBuildingColorData = async (devices, period) => {
 	const from = moment().startOf(period).format('YYYY-MM-DD HH:mm:ss');

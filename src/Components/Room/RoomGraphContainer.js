@@ -86,7 +86,11 @@ const RoomGraphContainer = (props) => {
 
 	const handleuserExperienceChange = (e) => {
 		let newStates = { ...checkboxStates };
-		newStates['userexperience'][e.target.value] = (newStates['userexperience'][e.target.value]) ? false : true;
+		if (newStates['userexperience'][e.target.value]) {
+			delete newStates['userexperience'][e.target.value];
+		} else {
+			newStates['userexperience'][e.target.value] = true;
+		}
 		setCheckboxStates(newStates);
 	}
 

@@ -12,7 +12,7 @@ import d3Line from 'Components/Graphs/classes/d3Line';
 import Legend from 'Components/Graphs/Legend';
 import lineStyles from 'Components/Custom/Styles/lineGraphStyles';
 import Tooltip from 'Components/Room/Tooltip';
-import { getDeviceDataConverted, getBuildingDevices } from 'data/climaid';
+import { getDeviceDataConverted, getBuildingDevices, getQualitativeData, getRoomDevices } from 'data/climaid';
 import { DateTimeFilter } from 'Components';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
@@ -78,7 +78,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						let humidityAvgData = [];
 						let batteryData = null;
 						let batteryAvgData = [];
-						let userexperienceData = [];
+						let userexperienceData = null;
 
 						let devices = null;
 						if (key === 'tempavgbuilding' || key === 'co2avgbuilding' || key === 'humidityavgbuilding' || key === 'batteryavgbuilding') {
@@ -186,53 +186,137 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							});
 						}
 
-						if (key === 'userexperience') {
-							if (checkboxStates['userexperience']['warm'] ||
-								checkboxStates['userexperience']['cold'] ||
-								checkboxStates['userexperience']['windy'] ||
-								checkboxStates['userexperience']['heavyair'] ||
-								checkboxStates['userexperience']['concentration'] ||
-								checkboxStates['userexperience']['tired'] ||
-								checkboxStates['userexperience']['itchyeyes'] ||
-								checkboxStates['userexperience']['lighting'] ||
-								checkboxStates['userexperience']['blinded'] ||
-								checkboxStates['userexperience']['noise']) {
+						if (key === 'userexperience' && Object.keys(checkboxStates['userexperience']).length) {
+							userexperienceData = [];
+							let buildingDevices = await getBuildingDevices(room.building.uuid);
+							let newDevices = [];
+							buildingDevices.map(device => {
+								if (device.type === 'userdata') {
+									newDevices.push(device.device);
+								}
+							});
 
-								// devices = await getBuildingDevices(room.building.uuid);
+							await Promise.all(
+								Object.keys(checkboxStates['userexperience']).map(async experienceType => {
+									if (experienceType === 'warm' ||
+										experienceType === 'cold' ||
+										experienceType === 'windy' ||
+										experienceType === 'heavyair' ||
+										experienceType === 'concentration' ||
+										experienceType === 'tired' ||
+										experienceType === 'itchyeyes' ||
+										experienceType === 'lighting' ||
+										experienceType === 'blinded' ||
+										experienceType === 'noise') {
 
-								// await Promise.all(
-								// 	Object.keys(checkboxStates['userexperience']).map(type => {
-								// 		console.log(type);
-								// 		devices.map(async device => {
-								// 			if (device.type === 'userdata') {
-								// 				let deviceData = await getDeviceDataConverted(device.device, period, type);
-								// 				console.log(deviceData);
-								// 				deviceData.map(data => {
-								// 					if (!userexperienceData[data.date][type]) {
-								// 						userexperienceData[data.date][type] = parseInt(data.value);
-								// 					} else {
-								// 						userexperienceData[data.date][type] += parseInt(data.value);
-								// 					}
-								// 				});
-								// 			}
-								// 		})
-								// 	})
-								// )
+										let qualitativeData = await getQualitativeData(newDevices, period);
 
-								userexperienceData.push({
-									date: moment("2020-04-01 00:00:00").valueOf(),
-									"cold": 1,
-									"warm": 2,
-									"noisy": 0,
-									"tired": 0,
-									"windy": 10,
-									"blinded": 0,
-									"heavyair": 0,
-									"lighting": 0,
-									"itchyeyes": 0,
-									"concentration": 0
-								});
-							}
+										if (qualitativeData) {
+											qualitativeData.map(td => {
+												const ts = td.uts * 1000;
+												let hasObjectKey = null;
+												userexperienceData.map((d, i) => {
+													if (d.ts === ts) {
+														hasObjectKey = i;
+													}
+												});
+
+												let tmpObj = {};
+												if (hasObjectKey === null) {
+													tmpObj["ts"] = ts;
+													tmpObj["warm"] = 0;
+													tmpObj["cold"] = 0;
+													tmpObj["windy"] = 0;
+													tmpObj["heavyair"] = 0;
+													tmpObj["concentration"] = 0;
+													tmpObj["tired"] = 0;
+													tmpObj["itchyeyes"] = 0;
+													tmpObj["lighting"] = 0;
+													tmpObj["blinded"] = 0;
+													tmpObj["noisy"] = 0;
+												} else {
+													tmpObj = userexperienceData[hasObjectKey];
+												}
+
+												Object.keys(td).map(tdkey => {
+													if (tdkey === experienceType) {
+														tmpObj[experienceType] = td[experienceType];
+													}
+												});
+
+												if (hasObjectKey === null) {
+													userexperienceData.push(tmpObj);
+												} else {
+													userexperienceData[hasObjectKey] = tmpObj;
+												}
+											});
+										}
+									} else if (experienceType.indexOf('warm_') !== -1 ||
+										experienceType.indexOf('cold_') !== -1 ||
+										experienceType.indexOf('windy_') !== -1 ||
+										experienceType.indexOf('heavyair_') !== -1 ||
+										experienceType.indexOf('concentration_') !== -1 ||
+										experienceType.indexOf('tired_') !== -1 ||
+										experienceType.indexOf('itchyeyes_') !== -1 ||
+										experienceType.indexOf('lighting_') !== -1 ||
+										experienceType.indexOf('blinded_') !== -1 ||
+										experienceType.indexOf('noise_') !== -1) {
+
+										let keyParts = experienceType.split('_');
+										let roomDevices = await getRoomDevices(keyParts[1]);
+
+										let newDevices = [];
+										roomDevices.map(device => {
+											if (device.type === 'userdata') {
+												newDevices.push(device.device);
+											}
+										});
+
+										let qualitativeData = await getQualitativeData(newDevices, period);
+
+										if (qualitativeData) {
+											qualitativeData.map(td => {
+												const ts = td.uts * 1000;
+												let hasObjectKey = null;
+												userexperienceData.map((d, i) => {
+													if (d.ts === ts) {
+														hasObjectKey = i;
+													}
+												});
+
+												let tmpObj = {};
+												if (hasObjectKey === null) {
+													tmpObj["ts"] = ts;
+													tmpObj["warm"] = 0;
+													tmpObj["cold"] = 0;
+													tmpObj["windy"] = 0;
+													tmpObj["heavyair"] = 0;
+													tmpObj["concentration"] = 0;
+													tmpObj["tired"] = 0;
+													tmpObj["itchyeyes"] = 0;
+													tmpObj["lighting"] = 0;
+													tmpObj["blinded"] = 0;
+													tmpObj["noisy"] = 0;
+												} else {
+													tmpObj = userexperienceData[hasObjectKey];
+												}
+
+												Object.keys(td).map(tdkey => {
+													if (tdkey === keyParts[0]) {
+														tmpObj[tdkey] = td[tdkey];
+													}
+												});
+
+												if (hasObjectKey === null) {
+													userexperienceData.push(tmpObj);
+												} else {
+													userexperienceData[hasObjectKey] = tmpObj;
+												}
+											});
+										}
+									}
+								})
+							);
 						}
 
 						if (props.checkboxStates[key]) {
@@ -423,17 +507,18 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										});
 									}
 									break;
-							}
-
-							if (key === 'userexperience' && Object.keys(props.checkboxStates['userexperience']).length) {
-								graphLinesData.userexperience.push({
-									noArea: true,
-									isBar: true,
-									name: key,
-									median: true,
-									data: userexperienceData,
-									noDots: true
-								});
+								case 'userexperience':
+									if (userexperienceData) {
+										graphLinesData.userexperience.push({
+											noArea: true,
+											isBar: true,
+											name: key,
+											median: true,
+											data: userexperienceData,
+											noDots: true
+										});
+									}
+									break;
 							}
 						}
 					})

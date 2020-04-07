@@ -107,6 +107,7 @@ class d3Line {
 		})
 
 		this.generateBackground()
+		this.generateBars();
 		this.generateLines()
 		// this.generateMedian()
 		this.generateLegend()
@@ -230,9 +231,15 @@ class d3Line {
 						yAxis2Type = data[0].unit;
 					}
 
-					yAxis2 = this.yAxis2 = this.svg.append("g")
-						.attr('transform', `translate(${this.width - 85}, 0)`)
-						.call(d3.axisRight(this.y2).tickSize(0).tickPadding(5));
+					if (key === 'userexperience') {
+						yAxis2 = this.yAxis2 = this.svg.append("g")
+							.attr('transform', `translate(${this.width - 85}, 0)`)
+							.call(d3.axisRight(this.y2).tickSize(0).tickPadding(5).ticks(max));
+					} else {
+						yAxis2 = this.yAxis2 = this.svg.append("g")
+							.attr('transform', `translate(${this.width - 85}, 0)`)
+							.call(d3.axisRight(this.y2).tickSize(0).tickPadding(5));
+					}
 				}
 
 				count++;
@@ -283,7 +290,7 @@ class d3Line {
 			let data = this.props.data[firstKey]
 			let newData = data.filter(f => !this.state[f.name])
 			let allData = [].concat(...newData.map(d => d.data))
-			let from = moment.min(allData.map(d => moment(d.date)))
+			let from = moment.min(allData.map(d => moment(d.date))).startOf('hour')
 			let to = moment.max(allData.map(d => moment(d.date)))
 
 			this.x.domain([from, to])
@@ -686,42 +693,11 @@ class d3Line {
 								.transition().duration(1500)
 								.attr("stroke-dashoffset", 0);
 						} else {
-							if (line.isBar === true) {
-								const keys = ["cold",
-								 		"warm",
-								 		"noisy",
-								 		"tired",
-								 		"windy",
-								 		"blinded",
-								 		"heavyair",
-								 		"lighting",
-								 		"itchyeyes",
-								 		"concentration"];
-
-								var stackedData = d3.stack().keys(keys)(line.data);
-								var color = d3.scaleOrdinal().domain(keys).range(['red', 'blue', 'green', 'yellow', 'purple', 'brown', 'white', 'black', 'grey', 'orange']);
-								var xScale = this.x;
-								var y2Scale = this.y2;
-
-								this.svg.append("g")
-									.selectAll("g")
-									// Enter in the stack data = loop key per key = group per group
-									.data(stackedData)
-									.enter().append("g")
-									.attr("fill", function (d) { return color(d.key); })
-									.selectAll("rect")
-									// enter a second time = loop subgroup per subgroup to add all rectangles
-									.data(function (d) { return d; })
-									.enter().append("rect")
-									.attr("x", function (d) { return xScale(d.data.date); })
-									.attr("y", function (d) { return y2Scale(d[1]); })
-									.attr("height", function (d) { return y2Scale(d[0]) - y2Scale(d[1]); })
-									// .attr("width", x.bandwidth())
-									.attr("width", 20)
-							} else {
+							if (line.isBar !== true) {
 								this.svg.append('path')
 									.data([line.data])
 									.attr('id', line.name)
+									.attr('class', 'line')
 									// .attr('class', classes[line.name])
 									.attr('fill', 'none')
 									.attr('stroke', line.color)
@@ -749,8 +725,61 @@ class d3Line {
 
 				count++;
 			}
-		})
+		});
+	}
 
+	generateBars = () => {
+		let count = 1;
+		Object.keys(this.props.data).map(key => {
+			let data = this.props.data[key]
+
+			if (data.length && count <= 2) {
+				data.forEach(line => {
+					if (line.isBar === true) {
+						const keys = [
+							"warm",
+							"cold",
+							"windy",
+							"heavyair",
+							"concentration",
+							"tired",
+							"itchyeyes",
+							"lighting",
+							"blinded",
+							"noisy"
+						];
+
+						var stackedData = d3.stack().keys(keys)(line.data);
+						var color = d3.scaleOrdinal().domain(keys).range(['#1F425D', '#224D66', '#007870', '#255870', '#28647A', '#2A7183', '#2D7F8D', '#2F8E97', '#34ABA8', '#04A8AB']);
+						var xScale = this.x;
+						var y2Scale = this.y2;
+
+						this.svg.append("g")
+							.selectAll("g")
+							// Enter in the stack data = loop key per key = group per group
+							.data(stackedData)
+							.enter().append("g")
+							.attr("fill", function (d) { return color(d.key); })
+							.selectAll("rect")
+							// enter a second time = loop subgroup per subgroup to add all rectangles
+							.data(function (d) { return d; })
+							.enter().append("rect")
+							.attr("x", (d, i) => {
+								let pos = 12;
+								if (i === line.data.length - 1) {
+									pos = 25;
+								}
+								return xScale(d.data.ts) - pos;
+							})
+							.attr("y", (d) => { return y2Scale(d[1]); })
+							.attr("height", (d) => { return y2Scale(d[0]) - y2Scale(d[1]); })
+							.attr("width", 30)
+					}
+				});
+
+				count++;
+			}
+		});
 	}
 
 	// generateMedian = () => {
