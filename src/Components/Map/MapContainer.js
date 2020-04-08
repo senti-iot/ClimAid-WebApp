@@ -171,8 +171,8 @@ const MapContainer = (props) => {
 					</div>
 					<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
 						<ItemG xs={7}>
-							<h1 className={classes.mapInfoContainerHeader}>{getWelcomeTime()} {user.firstName}<br />En bygning vælges nedenfor</h1>
-							<h2 className={classes.mapInfoContainerSubHeader}>Her har du en liste af alle registrerede bygninger udstyret med en ERS Co2 indeklima sensorer</h2>
+							<h1 className={classes.mapInfoContainerHeader}>{getWelcomeTime()} {user.firstName}</h1>
+							<h2 className={classes.mapInfoContainerSubHeader}>Brug kortet for at se hvilken bygning der har brug for ekstra opmærksomhed, eller gå direkte til en bygning via listen herunder.</h2>
 						</ItemG>
 						<ItemG xs={5}>
 							<img src="/images/velkommen.svg" alt="" style={{ maxWidth: 300 }} />
