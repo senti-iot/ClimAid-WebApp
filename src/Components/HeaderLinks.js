@@ -147,7 +147,11 @@ function HeaderLinks(props) {
 	}
 
 	const goToBurgerPage = page => {
-		history.push('/' + page + '/');
+		if (page === 'climaid') {
+			window.location = 'http://welcome.climaid.dk/';
+		} else {
+			history.push('/' + page + '/');
+		}
 
 		handleBurgerMenuClose();
 	}
