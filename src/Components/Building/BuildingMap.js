@@ -144,16 +144,18 @@ function BuildingMap(props) {
 				</div>
 			</Map>
 
-			{showingRoom && 
+			{showingRoom ?
 				<div style={{ position: 'absolute', left: 38, top: 158, width: 500, zIndex: 1000 }}>
 					<div style={{ position: 'absolute', top: 10, right: 10, cursor: 'pointer' }} onClick={closeRoomInfo}><CloseTwoToneIcon /></div>
 					<RoomInfo room={showingRoom} />
 				</div>
-			}
+				: ""}
 
-			<Backdrop style={{ zIndex: 2000 }} open={comfortDiagramOpen} onClick={closeComfortDiagram}>
-				<ComfortChart rooms={rooms} type="building" />
-			</Backdrop>
+			{comfortDiagramOpen ? 
+				<Backdrop style={{ zIndex: 1000 }} open={comfortDiagramOpen}>
+					<ComfortChart rooms={rooms} type="building" onClose={closeComfortDiagram} />
+				</Backdrop>
+				: ""}
 		</>
 	);
 }

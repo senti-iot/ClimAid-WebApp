@@ -5,7 +5,6 @@ import Administraion from 'Routes/Administration';
 import Building from 'Routes/Building';
 import UserManual from 'Routes/UserManual';
 import Support from 'Routes/Support';
-import Climaid from 'Routes/Climaid';
 import Room from 'Routes/Room';
 import Header from 'Components/Header';
 import Footer from 'Components/Footer';
@@ -44,9 +43,6 @@ function Container(props) {
 							</Route>
 							<Route path={'/support'}>
 								<Support />
-							</Route>
-							<Route path={'/climaid'}>
-								<Climaid />
 							</Route>
 							<Route path={'/building/:buildingUuid/room/:roomUuid'}>
 								<Room />

@@ -122,9 +122,11 @@ function RoomMap(props) {
 				</div>
 			</Map>
 
-			<Backdrop style={{ zIndex: 2000 }} open={comfortDiagramOpen} onClick={closeComfortDiagram}>
-				<ComfortChart rooms={[room]} type="room" />
-			</Backdrop>
+			{comfortDiagramOpen ?
+				<Backdrop style={{ zIndex: 1000 }} open={comfortDiagramOpen}>
+					<ComfortChart rooms={[room]} type="building" onClose={closeComfortDiagram} />
+				</Backdrop>
+				: ""}
 		</>
 	);
 }

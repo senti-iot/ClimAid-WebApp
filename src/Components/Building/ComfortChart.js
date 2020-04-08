@@ -1,13 +1,49 @@
 /* eslint-disable array-callback-return */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import moment from 'moment';
+import Button from '@material-ui/core/Button';
+import CloseIcon from '@material-ui/icons/Close';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import styled from 'styled-components';
+
 import comformChartStyles from 'Styles/comformChartStyles';
-import { getBuildingColorData } from 'data/climaid';
+import { getBuildingColorData, getQualitativeData } from 'data/climaid';
+import CircularLoader from 'Components/Loaders/CircularLoader';
+
+const TCard = styled(Card)`
+	position: absolute;
+	top: -1000px;
+	left: -1000px;
+	min-width: 300px;
+	min-height: 300px;
+	border: 0;
+	border-radius: 4;
+	z-index: 2200;
+	transition: 300ms all ease;
+`
 
 const ComfortChart = (props) => {
 	const classes = comformChartStyles();
 	const rooms = props.rooms;
+	const [loading, setLoading] = useState(true);
+	const [currentReading, setCurrentReading] = useState(null);
+	const [left, setLeft] = useState(-1000);
+	const [top, setTop] = useState(-1000);
+
+	const keyToText = {
+		warm: 'For varmt',
+		cold: 'For koldt',
+		windy: 'Træk',
+		heavyair: 'Tung luft',
+		concentration: 'Koncentrationsbesvær',
+		tired: 'Træthed',
+		itchyeyes: 'Tørre øjne og næse',
+		lighting: 'Dårlig belysning',
+		blinded: 'Blænding',
+		noisy: 'Støj'
+	}
 
 	useEffect(() => {
 		let dataDevices = [];
@@ -25,7 +61,16 @@ const ComfortChart = (props) => {
 		async function fetchData() {
 			let colorData = await getBuildingColorData(dataDevices, 'month');
 			if (colorData) {
-				generateChart(colorData);
+				let period = {};
+				period.timeType = 1;
+				period.from = moment().startOf('month').format('YYYY-MM-DD HH:mm:ss');
+				period.to = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss');
+
+				let qualitativeData = await getQualitativeData(userDevices, period);
+
+				setLoading(false);
+
+				generateChart(colorData, qualitativeData);
 			}
 		};
 
@@ -33,13 +78,11 @@ const ComfortChart = (props) => {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const generateChart = (data) => {
+	const generateChart = (data, qualitativeData) => {
 		let margin = { top: 30, right: 0, bottom: 100, left: 60 };
 		let width = 830 - margin.left - margin.right;
 		let height = 800 - margin.top - margin.bottom;
 		let gridSize = 25;
-		// let legendElementWidth = gridSize * 2;
-		// let buckets = 9;
 		const colors = ['#3fbfad', '#e28117', '#d1463d', '#e56363'];
 		let days = generateDayLabels();
 		let times = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
@@ -47,7 +90,6 @@ const ComfortChart = (props) => {
 		let svg = d3.select("#chart").append("svg")
 			.attr("width", width + margin.left + margin.right)
 			.attr("height", height + margin.top + margin.bottom)
-			//.attr("style", "background-color: red")
 			.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -71,14 +113,9 @@ const ComfortChart = (props) => {
 					+ "translate(" + gridSize / 1.5 + ", 125) rotate(-90)";
 			})			
 
-		// let colorScale = d3.scaleQuantile()
-		// 	.domain([0, buckets - 1, d3.max(data, function (d) { return d.value; })])
-		// 	.range(colors);
-
 		let cards = svg.selectAll(".hour")
 			.data(data, function (d) { return d.ts ? moment(d.ts.split(' ')[0]).format("D") + ':' + d.ts.split(' ')[1] : '' });
 
-		// cards.append("title");
 		const daysInMonth = moment().daysInMonth();
 		for (let i = 1; i <= daysInMonth; i++) {
 			svg.selectAll('.gridrect')
@@ -100,48 +137,27 @@ const ComfortChart = (props) => {
 			.attr("height", gridSize)
 			.style("fill", (d) => { return colors[d.color - 1]; });
 
-		// cards.transition().duration(1000)
-		// 	.style("fill", function (d) { return colorScale(d.value); });
-
-		// cards.select("title").text(function (d) { return d.value; });
-
 		cards.exit().remove();
 
 		// eslint-disable-next-line array-callback-return
-		// data.map((reading) => {
-		// 	if (reading.userResponses) {
-		// 		svg.append("circle")
-		// 			.attr("cx", () => { return (reading.day - 1) * gridSize + gridSize / 2; })
-		// 			.attr("cy", () => { return reading.hour * gridSize - gridSize / 2; })
-		// 			.attr("r", 6)
-		// 			.style("fill", "#7f7f7f")
-		// 			//.style("opacity", 0.8)
-		// 			.on('click', () => {
-		// 				console.log("You clicked");
-		// 			});
-		// 	}
-		// });
+		qualitativeData.map((reading) => {
+			if (reading) {
+				let day = moment(reading.ts.split(' ')[0]).format('D');
+				let hour = reading.ts.split(' ')[1];
 
-		// var legend = svg.selectAll(".legend")
-		// 	.data([0].concat(colorScale.quantiles()), function (d) { return d; });
-
-		// legend.enter().append("g")
-		// 	.attr("class", "legend");
-
-		// legend.append("rect")
-		// 	.attr("x", function (d, i) { return legendElementWidth * i; })
-		// 	.attr("y", height)
-		// 	.attr("width", legendElementWidth)
-		// 	.attr("height", gridSize / 2)
-		// 	.style("fill", function (d, i) { return colors[i]; });
-
-		// legend.append("text")
-		// 	.attr("class", "mono")
-		// 	.text(function (d) { return "≥ " + Math.round(d); })
-		// 	.attr("x", function (d, i) { return legendElementWidth * i; })
-		// 	.attr("y", height + gridSize);
-
-		// legend.exit().remove();
+				svg.append("circle")
+					.attr("cx", () => { return (day - 1) * gridSize + gridSize / 2; })
+					.attr("cy", () => { return hour * gridSize - gridSize / 2; })
+					.attr("r", 6)
+					.style("fill", "#7f7f7f")
+					.style("cursor", "pointer")
+					.on('click', () => {
+						setCurrentReading(reading);
+						setLeft(d3.event.pageX);
+						setTop(d3.event.pageY);
+					});
+			}
+		});
 	}
 
 	const generateDayLabels = () => {
@@ -157,12 +173,43 @@ const ComfortChart = (props) => {
 		return dates;
 	};
 
+	const closeReadingPopover = () => {
+		setCurrentReading(null);
+	};
+
 	return (
 		<>
-			<div id="chart" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2000, backgroundColor: '#fff' }}>
-				<div style={{ position: 'absolute', top: '50%', left: -30, transform: 'rotate(270deg)', color: '#000' }}>Time på døgnet</div>
-				<div style={{ textAlign: 'center', maxWidth: 750, margin: '0 auto' }}>{props.type === 'building' ? <><h2>KOMFORT DIAGRAM - BYGNING</h2><p>Hver firkant er en vurdering af indeklimaet i hele bygningen.<br />Time firkantens farve bestemmes af indeklima målingerne og viser om og hvornår indeklimaet har brug for ekstra opmærksomhed.</p></> : <><h2> KOMFORT DIAGRAM - LOKALE</h2><p>Hver firkant er en vurdering af indeklimaet i lokalet.<br />Time firkantens farve bestemmes af indeklima målingerne og viser hvordan det samlede indeklima har været.</p></>}</div>
-			</div>
+			{loading ? <CircularLoader fill />
+				:
+				<>
+					<div id="chart" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2100, backgroundColor: '#fff', borderRadius: 4 }}>
+						<div style={{ position: 'absolute', top: 10, right: 0 }}>
+							<Button onClick={props.onClose}>
+								<CloseIcon />
+							</Button>
+						</div>
+						<div style={{ position: 'absolute', top: '50%', left: -30, transform: 'rotate(270deg)', color: '#000' }}>Time på døgnet</div>
+						<div style={{ textAlign: 'center', maxWidth: 750, margin: '0 auto' }}>{props.type === 'building' ? <><h2>KOMFORT DIAGRAM - BYGNING</h2><p>Hver firkant er en vurdering af indeklimaet i hele bygningen.<br />Time firkantens farve bestemmes af indeklima målingerne og viser om og hvornår indeklimaet har brug for ekstra opmærksomhed.</p></> : <><h2> KOMFORT DIAGRAM - LOKALE</h2><p>Hver firkant er en vurdering af indeklimaet i lokalet.<br />Time firkantens farve bestemmes af indeklima målingerne og viser hvordan det samlede indeklima har været.</p></>}</div>
+					</div>
+
+					{currentReading ?
+						<TCard id='readingPopoverOpen' style={{ left: left, top: top }}>
+							<CardContent>
+								<div style={{ position: 'absolute', top: 0, right: -10 }}>
+									<Button onClick={closeReadingPopover}>
+										<CloseIcon />
+									</Button>
+								</div>
+								{Object.keys(currentReading).map(key => {
+									if (key !== 'ts' && key !== 'uts' && currentReading[key] > 0) {
+										return <div key={key}>{keyToText[key]}: {currentReading[key]}</div>
+									}
+								})}
+							</CardContent>
+						</TCard>
+						: ""}
+				</>
+			}
 		</>
 	);
 }
