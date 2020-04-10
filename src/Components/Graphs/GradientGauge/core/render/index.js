@@ -13,7 +13,7 @@ import {
 	configureScale,
 } from "../config/configure"
 
-export const update = ({ d3_refs, newValue, config }) => {
+export const update = ({ d3_refs, newValue, config, type }) => {
 	const scale = configureScale(config)
 	const ratio = scale(newValue)
 	const range = config.maxAngle - config.minAngle
@@ -24,6 +24,21 @@ export const update = ({ d3_refs, newValue, config }) => {
 	d3_refs.pointer
 		.transition()
 		.attr("transform", `rotate(${newAngle}) translate(0, -${r - 23.5})`)
+
+	if (type === 'temperature') {
+		if (newValue >= 21 && newValue <= 24.5) {
+			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', '#11f0d0')
+
+		}
+	} else if (type === 'co2') {
+		if (newValue >= 0 && newValue <= 1000) {
+			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', '#11f0d0')
+		}
+	} else if (type === 'humidity') {
+		if (newValue >= 35 && newValue <= 65) {
+			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', '#11f0d0')
+		}
+	}
 
 	d3_refs.current_value_text.text(formatCurrentValueText(newValue, config))
 }
@@ -296,7 +311,7 @@ function _renderNeedle({ config, svg, r, centerTx }) {
 	// 	.attr("transform", centerTx)
 
 	var arc = d3.arc();
-	arc.innerRadius(0);
+	arc.innerRadius(5);
 	arc.outerRadius(8);
 	arc.startAngle(0);
 	arc.endAngle(360);
