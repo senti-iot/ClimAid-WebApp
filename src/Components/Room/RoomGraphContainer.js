@@ -16,6 +16,7 @@ import RoomGraph from 'Components/Room/RoomGraph';
 // import Weather from 'Components/Room/Weather';
 import ClimateDropdown from 'Components/Room/ClimateDropdown';
 import UserExperienceDropdown from 'Components/Room/UserExperienceDropdown';
+import AnalyticsDropdown from 'Components/Room/AnalyticsDropdown';
 import ExportDropdown from 'Components/Room/ExportDropdown';
 import { getRoomsInBuilding } from 'data/climaid';
 import { CircularLoader } from 'Components';
@@ -25,7 +26,7 @@ const RoomGraphContainer = (props) => {
 	const [loading, setLoading] = useState(false);
 	// const [roomValues, setRoomValues] = useState(null);
 	// const [batteryLevel, setBatteryLevel] = useState(null);
-	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true, 'userexperience': [] });
+	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true, 'userexperience': [], 'analytics': [] });
 	// const [anchorEl, setAnchorEl] = useState(null);
 	const [room, setRoom] = useState(null);
 	const [rooms, setRooms] = useState([]);
@@ -90,6 +91,16 @@ const RoomGraphContainer = (props) => {
 			delete newStates['userexperience'][e.target.value];
 		} else {
 			newStates['userexperience'][e.target.value] = true;
+		}
+		setCheckboxStates(newStates);
+	}
+
+	const handleAnalyticsChange = (e) => {
+		let newStates = { ...checkboxStates };
+		if (newStates['analytics'][e.target.value]) {
+			delete newStates['analytics'][e.target.value];
+		} else {
+			newStates['analytics'][e.target.value] = true;
 		}
 		setCheckboxStates(newStates);
 	}
@@ -184,7 +195,10 @@ const RoomGraphContainer = (props) => {
 						<Grid item xs={3} xl={2}>
 							{rooms ? <UserExperienceDropdown onChange={handleuserExperienceChange} checkboxStates={checkboxStates} rooms={rooms} /> : ""}
 						</Grid>
-						<Grid item xs={3} xl={6}>
+						<Grid item xs={3} xl={2}>
+							{rooms ? <AnalyticsDropdown onChange={handleAnalyticsChange} checkboxStates={checkboxStates} rooms={rooms} /> : ""}
+						</Grid>
+						<Grid item xs={3} xl={4}>
 						</Grid>
 						<Grid item xs={3} xl={2}>
 							<ExportDropdown saveGraph={saveGraph} />

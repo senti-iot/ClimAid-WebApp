@@ -50,7 +50,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 			co2: [],
 			humidity: [],
 			battery: [],
-			userexperience: []
+			userexperience: [],
+			analytics: []
 		}
 
 		async function fetchData() {
