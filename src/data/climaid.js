@@ -233,3 +233,19 @@ export const getRoomColorData = async (devices) => {
 	let data = await servicesAPI.post('/v2/climaidinsight/colorstate/room', { "devices": devices, "config": config }).then(rs => rs.data);
 	return data;
 }
+
+export const getRoomActivityLevel = async (device) => {
+	const config = {
+		"firstday": 0,
+		"lastday": 4,
+		"firsthour": 7,
+		"lasthour": 16
+	}
+
+	const from = moment().startOf('month').format('YYYY-MM-DD');
+	const to = moment().endOf('month').format('YYYY-MM-DD');
+	// console.log('/v2/climaidinsight/activity/' + from + '/' + to);
+	// console.log({ "devices": [device], "config": config });
+	let data = await servicesAPI.post('/v2/climaidinsight/activity/' + from + '/' + to, { "devices": [device], "config": config }).then(rs => rs.data);
+	return data;
+}

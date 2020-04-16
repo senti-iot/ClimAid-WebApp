@@ -157,6 +157,30 @@ const roomStyles = makeStyles(theme => ({
 			backgroundColor: 'transparent'
 		},
 	},
+	usagePercent: {
+		color: '#babebe',
+		fontSize: 30,
+		fontWeight: 'normal',
+	},
+	usageGraphBg: {
+		width: '100%',
+		height: 10,
+		backgroundColor: '#eceded',
+		borderRadius: 10,
+		marginTop: 10
+	},
+	usageGraph: {
+		height: 10,
+		backgroundColor: '#83b4b5',
+		borderRadius: 10,
+	},
+	usageDesc: {
+		color: '#c3c6c6',
+		fontSize: 13,
+		lineHeight: '15px',
+		textAlign: 'center',
+		marginTop: 8
+	}
 }));
 
 export default roomStyles;

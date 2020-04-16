@@ -5,19 +5,24 @@ import moment from 'moment';
 import roomStyles from 'Styles/roomStyles';
 import { ItemG } from 'Components';
 import GradientGauge from "Components/Graphs/GradientGauge/GradientGauge";
-import { getMeassurement } from 'data/climaid';
+import { getMeassurement, getRoomActivityLevel } from 'data/climaid';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
 const RoomInfo = (props) => {
 	const classes = roomStyles();
 	let room = props.room;
 	const [roomValues, setRoomValues] = useState(null);
+	const [activityLevel, setActivityLevel] = useState(null);
 
 	useEffect(() => {
 		async function fetchData() {
 			let values = {};
+			let dataDevice = null;
 			await Promise.all(
 				room.devices.map(async device => {
+					if (device.type === 'data') {
+						dataDevice = device.device;
+					}
 					if (device.gauges && device.gauges.length) {
 						return await Promise.all(
 							device.gauges.map(async (gauge) => {
@@ -29,6 +34,14 @@ const RoomInfo = (props) => {
 				})
 			)
 
+			if (dataDevice) {
+				console.log(dataDevice);
+				let activityLevelData = await getRoomActivityLevel(dataDevice);
+				if (activityLevelData) {
+					setActivityLevel(Math.round(activityLevelData.motion));
+				}
+			}
+
 			setRoomValues(values);
 		}
 
@@ -38,8 +51,8 @@ const RoomInfo = (props) => {
 	return (
 		<Paper elevation={3} className={classes.roomInfoContainer}>
 			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
-				<Grid container item xs={12}>
-					<ItemG xs={9}>
+				<Grid container item xs={12} style={{ marginBottom: 20 }}>
+					<ItemG xs={8}>
 						<div className={classes.roomName}>{room.name}</div>
 						<div className={classes.dayName}>
 							{moment().format('dddd')}
@@ -47,9 +60,26 @@ const RoomInfo = (props) => {
 						<div className={classes.date}>
 							{moment().format('D. MMMM YYYY')}
 						</div>
-						<br />
 					</ItemG>
+					<ItemG xs={4}>
+						{activityLevel ?
+							<Grid container justify={'space-between'} alignItems={'flex-start'} style={{ marginLeft: 20, marginTop: 4 }}>
+								<ItemG xs={4}>
+									<img src='/images/anvendelse.svg' alt='' style={{ width: '100%' }} />
+								</ItemG>
+								<ItemG xs={8} style={{ textAlign: 'center' }} className={classes.usagePercent}>{activityLevel}%</ItemG>
+								<ItemG xs={12}>
+									<div className={classes.usageGraphBg}>
+										<div className={classes.usageGraph} style={{ width: activityLevel + '%' }} />
+									</div>
+								</ItemG>
+								<ItemG xs={12} className={classes.usageDesc}>Anvendelse fra 7-17 i hverdagen</ItemG>
+							</Grid>
+							: ""}
+					</ItemG>
+				</Grid>
 
+				<Grid container item xs={12}>
 					{roomValues ?
 						// eslint-disable-next-line array-callback-return
 						room.devices.map(device => {
