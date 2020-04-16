@@ -18,6 +18,7 @@ import ClimateDropdown from 'Components/Room/ClimateDropdown';
 import UserExperienceDropdown from 'Components/Room/UserExperienceDropdown';
 import AnalyticsDropdown from 'Components/Room/AnalyticsDropdown';
 import ExportDropdown from 'Components/Room/ExportDropdown';
+import EnergyDropdown from 'Components/Room/EnergyDropdown';
 import { getRoomsInBuilding } from 'data/climaid';
 import { CircularLoader } from 'Components';
 
@@ -198,7 +199,10 @@ const RoomGraphContainer = (props) => {
 						<Grid item xs={3} xl={2}>
 							{rooms ? <AnalyticsDropdown onChange={handleAnalyticsChange} checkboxStates={checkboxStates} rooms={rooms} /> : ""}
 						</Grid>
-						<Grid item xs={3} xl={4}>
+						<Grid item xs={3} xl={2}>
+							<EnergyDropdown />
+						</Grid>
+						<Grid item xs={3} xl={2}>
 						</Grid>
 						<Grid item xs={3} xl={2}>
 							<ExportDropdown saveGraph={saveGraph} />
