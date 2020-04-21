@@ -173,6 +173,10 @@ const MapContainer = (props) => {
 		return string;
 	}
 
+	const handleMarkerClick = () => {
+		setDisplayOverlay(false);
+	}
+
 	return (
 		<div style={{ height: "1100px", width: "100%" }}>
 			{!loading ?
@@ -238,7 +242,7 @@ const MapContainer = (props) => {
 							<FeatureGroup ref={groupRef}>
 								{buildings.map(building => {
 									return (
-										<Marker key={building.uuid} position={building.latlong.split(',')} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })}>
+										<Marker key={building.uuid} position={building.latlong.split(',')} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })} onClick={handleMarkerClick}>
 											<Popup maxWidth={400} maxHeight={550} closeButton="">
 												<MapPopupBuilding building={building} />
 											</Popup>
