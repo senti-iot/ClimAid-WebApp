@@ -31,6 +31,7 @@ const ComfortChart = (props) => {
 	const [currentReading, setCurrentReading] = useState(null);
 	const [left, setLeft] = useState(-1000);
 	const [top, setTop] = useState(-1000);
+	const [height, setHeight] = useState(800);
 
 	const keyToText = {
 		warm: 'For varmt',
@@ -73,6 +74,12 @@ const ComfortChart = (props) => {
 				generateChart(colorData, qualitativeData);
 			}
 		};
+
+		if (window.innerHeight > 1000) {
+			setHeight(820);
+		} else {
+			setHeight(window.innerHeight / 2);
+		}
 
 		fetchData();
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -182,14 +189,17 @@ const ComfortChart = (props) => {
 			{loading ? <CircularLoader fill />
 				:
 				<>
-					<div id="chart" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2100, backgroundColor: '#fff', borderRadius: 4 }}>
-						<div style={{ position: 'absolute', top: 10, right: 0 }}>
+					<div style={{ position: 'absolute', top: '55%', left: '50%', transform: 'translate(-50%, -50%)', width: 850, zIndex: 2100, backgroundColor: '#fff', borderRadius: 4 }}>
+						<div style={{ position: 'absolute', top: 10, right: 0, zIndex: 1100 }}>
 							<Button onClick={props.onClose}>
 								<CloseIcon />
 							</Button>
 						</div>
 						<div style={{ position: 'absolute', top: '50%', left: -30, transform: 'rotate(270deg)', color: '#000' }}>Time på døgnet</div>
-						<div style={{ textAlign: 'center', maxWidth: 750, margin: '0 auto' }}>{props.type === 'building' ? <><h2>KOMFORT DIAGRAM - BYGNING</h2><p>Hver firkant er en vurdering af indeklimaet i hele bygningen.<br />Time firkantens farve bestemmes af indeklima målingerne og viser om og hvornår indeklimaet har brug for ekstra opmærksomhed.</p></> : <><h2> KOMFORT DIAGRAM - LOKALE</h2><p>Hver firkant er en vurdering af indeklimaet i lokalet.<br />Time firkantens farve bestemmes af indeklima målingerne og viser hvordan det samlede indeklima har været.</p></>}</div>
+						<div style={{ textAlign: 'center', width: '90%', height: 150, margin: '0 auto', backgroundColor: '#fff' }}>{props.type === 'building' ? <><h2>KOMFORT DIAGRAM - BYGNING</h2><p>Hver firkant er en vurdering af indeklimaet i hele bygningen.<br />Time firkantens farve bestemmes af indeklima målingerne og viser om og hvornår indeklimaet har brug for ekstra opmærksomhed.</p></> : <><h2> KOMFORT DIAGRAM - LOKALE</h2><p>Hver firkant er en vurdering af indeklimaet i lokalet.<br />Time firkantens farve bestemmes af indeklima målingerne og viser hvordan det samlede indeklima har været.</p></>}</div>
+						<div style={{ height: height, overflow: 'scroll' }}>
+							<div id="chart"></div>
+						</div>
 					</div>
 
 					{currentReading ?
