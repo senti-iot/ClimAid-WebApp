@@ -12,7 +12,7 @@ import d3Line from 'Components/Graphs/classes/d3Line';
 import Legend from 'Components/Graphs/Legend';
 import lineStyles from 'Components/Custom/Styles/lineGraphStyles';
 import Tooltip from 'Components/Room/Tooltip';
-import { getDeviceDataConverted, getBuildingDevices, getQualitativeData, getRoomDevices } from 'data/climaid';
+import { getDeviceDataConverted, getBuildingDevices, getQualitativeData, getRoomDevices, getActivityLevelData } from 'data/climaid';
 import { DateTimeFilter } from 'Components';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
@@ -80,6 +80,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						let batteryData = null;
 						let batteryAvgData = [];
 						let userexperienceData = null;
+						let analyticsData = null;
 
 						let devices = null;
 						if (key === 'tempavgbuilding' || key === 'co2avgbuilding' || key === 'humidityavgbuilding' || key === 'batteryavgbuilding') {
@@ -320,6 +321,39 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							);
 						}
 
+						if (key === 'analytics' && Object.keys(checkboxStates['analytics']).length) {
+							analyticsData = [];
+							let buildingDevices = await getBuildingDevices(room.building.uuid);
+							let newDevices = [];
+							buildingDevices.map(device => {
+								if (device.type === 'data') {
+									newDevices.push(device.device);
+								}
+							});
+
+							await Promise.all(
+								Object.keys(checkboxStates['analytics']).map(async experienceType => {
+									if (experienceType === 'activitylevel') {
+										let data = await getActivityLevelData(newDevices, period);
+										console.log(data);
+
+										analyticsData = data;
+										
+									} else if (experienceType.indexOf('activitylevel_') !== -1) {
+										let keyParts = experienceType.split('_');
+										let roomDevices = await getRoomDevices(keyParts[1]);
+
+										let newDevices = [];
+										roomDevices.map(device => {
+											if (device.type === 'data') {
+												newDevices.push(device.device);
+											}
+										});
+									}
+								})
+							);
+						}
+						console.log(temperatureData);
 						if (props.checkboxStates[key]) {
 							switch (key) {
 								default:
@@ -333,7 +367,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											median: true,
 											data: temperatureData,
 											color: "#e28117",
-											alarmColor: '#ff0000'
+											alarmColor: '#ff0000',
+											dotSize: period.timeType === 1 ? 2 : 6
 										});
 									}
 									break;
@@ -399,7 +434,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											median: true,
 											data: co2Data,
 											color: "#245bed",
-											alarmColor: '#ff0000'
+											alarmColor: '#ff0000',
+											dotSize: period.timeType === 1 ? 2 : 6
 										});
 									}
 									break;
@@ -465,7 +501,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											median: true,
 											data: humidityData,
 											color: "#1cc933",
-											alarmColor: '#ff0000'
+											alarmColor: '#ff0000',
+											dotSize: period.timeType === 1 ? 2 : 6
 										});
 									}
 									break;
@@ -492,7 +529,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: batteryData,
-											color: "#1cc933"
+											color: "#1cc933",
+											dotSize: period.timeType === 1 ? 2 : 6
 										});
 									}
 									break;
@@ -517,6 +555,20 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											median: true,
 											data: userexperienceData,
 											noDots: true
+										});
+									}
+									break;
+								case 'analytics':
+									if (analyticsData) {
+										graphLinesData.analytics.push({
+											noArea: true,
+											unit: '%',
+											name: key,
+											median: true,
+											data: analyticsData,
+											color: "darkgreen",
+											noDots: false,
+											maxValue: 100
 										});
 									}
 									break;

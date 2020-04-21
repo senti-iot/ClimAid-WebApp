@@ -11,7 +11,7 @@ const AnalyticsDropdown = (props) => {
 	const [popoverWidth, setPopoverWidth] = useState(310);
 	const [anchorAnalyticsEl, setAnchorAnalyticsEl] = React.useState(null);
 	const [activityLevelOpen, setActivityLevelOpen] = useState(false);
-	const [usageOpen, setUsageOpen] = useState(false);
+	// const [usageOpen, setUsageOpen] = useState(false);
 	const checkboxStates = props.checkboxStates;
 	const rooms = props.rooms;
 
@@ -34,9 +34,9 @@ const AnalyticsDropdown = (props) => {
 		setActivityLevelOpen(activityLevelOpen ? false : true);
 	}
 
-	const toggleUsageOpen = () => {
-		setUsageOpen(usageOpen ? false : true);
-	}
+	// const toggleUsageOpen = () => {
+	// 	setUsageOpen(usageOpen ? false : true);
+	// }
 
 	return (
 		<>
@@ -114,7 +114,7 @@ const AnalyticsDropdown = (props) => {
 						</Collapse>
 
 
-						<ListItem key={10} button style={{ backgroundColor: '#eee' }} >
+						{/* <ListItem key={10} button style={{ backgroundColor: '#eee' }} >
 							<ListItemText id={10} primary="Brugstid" onClick={toggleUsageOpen} />
 							<ListItemSecondaryAction>
 								<IconButton edge="end" onClick={toggleUsageOpen}>
@@ -152,7 +152,7 @@ const AnalyticsDropdown = (props) => {
 									</ListItemSecondaryAction>
 								</ListItem>);
 							})}
-						</Collapse>
+						</Collapse> */}
 					</List>
 				</>
 			</Popover>

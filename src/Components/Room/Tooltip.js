@@ -130,6 +130,33 @@ const batteryTooltip = (props) => {
 	</TCard>
 }
 
+const analyticsTooltip = (props) => {
+	let cookiePeriod = cookie.load('graph_period');
+
+	let timeFormat = 'll';
+	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+		timeFormat = 'lll';
+	}
+
+	return <TCard id='analyticstooltip'>
+		<CardContent>
+			<ItemG container xs={12}>
+				<ItemG container xs={6}>
+					<ItemG xs={12}>
+						<T variant={'h6'}>{capitalizeFL(moment(props.tooltip.date).format('dddd'))}</T>
+					</ItemG>
+					<ItemG xs={12}>
+						<T varinat={'body2'}>{moment(props.tooltip.date).format(timeFormat)}</T>
+					</ItemG>
+				</ItemG>
+				<ItemG xs={6} container justify={'center'} alignItems={'flex-end'}>
+					<T variant={'h5'}>{`${parseFloat(props.tooltip.value).toFixed(1)}`} %</T>
+				</ItemG>
+			</ItemG>
+		</CardContent>
+	</TCard>
+}
+
 const Tooltip = (props) => {
 	 switch (props.id) {
 	 	case 'temperature':
@@ -140,6 +167,8 @@ const Tooltip = (props) => {
 			return humidityTooltip(props)
 	 	case 'battery':
 			return batteryTooltip(props)
+		case 'analytics':
+			return analyticsTooltip(props)
 		default:
 			return null
 	 }

@@ -249,3 +249,20 @@ export const getRoomActivityLevel = async (device) => {
 	let data = await servicesAPI.post('/v2/climaidinsight/activity/' + from + '/' + to, { "devices": [device], "config": config }).then(rs => rs.data);
 	return data;
 }
+
+export const getActivityLevelData = async (devices, period) => {
+	let sort = 'byhour';
+	if (period.timeType === 2) {
+		sort = 'byday';
+	}
+
+	const config = {
+		"firstday": 0,
+		"lastday": 6,
+		"firsthour": 7,
+		"lasthour": 16
+	}
+
+	let data = await servicesAPI.post('/v2/climaidinsight/activity/' + sort + '/' + period.from + '/' + period.to, { "devices": devices, "config": config }).then(rs => rs.data);
+	return data;
+}

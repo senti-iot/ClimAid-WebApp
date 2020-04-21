@@ -426,7 +426,7 @@ class d3Line {
 								setTooltip(d)
 
 							}).on("mouseout", function () {
-								d3.select(this).attr("r", (d) => { return (d.value <= line.maxValue) ? 6 : 12 })
+								d3.select(this).attr("r", (d) => { return (d.value <= line.maxValue) ? line.dotSize : 12 })
 								tooltipDiv.transition()
 									.duration(500)
 									.style('z-index', -1)
@@ -447,7 +447,7 @@ class d3Line {
 							.attr("id", `${line.name}Dots`)
 							.style("opacity", this.state[line.name] ? 0 : 1)
 							.delay((d, i) => { return i * (1500 / line.data.length) })
-							.attr("r", (d) => { return (d.value <= line.maxValue) ? 6 : 12 });
+							.attr("r", (d) => { return (d.value <= line.maxValue) ? line.dotSize : 12 });
 	
 						g.append("text")
 							.attr("x", (d) => { return this.x(moment(d.date).valueOf()) })
