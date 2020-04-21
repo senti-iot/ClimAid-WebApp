@@ -10,6 +10,7 @@ import moment from 'moment';
 import { Grid } from '@material-ui/core';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import { useHistory } from 'react-router';
+import cookie from 'react-cookies';
 
 import { MeetingRoom, ArrowForward, ArrowBack } from 'variables/icons';
 import otherStyles from 'Styles/otherStyles';
@@ -20,6 +21,7 @@ import { ItemG } from 'Components';
 
 const MapContainer = (props) => {
 	const [buildings, setBuildings] = useState(null);
+	const [loading, setLoading] = useState(true);
 	const [displayOverlay, setDisplayOverlay] = useState(false);
 	const [onlineStates, setOnlineStates] = useState({});
 	const mapRef = useRef(null);
@@ -39,6 +41,8 @@ const MapContainer = (props) => {
 
 	useEffect(() => {
 		async function fetchData() {
+			setLoading(true);
+
 			const data = await getBuildings();
 
 			if (data) {
@@ -92,7 +96,16 @@ const MapContainer = (props) => {
 
 				setOnlineStates(onlineStatesData);
 				setBuildings(buildingsWithColor);
+
+				setLoading(false);
 			}
+		}
+
+		let didShowMapOverlay = cookie.load('didShowMapOverlay');
+
+		if (!didShowMapOverlay) {
+			cookie.save('didShowMapOverlay', 1, { path: '/', expires: moment().add('1', 'day').toDate() })
+			setDisplayOverlay(true);
 		}
 
 		fetchData();
@@ -135,6 +148,8 @@ const MapContainer = (props) => {
 		} else {
 			setDisplayOverlay(false);
 		}
+
+		cookie.save('didShowMapOverlay', 1, { path: '/', expires: moment().add('1', 'day').toDate() })
 	}
 
 	const getWelcomeTime = () => {
@@ -160,75 +175,81 @@ const MapContainer = (props) => {
 
 	return (
 		<div style={{ height: "1100px", width: "100%" }}>
-			{!displayOverlay ? 
-				<div className={classes.mapInfoContainerToggleOff} onClick={toogleOverlay}>
-					<ArrowForward style={{ color: '#b9bdbe' }} fontSize="large" />
-				</div>
-				: 
-				<div className={classes.mapInfoContainer}>
-					<div className={classes.mapInfoContainerToggleOn} onClick={toogleOverlay}>
-						<ArrowBack  />
-					</div>
-					<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
-						<ItemG xs={7}>
-							<h1 className={classes.mapInfoContainerHeader}>{getWelcomeTime()} {user.firstName}</h1>
-							<h2 className={classes.mapInfoContainerSubHeader}>Brug kortet for at se hvilken bygning der har brug for ekstra opmærksomhed, eller gå direkte til en bygning via listen herunder.</h2>
-						</ItemG>
-						<ItemG xs={5}>
-							<img src="/images/velkommen.svg" alt="" style={{ maxWidth: 300 }} />
-						</ItemG>
-					</Grid>
-					<br />
-					<br />
+			{!loading ?
+				<>
+					{!displayOverlay ? 
+						<div className={classes.mapInfoContainerToggleOff} onClick={toogleOverlay}>
+							<ArrowForward style={{ color: '#b9bdbe' }} fontSize="large" />
+						</div>
+						:
+						<>
+							<div className={classes.mapInfoContainer}>
+								<div className={classes.mapInfoContainerToggleOn} onClick={toogleOverlay}>
+									<ArrowBack  />
+								</div>
+								<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={0}>
+									<ItemG xs={7}>
+										<h1 className={classes.mapInfoContainerHeader}>{getWelcomeTime()} {user.firstName}</h1>
+										<h2 className={classes.mapInfoContainerSubHeader}>Brug kortet for at se hvilken bygning der har brug for ekstra opmærksomhed, eller gå direkte til en bygning via listen herunder.</h2>
+									</ItemG>
+									<ItemG xs={5}>
+										<img src="/images/velkommen.svg" alt="" style={{ maxWidth: 300 }} />
+									</ItemG>
+								</Grid>
+								<br />
+								<br />
 
-					<div className={classes.mapInfoContainerBuildingsContainer}>
-						<Table className={classes.table} aria-label="buildings table" style={{ boxShadow: "none" }}>
-							<TableBody>
-								{buildings.map((building, index) => (
-									<TableRow key={building.uuid} style={{ backgroundColor: index % 2 ? '#f6f7ff' : '#ffffff', height: 40, cursor: 'pointer' }}>
-										<TableCell style={{ borderBottom: "none", borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }} align="center">
-											{Object.keys(onlineStates).length ? <>{onlineStates[building.uuid] ? <FiberManualRecordIcon style={{ color: '#74d3c9' }} /> : <FiberManualRecordIcon style={{ color: '#cf565c' }} />}</> : <></>}
-										</TableCell>
-										<TableCell style={{ borderBottom: "none" }} onClick={() => handleGoToBuilding(building.uuid)}>
-											{building.name}
-										</TableCell>
-										<TableCell style={{ borderBottom: "none", borderTopRightRadius: 20, borderBottomRightRadius: 20 }} align="right"><MeetingRoom /></TableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					</div>
-				</div>
-			}
+								<div className={classes.mapInfoContainerBuildingsContainer}>
+									<Table className={classes.table} aria-label="buildings table" style={{ boxShadow: "none" }}>
+										<TableBody>
+											{buildings.map((building, index) => (
+												<TableRow key={building.uuid} style={{ backgroundColor: index % 2 ? '#f6f7ff' : '#ffffff', height: 40, cursor: 'pointer' }}>
+													<TableCell style={{ width: 80, borderBottom: "none", borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }} align="center">
+														{Object.keys(onlineStates).length ? <>{onlineStates[building.uuid] ? <div style={{ display: 'flex', alignItems: 'center' }}><FiberManualRecordIcon style={{ color: '#74d3c9' }} /> <span style={{ color: '#74d3c9' }}>Online</span></div> : <div style={{ display: 'flex', alignItems: 'center' }}><FiberManualRecordIcon style={{ color: '#cf565c' }} /> <span style={{ color: '#cf565c' }}>Offline</span></div>}</> : <></>}
+													</TableCell>
+													<TableCell style={{ borderBottom: "none" }} onClick={() => handleGoToBuilding(building.uuid)}>
+														{building.name}
+													</TableCell>
+													<TableCell style={{ borderBottom: "none", borderTopRightRadius: 20, borderBottomRightRadius: 20 }} align="right"><MeetingRoom /></TableCell>
+												</TableRow>
+											))}
+										</TableBody>
+									</Table>
+								</div>
+							</div>
+						</>
+					}
 
-			<Map
-				ref={mapRef}
-				center={position}
-				zoom={18}
-				maxZoom={19}
-				zoomControl={false}
-				scrollWheelZoom={false}
-				style={{ height: "100%", width: "100%" }}>
-				<TileLayer
-					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-					attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-				/>
-				<ZoomControl position="bottomright" />
+					<Map
+						ref={mapRef}
+						center={position}
+						zoom={18}
+						maxZoom={19}
+						zoomControl={false}
+						scrollWheelZoom={false}
+						style={{ height: "100%", width: "100%" }}>
+						<TileLayer
+							url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+							attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+						/>
+						<ZoomControl position="bottomright" />
 
-				{buildings ? 
-					<FeatureGroup ref={groupRef}>
-						{buildings.map(building => {
-							return (
-								<Marker key={building.uuid} position={building.latlong.split(',')} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })}>
-									<Popup maxWidth={400} maxHeight={550} closeButton="">
-										<MapPopupBuilding building={building} />
-									</Popup>
-								</Marker>
-							);
-						})}
-					</FeatureGroup>
-					: ""}
-			</Map>
+						{buildings ? 
+							<FeatureGroup ref={groupRef}>
+								{buildings.map(building => {
+									return (
+										<Marker key={building.uuid} position={building.latlong.split(',')} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })}>
+											<Popup maxWidth={400} maxHeight={550} closeButton="">
+												<MapPopupBuilding building={building} />
+											</Popup>
+										</Marker>
+									);
+								})}
+							</FeatureGroup>
+							: ""}
+					</Map>
+				</>
+				: "" }
 		</div>
 	);
 }

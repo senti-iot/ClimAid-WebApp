@@ -56,6 +56,7 @@ function HeaderLinks(props) {
 		try {
 			await logOut().then(() => {
 				cookie.remove('SESSION', { path: '/' })
+				cookie.remove('didShowMapOverlay', { path: '/' })
 				redux.resetRedux()
 			})
 		}
