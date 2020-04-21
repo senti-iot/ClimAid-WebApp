@@ -27,16 +27,16 @@ export const update = ({ d3_refs, newValue, config, type }) => {
 
 	if (type === 'temperature') {
 		if (newValue >= 21 && newValue <= 24.5) {
-			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', '#11f0d0')
+			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', 'transparent')
 
 		}
 	} else if (type === 'co2') {
 		if (newValue >= 0 && newValue <= 1000) {
-			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', '#11f0d0')
+			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', 'transparent')
 		}
 	} else if (type === 'humidity') {
 		if (newValue >= 35 && newValue <= 65) {
-			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', '#11f0d0')
+			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', 'transparent')
 		}
 	}
 
@@ -311,16 +311,16 @@ function _renderNeedle({ config, svg, r, centerTx }) {
 	// 	.attr("transform", centerTx)
 
 	var arc = d3.arc();
-	arc.innerRadius(5);
+	arc.innerRadius(0);
 	arc.outerRadius(8);
 	arc.startAngle(0);
 	arc.endAngle(360);
 
-	var arcBorder = d3.arc();
-	arcBorder.innerRadius(10);
-	arcBorder.outerRadius(11);
-	arcBorder.startAngle(0);
-	arcBorder.endAngle(360);
+	// var arcBorder = d3.arc();
+	// arcBorder.innerRadius(10);
+	// arcBorder.outerRadius(11);
+	// arcBorder.startAngle(0);
+	// arcBorder.endAngle(360);
 
 	return svg
 		.append("g")
