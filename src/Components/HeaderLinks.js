@@ -216,7 +216,7 @@ function HeaderLinks(props) {
 				PaperProps={{
 					style: {
 						maxHeight: 800,
-						width: 300,
+						width: 350,
 						backgroundColor: '#ffffff',
 						color: '#000000'
 					},
@@ -240,7 +240,7 @@ function HeaderLinks(props) {
 				PaperProps={{
 					style: {
 						maxHeight: 800,
-						width: 200,
+						width: 350,
 						backgroundColor: '#ffffff',
 						color: '#000000'
 					},
