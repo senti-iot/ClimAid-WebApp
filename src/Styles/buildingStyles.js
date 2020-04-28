@@ -8,6 +8,7 @@ const buildingStyles = makeStyles(theme => ({
 	buildingName: {
 		fontSize: 30,
 		fontWeight: 300,
+		lineHeight: '1.8rem',
 		color: '#201f20',
 		paddingBottom: 25,
 		borderBottom: 'solid 1px #bbbebe',

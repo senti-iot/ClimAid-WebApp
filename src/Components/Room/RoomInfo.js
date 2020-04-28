@@ -35,7 +35,6 @@ const RoomInfo = (props) => {
 			)
 
 			if (dataDevice) {
-				console.log(dataDevice);
 				let activityLevelData = await getRoomActivityLevel(dataDevice);
 				if (activityLevelData) {
 					setActivityLevel(Math.round(activityLevelData.motion));
