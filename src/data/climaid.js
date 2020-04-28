@@ -151,7 +151,7 @@ export const getDeviceOnlineStatus = async (device) => {
 
 export const getDeviceDataConverted = async (device, period, type) => {
 	let cloudFunction = 13;
-	if (period.timeType === 1) {
+	if (period.timeTypeData === 1) {
 		cloudFunction = 0;
 	}
 	//console.log('/v1/devicedata-clean/' + device + '/' + period.from + '/' + period.to + '/' + type + '/' + cloudFunction);

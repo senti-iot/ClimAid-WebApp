@@ -26,6 +26,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 	const [from, setFrom] = useState(null);
 	const [to, setTo] = useState(null);
 	const [timeType, setTimeType] = useState(null);
+	const [timeTypeData, setTimeTypeData] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [graphLines, setGraphLines] = useState({});
 	const lineChartContainer = useRef(null);
@@ -353,7 +354,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 								})
 							);
 						}
-						console.log(temperatureData);
+
 						if (props.checkboxStates[key]) {
 							switch (key) {
 								default:
@@ -368,7 +369,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											data: temperatureData,
 											color: "#e28117",
 											alarmColor: '#ff0000',
-											dotSize: period.timeType === 1 ? 2 : 6
+											dotSize: period.timeTypeData === 1 ? 2 : 6
 										});
 									}
 									break;
@@ -435,7 +436,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											data: co2Data,
 											color: "#245bed",
 											alarmColor: '#ff0000',
-											dotSize: period.timeType === 1 ? 2 : 6
+											dotSize: period.timeTypeData === 1 ? 2 : 6
 										});
 									}
 									break;
@@ -502,7 +503,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											data: humidityData,
 											color: "#1cc933",
 											alarmColor: '#ff0000',
-											dotSize: period.timeType === 1 ? 2 : 6
+											dotSize: period.timeTypeData === 1 ? 2 : 6
 										});
 									}
 									break;
@@ -530,7 +531,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											median: true,
 											data: batteryData,
 											color: "#1cc933",
-											dotSize: period.timeType === 1 ? 2 : 6
+											dotSize: period.timeTypeData === 1 ? 2 : 6
 										});
 									}
 									break;
@@ -586,6 +587,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 			let thisfrom = 0;
 			let thisto = 0;
 			let thistimetype;
+			let thistimetypedata;
 
 			if (!from || !to) {
 				setSelectedPeriod(menuId);
@@ -596,53 +598,63 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						thisfrom = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thisto = moment().format('YYYY-MM-DD HH:mm:ss');
 						thistimetype = 1;
+						thistimetypedata = 1;
 						break;
 					case 11:
 						thisfrom = moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thisto = moment().subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thistimetype = 1;
+						thistimetypedata = 1;
 						break;
 					case 1:
 						thisfrom = moment().startOf('week').format('YYYY-MM-DD HH:mm:ss');
 						thisto = moment().endOf('week').format('YYYY-MM-DD HH:mm:ss');
 						thistimetype = 2;
+						thistimetypedata = 1;
 						break;
 					case 2:
 						thisfrom = moment().subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thisto = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thistimetype = 2;
+						thistimetypedata = 1;
 						break;
 					case 3:
 						thisfrom = moment().startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thisto = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss');
 						thistimetype = 2;
+						thistimetypedata = 2;
 						break;
 					case 5:
 						thisfrom = moment().subtract(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thisto = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thistimetype = 2;
+						thistimetypedata = 2;
 						break;
 					case 7:
 						thisfrom = moment().subtract(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thisto = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
 						thistimetype = 2;
+						thistimetypedata = 2;
 						break;
 				}
 
 				setFrom(thisfrom);
 				setTo(thisto);
 				setTimeType(thistimetype);
+				setTimeTypeData(thistimetypedata);
 			} else {
 				thisfrom = from;
 				thisto = to;
 				thistimetype = timeType;
+				thistimetype = timeTypeData;
 			}
 
 			return {
 				menuId: menuId,
 				from: thisfrom,
 				to: thisto,
-				timeType: thistimetype
+				timeType: thistimetype,
+				timeTypeData: thistimetypedata
 			};
 		}
 
