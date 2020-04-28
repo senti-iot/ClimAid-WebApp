@@ -35,7 +35,7 @@ const Weather = (props) => {
 						<Grid item xs={6}>Vejr: {weather.currently.summary}</Grid>
 
 						<Grid item xs={6}>Vindhastighed: {Math.round(weather.currently.windSpeed)} m/s</Grid>
-						<Grid item xs={6}>Fugtighed: {weather.currently.humidity * 100}%</Grid>
+						<Grid item xs={7}>Fugtighed: {Math.round(weather.currently.humidity * 100)}%</Grid>
 					</Grid>
 				</div>
 			}
