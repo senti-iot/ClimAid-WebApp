@@ -22,7 +22,7 @@ const temperatureTooltip = (props) => {
 	let cookiePeriod = cookie.load('graph_period');
 
 	let timeFormat = 'll';
-	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+	if (cookiePeriod && cookiePeriod.timeTypeData === 1) {
 		timeFormat = 'lll';
 	}
 
@@ -50,7 +50,7 @@ const co2Tooltip = (props) => {
 	let cookiePeriod = cookie.load('graph_period');
 
 	let timeFormat = 'll';
-	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+	if (cookiePeriod && cookiePeriod.timeTypeData === 1) {
 		timeFormat = 'lll';
 	}
 
@@ -78,7 +78,7 @@ const humidityTooltip = (props) => {
 	let cookiePeriod = cookie.load('graph_period');
 
 	let timeFormat = 'll';
-	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+	if (cookiePeriod && cookiePeriod.timeTypeData === 1) {
 		timeFormat = 'lll';
 	}
 
@@ -106,7 +106,7 @@ const batteryTooltip = (props) => {
 	let cookiePeriod = cookie.load('graph_period');
 
 	let timeFormat = 'll';
-	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+	if (cookiePeriod && cookiePeriod.timeTypeData === 1) {
 		timeFormat = 'lll';
 	}
 
@@ -134,7 +134,7 @@ const analyticsTooltip = (props) => {
 	let cookiePeriod = cookie.load('graph_period');
 
 	let timeFormat = 'll';
-	if (cookiePeriod && cookiePeriod.timeFormat === 1) {
+	if (cookiePeriod && cookiePeriod.timeTypeData === 1) {
 		timeFormat = 'lll';
 	}
 
