@@ -239,7 +239,7 @@ function HeaderLinks(props) {
 				style={{ marginTop: 45 }}
 				PaperProps={{
 					style: {
-						maxHeight: 800,
+						maxHeight: 600,
 						width: 350,
 						backgroundColor: '#ffffff',
 						color: '#000000'
