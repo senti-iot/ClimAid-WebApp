@@ -416,7 +416,8 @@ class d3Line {
 
 						g.append("circle") // Uses the enter().append() method
 							.on("mouseover", function (d) {
-								d3.select(this).attr("r", (d) => { return (d.value <= line.maxValue) ? 8 : 14 });
+								// d3.select(this).attr("r", (d) => { return (d.value <= line.maxValue) ? 8 : 14 });
+								d3.select(this).attr("r", 8);
 								tooltipDiv.transition()
 									.duration(200)
 									.style("opacity", 1)
@@ -426,7 +427,8 @@ class d3Line {
 								setTooltip(d)
 
 							}).on("mouseout", function () {
-								d3.select(this).attr("r", (d) => { return (d.value <= line.maxValue) ? line.dotSize : 12 })
+								// d3.select(this).attr("r", (d) => { return (d.value <= line.maxValue) ? line.dotSize : 12 })
+								d3.select(this).attr("r", line.dotSize)
 								tooltipDiv.transition()
 									.duration(500)
 									.style('z-index', -1)
@@ -441,29 +443,31 @@ class d3Line {
 								}
 							})
 							.attr("r", 0)
-							.attr("fill", (d) => { return (d.value <= line.maxValue) ? line.color : line.alarmColor })
+							// .attr("fill", (d) => { return (d.value <= line.maxValue) ? line.color : line.alarmColor })
+							.attr("fill", (d) => line.color )
 							.attr('opacity', 0)
 							.transition()
 							.attr("id", `${line.name}Dots`)
 							.style("opacity", this.state[line.name] ? 0 : 1)
 							.delay((d, i) => { return i * (1500 / line.data.length) })
-							.attr("r", (d) => { return (d.value <= line.maxValue) ? line.dotSize : 12 });
+							// .attr("r", (d) => { return (d.value <= line.maxValue) ? line.dotSize : 12 });
+							.attr("r", line.dotSize);
 	
-						g.append("text")
-							.attr("x", (d) => { return this.x(moment(d.date).valueOf()) })
-							.attr("y", (d) => {
-								if (count === 1) {
-									return this.y(d.value)
-								} else {
-									return this.y2(d.value)
-								}
-							})
-							.attr("dx", -2)
-							.attr("dy", 5)
-							.attr("font-size", "18px")
-							.attr("font-weight", "bold")
-							.text((d) => { return (d.value <= line.maxValue) ? '' : '!' })
-							.attr('fill', '#ffffff')
+						// g.append("text")
+						// 	.attr("x", (d) => { return this.x(moment(d.date).valueOf()) })
+						// 	.attr("y", (d) => {
+						// 		if (count === 1) {
+						// 			return this.y(d.value)
+						// 		} else {
+						// 			return this.y2(d.value)
+						// 		}
+						// 	})
+						// 	.attr("dx", -2)
+						// 	.attr("dy", 5)
+						// 	.attr("font-size", "18px")
+						// 	.attr("font-weight", "bold")
+						// 	.text((d) => { return (d.value <= line.maxValue) ? '' : '!' })
+						// 	.attr('fill', '#ffffff')
 					}
 				})
 
