@@ -17,6 +17,7 @@
 		"file-saver": "^2.0.2",
 		"for-each": "^0.3.3",
 		"hex-to-rgba": "^2.0.1",
+		"js-file-download": "^0.4.11",
 		"leaflet": "^1.6.0",
 		"lodash": "^4.17.15",
 		"memoize-one": "^5.1.1",

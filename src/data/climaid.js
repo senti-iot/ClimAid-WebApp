@@ -105,6 +105,12 @@ export const getWeather = async (date, lat, long) => {
 	return data;
 };
 
+
+export const getCsvExport = async (device, period) => {
+	let data = await climaidApi.get('/export/roomdata/' + device + '/' + period.from + '/' + period.to + '/').then(rs => rs.data);
+	return data;
+}
+
 // DEVICE DATA
 
 export const getMeassurement = async (device, gauge) => {

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 //, List, ListItem, ListItemText
 import { Grid } from '@material-ui/core';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 // import Button from '@material-ui/core/Button';
 // import Popover from '@material-ui/core/Popover';
 import * as d3 from 'd3';
 import { saveAs } from 'file-saver';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import cookie from 'react-cookies';
 
 import roomStyles from 'Styles/roomStyles';
 // import CurrentTemperatureBar from 'Components/Room/CurrentTemperatureBar';
@@ -19,12 +22,15 @@ import UserExperienceDropdown from 'Components/Room/UserExperienceDropdown';
 import AnalyticsDropdown from 'Components/Room/AnalyticsDropdown';
 import ExportDropdown from 'Components/Room/ExportDropdown';
 import EnergyDropdown from 'Components/Room/EnergyDropdown';
-import { getRoomsInBuilding } from 'data/climaid';
+import { getRoomsInBuilding, getCsvExport } from 'data/climaid';
 import { CircularLoader } from 'Components';
+
+const fileDownload = require('js-file-download');
 
 const RoomGraphContainer = (props) => {
 	const classes = roomStyles();
 	const [loading, setLoading] = useState(false);
+	const [loadingOverlayOpen, setLoadingOverlayOpen] = useState(false);
 	// const [roomValues, setRoomValues] = useState(null);
 	// const [batteryLevel, setBatteryLevel] = useState(null);
 	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true, 'userexperience': [], 'analytics': [] });
@@ -136,6 +142,8 @@ const RoomGraphContainer = (props) => {
 	};
 
 	const saveGraph = (type) => {
+		setLoadingOverlayOpen(true);
+
 		const source = (new XMLSerializer()).serializeToString(d3.select('#graph').node());
 		const evcEncoded = 'data:image/svg+xml;base64,' + new Buffer(source).toString('base64');
 
@@ -166,14 +174,19 @@ const RoomGraphContainer = (props) => {
 								console.log("clipboard-permissoin not granted: " + result);
 								setAlertClipboardFail(true);
 							}
+
+							setLoadingOverlayOpen(false);
 						});
 					});
 				}, 1000);
 			} catch (error) {
 				console.error(error);
+				setLoadingOverlayOpen(false);
 			}
 		} else if (type === 2) { // png
 			setTimeout(function () {
+				setLoadingOverlayOpen(false);
+
 				savecanvas.toBlob(function (blob) {
 					saveAs(blob, "test.png");
 					setAlertImageSaveSuccess(true);
@@ -181,6 +194,18 @@ const RoomGraphContainer = (props) => {
 			}, 1000);
 		}
 	};
+
+	const exportCsv = async () => {
+		setLoadingOverlayOpen(true);
+
+		let cookiePeriod = cookie.load('graph_period');
+
+		let csvData = await getCsvExport(room.uuid, cookiePeriod);
+
+		fileDownload(csvData, 'export.csv');
+
+		setLoadingOverlayOpen(false);
+	}
 
 	// const roompopoverOpen = Boolean(anchorEl);
 	// const roompopoverId = roompopoverOpen ? 'simple-popover' : undefined;
@@ -205,7 +230,7 @@ const RoomGraphContainer = (props) => {
 						<Grid item xs={3} xl={2}>
 						</Grid>
 						<Grid item xs={3} xl={2}>
-							<ExportDropdown saveGraph={saveGraph} />
+							<ExportDropdown saveGraph={saveGraph} exportCsv={exportCsv} />
 						</Grid>
 
 						<Grid item xs={12}>
@@ -331,6 +356,10 @@ const RoomGraphContainer = (props) => {
 					<Snackbar open={alertImageSaveSuccess} autoHideDuration={3000} onClose={handleAlertImageSaveSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
 						<Alert onClose={handleAlertImageSaveSuccessClose} severity="success" elevation={6} variant="filled">Billede er gemt!</Alert>
 					</Snackbar>
+
+					<Backdrop open={loadingOverlayOpen} style={{ zIndex: 10000 }}>
+						<CircularProgress color="inherit" />
+					</Backdrop>
 				</>
 				: <CircularLoader fill />}
 		</>

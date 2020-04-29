@@ -5,8 +5,9 @@ import AddIcon from '@material-ui/icons/Add';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 
 import roomStyles from 'Styles/roomStyles';
+import {  } from 'data/climaid';
 
-const ClimateDropdown = (props) => {
+const ExportDropdown = (props) => {
 	const classes = roomStyles();
 	const [popoverWidth, setPopoverWidth] = useState(310);
 	const [anchorExportEl, setAnchorExportEl] = React.useState(null);
@@ -24,6 +25,11 @@ const ClimateDropdown = (props) => {
 		handleExportMenuClose();
 		props.saveGraph(type);
 	};
+
+	const _exportCsv = async () => {
+		handleExportMenuClose();
+		props.exportCsv();		
+	}
 
 	return (
 		<>
@@ -76,8 +82,8 @@ const ClimateDropdown = (props) => {
 								</IconButton>
 							</ListItemSecondaryAction>
 						</ListItem>
-						<ListItem key={2} button>
-							<ListItemText id={2} primary="Download data til Excel" />
+						<ListItem key={2} button onClick={async () => _exportCsv()}>
+							<ListItemText id={2} primary="Download data til csv" />
 							<ListItemSecondaryAction>
 								<IconButton edge="end">
 									<SaveAltIcon />
@@ -91,4 +97,4 @@ const ClimateDropdown = (props) => {
 	)
 }
 
-export default ClimateDropdown;
+export default ExportDropdown;
