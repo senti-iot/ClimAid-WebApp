@@ -12,7 +12,7 @@ import d3Line from 'Components/Graphs/classes/d3Line';
 import Legend from 'Components/Graphs/Legend';
 import lineStyles from 'Components/Custom/Styles/lineGraphStyles';
 import Tooltip from 'Components/Room/Tooltip';
-import { getDeviceDataConverted, getBuildingDevices, getQualitativeData, getRoomDevices, getActivityLevelData } from 'data/climaid';
+import { getDeviceDataConverted, getBuildingDevices, getQualitativeData, getRoom, getRoomDevices, getActivityLevelData } from 'data/climaid';
 import { DateTimeFilter } from 'Components';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
@@ -73,12 +73,16 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 				await Promise.all(
 					Object.keys(props.checkboxStates).map(async key => {
 						let temperatureData = null;
+						let temperatureRoomData = null;
 						let temperatureAvgData = [];
 						let co2Data = null;
+						let co2RoomData = null;
 						let co2AvgData = [];
 						let humidityData = null;
+						let humidityRoomData = null;
 						let humidityAvgData = [];
 						let batteryData = null;
+						let batteryRoomData = null;
 						let batteryAvgData = [];
 						let userexperienceData = null;
 						let analyticsData = null;
@@ -89,9 +93,32 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							// console.log(devices);
 						}
 
+						if (key === 'temphistoryrooms') {
+							temperatureRoomData = {};
+
+							await Promise.all(
+								Object.keys(props.checkboxStates['temphistoryrooms']).map(async uuid => {
+									let roomDevices = await getRoomDevices(uuid);
+									let r = await getRoom(uuid);
+
+									await Promise.all(
+										roomDevices.map(async device => {
+											if (device.type === 'data') {
+												let data = await getDeviceDataConverted(device.device, period, 'temperature');
+												if (data) {
+													temperatureRoomData[uuid] = { data: data, room: r };
+												}
+											}
+										})
+									)
+								})
+							);
+						}
+
 						if (key === 'temphistory' || key === 'tempanbmin' || key === 'tempanbmax') {
 							temperatureData = await getDeviceDataConverted(room.devices[0].device, period, 'temperature');
 						}
+
 						if (key === 'tempavgbuilding') {
 							let combinedData = {};
 							await Promise.all(
@@ -117,6 +144,29 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						if (key === 'co2history' || key === 'co2anbmin' || key === 'co2anbmax') {
 							co2Data = await getDeviceDataConverted(room.devices[0].device, period, 'co2');
 						}
+
+						if (key === 'co2historyrooms') {
+							co2RoomData = {};
+
+							await Promise.all(
+								Object.keys(props.checkboxStates['co2historyrooms']).map(async uuid => {
+									let roomDevices = await getRoomDevices(uuid);
+									let r = await getRoom(uuid);
+
+									await Promise.all(
+										roomDevices.map(async device => {
+											if (device.type === 'data') {
+												let data = await getDeviceDataConverted(device.device, period, 'co2');
+												if (data) {
+													co2RoomData[uuid] = { data: data, room: r };
+												}
+											}
+										})
+									)
+								})
+							);
+						}
+
 						if (key === 'co2avgbuilding') {
 							let combinedData = {};
 							await Promise.all(
@@ -142,6 +192,29 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						if (key === 'humidityhistory') {
 							humidityData = await getDeviceDataConverted(room.devices[0].device, period, 'humidity');
 						}
+
+						if (key === 'humidityhistoryrooms') {
+							humidityRoomData = {};
+
+							await Promise.all(
+								Object.keys(props.checkboxStates['humidityhistoryrooms']).map(async uuid => {
+									let roomDevices = await getRoomDevices(uuid);
+									let r = await getRoom(uuid);
+
+									await Promise.all(
+										roomDevices.map(async device => {
+											if (device.type === 'data') {
+												let data = await getDeviceDataConverted(device.device, period, 'humidity');
+												if (data) {
+													humidityRoomData[uuid] = { data: data, room: r };
+												}
+											}
+										})
+									)
+								})
+							);
+						}
+
 						if (key === 'humidityavgbuilding') {
 							let combinedData = {};
 							await Promise.all(
@@ -167,6 +240,29 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						if (key === 'batteryhistory') {
 							batteryData = await getDeviceDataConverted(room.devices[0].device, period, 'batteristatus');
 						}
+
+						if (key === 'batteryhistoryrooms') {
+							batteryRoomData = {};
+
+							await Promise.all(
+								Object.keys(props.checkboxStates['batteryhistoryrooms']).map(async uuid => {
+									let roomDevices = await getRoomDevices(uuid);
+									let r = await getRoom(uuid);
+
+									await Promise.all(
+										roomDevices.map(async device => {
+											if (device.type === 'data') {
+												let data = await getDeviceDataConverted(device.device, period, 'batteristatus');
+												if (data) {
+													co2RoomData[uuid] = { data: data, room: r };
+												}
+											}
+										})
+									)
+								})
+							);
+						}
+
 						if (key === 'batteryavgbuilding') {
 							let combinedData = {};
 							await Promise.all(
@@ -373,6 +469,24 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										});
 									}
 									break;
+								case 'temphistoryrooms':
+									if (Object.keys(temperatureRoomData).length) {
+										Object.keys(temperatureRoomData).map(uuid => {
+											graphLinesData.temperature.push({
+												unit: '°C',
+												maxValue: 24.5,
+												noArea: true,
+												name: key + uuid,
+												caption: 'Temperatur - ' + temperatureRoomData[uuid]['room']['name'],
+												median: true,
+												data: temperatureRoomData[uuid]['data'],
+												color: "#6e33ff",
+												alarmColor: '#ff0000',
+												dotSize: period.timeTypeData === 1 ? 2 : 6
+											});
+										});
+									}
+									break;
 								case 'tempanbmin':
 									if (temperatureData) {
 										let dataMinimum = [];
@@ -437,6 +551,24 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											color: "#245bed",
 											alarmColor: '#ff0000',
 											dotSize: period.timeTypeData === 1 ? 2 : 6
+										});
+									}
+									break;
+								case 'co2historyrooms':
+									if (Object.keys(co2RoomData).length) {
+										Object.keys(co2RoomData).map(uuid => {
+											graphLinesData.co2.push({
+												unit: 'ppm',
+												maxValue: 1000,
+												noArea: true,
+												name: key + uuid,
+												caption: 'Co2 - ' + co2RoomData[uuid]['room']['name'],
+												median: true,
+												data: co2RoomData[uuid]['data'],
+												color: "#6e33ff",
+												alarmColor: '#ff0000',
+												dotSize: period.timeTypeData === 1 ? 2 : 6
+											});
 										});
 									}
 									break;
@@ -507,6 +639,24 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										});
 									}
 									break;
+								case 'humidityhistoryrooms':
+									if (Object.keys(humidityRoomData).length) {
+										Object.keys(humidityRoomData).map(uuid => {
+											graphLinesData.humidity.push({
+												unit: 'ppm',
+												maxValue: 1000,
+												noArea: true,
+												name: key + uuid,
+												caption: 'Luftfugtighed - ' + humidityRoomData[uuid]['room']['name'],
+												median: true,
+												data: humidityRoomData[uuid]['data'],
+												color: "#6e33ff",
+												alarmColor: '#ff0000',
+												dotSize: period.timeTypeData === 1 ? 2 : 6
+											});
+										});
+									}
+									break;
 								case 'humidityavgbuilding':
 									if (humidityAvgData.length) {
 										graphLinesData.humidity.push({
@@ -532,6 +682,24 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											data: batteryData,
 											color: "#1cc933",
 											dotSize: period.timeTypeData === 1 ? 2 : 6
+										});
+									}
+									break;
+								case 'batteryhistoryrooms':
+									if (Object.keys(batteryRoomData).length) {
+										Object.keys(batteryRoomData).map(uuid => {
+											graphLinesData.battery.push({
+												unit: 'ppm',
+												maxValue: 1000,
+												noArea: true,
+												name: key + uuid,
+												caption: 'Batteri - ' + batteryRoomData[uuid]['room']['name'],
+												median: true,
+												data: batteryRoomData[uuid]['data'],
+												color: "#6e33ff",
+												alarmColor: '#ff0000',
+												dotSize: period.timeTypeData === 1 ? 2 : 6
+											});
 										});
 									}
 									break;

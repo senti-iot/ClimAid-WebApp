@@ -33,7 +33,7 @@ const RoomGraphContainer = (props) => {
 	const [loadingOverlayOpen, setLoadingOverlayOpen] = useState(false);
 	// const [roomValues, setRoomValues] = useState(null);
 	// const [batteryLevel, setBatteryLevel] = useState(null);
-	const [checkboxStates, setCheckboxStates] = useState({ 'temphistory': true, 'userexperience': [], 'analytics': [] });
+	const [checkboxStates, setCheckboxStates] = useState({ temphistory: true, temphistoryrooms: [], userexperience: [], analytics: [], co2historyrooms: [], humidityhistoryrooms: [], batteryhistoryrooms: [] });
 	// const [anchorEl, setAnchorEl] = useState(null);
 	const [room, setRoom] = useState(null);
 	const [rooms, setRooms] = useState([]);
@@ -89,6 +89,50 @@ const RoomGraphContainer = (props) => {
 	const handleCheckboxChange = (e) => {
 		let newStates = { ...checkboxStates };
 		newStates[e.target.value] = (newStates[e.target.value]) ? false : true;
+		setCheckboxStates(newStates);
+	}
+
+	const handleTemperatureRoomChange = (e) => {
+		let newStates = { ...checkboxStates };
+
+		if (newStates['temphistoryrooms'][e.target.value]) {
+			delete newStates['temphistoryrooms'][e.target.value];
+		} else {
+			newStates['temphistoryrooms'][e.target.value] = true;
+		}
+		setCheckboxStates(newStates);
+	}
+
+	const handleCo2RoomChange = (e) => {
+		let newStates = { ...checkboxStates };
+
+		if (newStates['co2historyrooms'][e.target.value]) {
+			delete newStates['co2historyrooms'][e.target.value];
+		} else {
+			newStates['co2historyrooms'][e.target.value] = true;
+		}
+		setCheckboxStates(newStates);
+	}
+
+	const handleHumidityRoomChange = (e) => {
+		let newStates = { ...checkboxStates };
+
+		if (newStates['humidityhistoryrooms'][e.target.value]) {
+			delete newStates['humidityhistoryrooms'][e.target.value];
+		} else {
+			newStates['humidityhistoryrooms'][e.target.value] = true;
+		}
+		setCheckboxStates(newStates);
+	}
+
+	const handleBatteryRoomChange = (e) => {
+		let newStates = { ...checkboxStates };
+
+		if (newStates['batteryhistoryrooms'][e.target.value]) {
+			delete newStates['batteryhistoryrooms'][e.target.value];
+		} else {
+			newStates['batteryhistoryrooms'][e.target.value] = true;
+		}
 		setCheckboxStates(newStates);
 	}
 
@@ -216,7 +260,15 @@ const RoomGraphContainer = (props) => {
 				<>
 					<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2} style={{ marginTop: 30 }}>
 						<Grid item xs={3} xl={2}>
-							<ClimateDropdown onChange={handleCheckboxChange} checkboxStates={checkboxStates} />
+							<ClimateDropdown
+								onChange={handleCheckboxChange}
+								onTemperatureRoomChange={handleTemperatureRoomChange}
+								onCo2RoomChange={handleCo2RoomChange}
+								onHumidityRoomChange={handleHumidityRoomChange}
+								onBatteryRoomChange={handleBatteryRoomChange}
+								checkboxStates={checkboxStates}
+								rooms={rooms}
+							/>
 						</Grid>
 						<Grid item xs={3} xl={2}>
 							{rooms ? <UserExperienceDropdown onChange={handleuserExperienceChange} checkboxStates={checkboxStates} rooms={rooms} /> : ""}

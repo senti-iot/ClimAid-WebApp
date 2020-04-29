@@ -15,6 +15,7 @@ const ClimateDropdown = (props) => {
 	const [batteryopen, setBatteryopen] = useState(false);
 	const [popoverWidth, setPopoverWidth] = useState(310);
 	const checkboxStates = props.checkboxStates;
+	const rooms = props.rooms;
 
 	useEffect(() => {
 		if (checkboxStates['temphistory'] || checkboxStates['tempanbmin'] || checkboxStates['tempanbmax']) {
@@ -81,6 +82,7 @@ const ClimateDropdown = (props) => {
 				PaperProps={{
 					style: {
 						width: popoverWidth,
+						maxHeight: 600
 					},
 				}}
 				id="climate-menu"
@@ -150,6 +152,21 @@ const ClimateDropdown = (props) => {
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>
+
+							{rooms.map(room => {
+								return (<ListItem key={room.uuid} button>
+									<ListItemText id={room.uuid} primary={room.name} />
+									<ListItemSecondaryAction>
+										<Checkbox
+											edge="end"
+											value={room.uuid}
+											onChange={props.onTemperatureRoomChange}
+											checked={checkboxStates['temphistoryrooms'][room.uuid] ? true : false}
+											inputProps={{ 'aria-labelledby': 1 }}
+										/>
+									</ListItemSecondaryAction>
+								</ListItem>);
+							})}
 						</Collapse>
 
 						<ListItem key={20} button style={{ backgroundColor: '#eee' }}>
@@ -211,6 +228,21 @@ const ClimateDropdown = (props) => {
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>
+
+							{rooms.map(room => {
+								return (<ListItem key={room.uuid} button>
+									<ListItemText id={room.uuid} primary={room.name} />
+									<ListItemSecondaryAction>
+										<Checkbox
+											edge="end"
+											value={room.uuid}
+											onChange={props.onCo2RoomChange}
+											checked={checkboxStates['co2historyrooms'][room.uuid] ? true : false}
+											inputProps={{ 'aria-labelledby': 1 }}
+										/>
+									</ListItemSecondaryAction>
+								</ListItem>);
+							})}
 						</Collapse>
 
 						<ListItem key={30} button style={{ backgroundColor: '#eee' }}>
@@ -248,6 +280,21 @@ const ClimateDropdown = (props) => {
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>
+
+							{rooms.map(room => {
+								return (<ListItem key={room.uuid} button>
+									<ListItemText id={room.uuid} primary={room.name} />
+									<ListItemSecondaryAction>
+										<Checkbox
+											edge="end"
+											value={room.uuid}
+											onChange={props.onHumidityRoomChange}
+											checked={checkboxStates['humidityhistoryrooms'][room.uuid] ? true : false}
+											inputProps={{ 'aria-labelledby': 1 }}
+										/>
+									</ListItemSecondaryAction>
+								</ListItem>);
+							})}
 						</Collapse>
 
 						<ListItem key={40} button style={{ backgroundColor: '#eee' }}>
@@ -285,6 +332,21 @@ const ClimateDropdown = (props) => {
 									/>
 								</ListItemSecondaryAction>
 							</ListItem>
+
+							{rooms.map(room => {
+								return (<ListItem key={room.uuid} button>
+									<ListItemText id={room.uuid} primary={room.name} />
+									<ListItemSecondaryAction>
+										<Checkbox
+											edge="end"
+											value={room.uuid}
+											onChange={props.onBatteryRoomChange}
+											checked={checkboxStates['batteryhistoryrooms'][room.uuid] ? true : false}
+											inputProps={{ 'aria-labelledby': 1 }}
+										/>
+									</ListItemSecondaryAction>
+								</ListItem>);
+							})}
 						</Collapse>
 					</List>
 				</>

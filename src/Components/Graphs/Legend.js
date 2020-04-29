@@ -45,7 +45,7 @@ const Legend = props => {
 													style={{
 														color: line.hidden ? 'rgba(255, 255, 255, 0.3)' : '#fff'
 													}}
-													id={line.name + 'LegendLabel'}>{t('chartLines.' + line.name)}</T>}
+													id={line.name + 'LegendLabel'}>{line.caption ? line.caption : t('chartLines.' + line.name)}</T>}
 											/>
 										</Fragment>
 									</Grid>
@@ -66,7 +66,7 @@ const Legend = props => {
 											style={{
 												color: line.hidden ? 'rgba(255, 255, 255, 0.3)' : '#fff'
 											}}
-											id={line.name + 'LegendLabel'}>{t('chartLines.' + line.name)}</T>}
+											id={line.name + 'LegendLabel'}>{line.caption ? line.caption : t('chartLines.' + line.name)}</T>}
 									/>
 								</Grid>
 							})}
