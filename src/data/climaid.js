@@ -30,9 +30,14 @@ if (hostname === 'localhost') {
 	climaidApiHost = 'https://services.senti.cloud/climaid-backend';
 }
 
-let token = null;
-if (cookie.load('SESSION')) {
-	token = cookie.load('SESSION').token;
+export const setToken = () => {
+	try {
+		let token = cookie.load('SESSION').token;
+		climaidApi.setHeader('Authorization', 'Bearer ' + token);
+		return true;
+	} catch (error) {
+		return false
+	}
 }
 
 export const climaidApi = create({
@@ -45,10 +50,6 @@ export const climaidApi = create({
 		// 'Cache-Control': 'public, max-age=86400'
 	}
 });
-
-if (token) {
-	climaidApi.setHeader('Authorization', 'Bearer ' + token);
-}
 
 export const getBuildings = async () => {
 	let data = await climaidApi.get('/buildings').then(rs => rs.data);
@@ -282,3 +283,5 @@ export const getActivityLevelData = async (devices, period) => {
 	let data = await servicesAPI.post('/v2/climaidinsight/activity/' + sort + '/' + period.from + '/' + period.to, { "devices": devices, "config": config }).then(rs => rs.data);
 	return data;
 }
+
+setToken();

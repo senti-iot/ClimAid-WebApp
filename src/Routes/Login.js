@@ -50,7 +50,6 @@ function Login() {
 	//TODO
 	const handleLoginUser = async () => {
 		await loginUser(user, pass, orgId).then(async rs => {
-			console.log(rs);
 			if (rs) {
 				
 				let exp = moment().add('1', 'day')
