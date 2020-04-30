@@ -1,6 +1,7 @@
 import { create } from 'apisauce';
 import moment from 'moment';
 import crypto from 'crypto';
+import cookie from 'react-cookies';
 
 import { servicesAPI, weatherApi } from './data';
 
@@ -29,11 +30,14 @@ if (hostname === 'localhost') {
 	climaidApiHost = 'https://services.senti.cloud/climaid-backend';
 }
 
+const token = cookie.load('SESSION').token;
+
 export const climaidApi = create({
 	baseURL: climaidApiHost,
 	timout: 30000,
 	headers: {
 		'auth': encrypt(process.env.REACT_APP_ENCRYPTION_KEY),
+		'Authorization': 'Bearer ' + token,
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
 		// 'Cache-Control': 'public, max-age=86400'
