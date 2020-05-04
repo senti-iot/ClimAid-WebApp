@@ -170,7 +170,7 @@ const ClimateDropdown = (props) => {
 						</Collapse>
 
 						<ListItem key={20} button style={{ backgroundColor: '#eee' }}>
-							<ListItemText id={10} primary="Co2 koncentration" onClick={toogleCo2open} />
+							<ListItemText id={10} primary="CO2 koncentration" onClick={toogleCo2open} />
 							<ListItemSecondaryAction>
 								<IconButton edge="end" onClick={toogleCo2open}>
 									{co2open ? <RemoveIcon /> : <AddIcon />}
