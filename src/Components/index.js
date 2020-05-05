@@ -18,6 +18,8 @@ import PrivacyDialog from 'Components/Dialogs/PrivacyPolicyDialog'
 import T from 'Components/Typography/T'
 import Muted from 'Components/Typography/Muted'
 import Caption from 'Components/Typography/Caption'
+import Danger from 'Components/Typography/Danger'
+import Success from 'Components/Typography/Success'
 
 //#endregion
 
@@ -47,6 +49,8 @@ export {
 	T,
 	Muted,
 	Caption,
+	Danger,
+	Success,
 	//Inputs
 	TextF,
 	DSelect,

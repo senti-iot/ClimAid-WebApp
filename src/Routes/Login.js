@@ -191,7 +191,7 @@ function Login() {
 										</ItemG>
 										<ItemG xs={12} container justify={'center'} style={{ margin: "8px 0px" }}>
 											<ItemG xs={12} container justify={'space-around'}>
-												<Link to={'/password/reset'}>
+												<Link to={'/password/reset/da'}>
 													{t('login.forgotPassword')}
 												</Link>
 											</ItemG>

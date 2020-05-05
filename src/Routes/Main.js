@@ -16,7 +16,7 @@ function Main() {
 			<MuiThemeProvider theme={themes[colorTheme]}>
 				<NewContent />
 				<Switch>
-					<Route path={'/password/reset'}>
+					<Route path={'/password/reset/:lang/:token?'}>
 						<ForgotPassword />
 					</Route>
 					<Route path={'/login'}>

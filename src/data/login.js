@@ -25,12 +25,11 @@ export const logOut = async () => {
 }
 /**
  *
- * @param {object} obj
- * @param {String} obj.email User's e-mail
+ * @param {String} email User's e-mail
  */
 export const resetPassword = async (email) => {
 	let response = await api.post(`/v2/entity/user/forgotpassword`, { email: email }).then(rs => rs);
-	return response.ok ? response.data : response.status;
+	return response.status;
 }
 /**
  *
@@ -38,10 +37,10 @@ export const resetPassword = async (email) => {
  * @param {String} obj.newPassword New Password
  * @param {String} obj.passwordToken Confirm new password token
  */
-// export const confirmPassword = async (obj) => {
-// 	let response = await api.post(`/user/forgotpassword/set`, obj).then(rs => rs)
-// 	return response.ok ? response.data : response.status
-// }
+export const confirmPassword = async (obj) => {
+	let response = await api.post(`/v2/entity/user/forgotpassword/set`, obj).then(rs => rs)
+	return response.status
+}
 /**
  *
  * @param {object} obj
