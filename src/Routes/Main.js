@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import { Route, Switch } from 'react-router-dom';
 import Login from './Login';
+import ForgotPassword from './ForgotPassword';
 import * as themes from 'Styles/themes'
 import NewContent from 'Components/Loaders/NewContent';
 
@@ -15,6 +16,9 @@ function Main() {
 			<MuiThemeProvider theme={themes[colorTheme]}>
 				<NewContent />
 				<Switch>
+					<Route path={'/password/reset'}>
+						<ForgotPassword />
+					</Route>
 					<Route path={'/login'}>
 						<Login />
 					</Route>

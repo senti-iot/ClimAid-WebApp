@@ -69,9 +69,9 @@ function BuildingMap(props) {
 				}
 			});
 
-			// leafletMap.on('click', function(e) {
-			// 	console.log(e.latlng);
-			// });
+			leafletMap.on('click', function(e) {
+				console.log(e.latlng);
+			});
 
 			// eslint-disable-next-line array-callback-return
 			rooms.map(async room => {

@@ -91,6 +91,11 @@ export const setToken = () => {
 
 }
 
+export const setHeaders = () => {
+	api.setHeader('wlHost', window.location.hostname);
+	loginApi.setHeader('wlHost', window.location.hostname);
+	servicesAPI.setHeader('wlHost', window.location.hostname);
+}
 
 export const servicesAPI = create({
 	baseURL: 'https://dev.services.senti.cloud/databroker',
@@ -115,3 +120,4 @@ export const dataExportAPI = create({
 })
 
 setToken();
+setHeaders();

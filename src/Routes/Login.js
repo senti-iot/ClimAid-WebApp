@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import moment from 'moment';
 import logo from 'assets/logo.png'
 import cookie from 'react-cookies';
+import { Link } from 'react-router-dom';
 
 // Components
 import { ItemG, CookiesDialog, PrivacyDialog, FadeOutLoader } from 'Components';
@@ -188,12 +189,19 @@ function Login() {
 											/>
 											{/* </ItemG> */}
 										</ItemG>
+										<ItemG xs={12} container justify={'center'} style={{ margin: "8px 0px" }}>
+											<ItemG xs={12} container justify={'space-around'}>
+												<Link to={'/password/reset'}>
+													{t('login.forgotPassword')}
+												</Link>
+											</ItemG>
+										</ItemG>
 										<ItemG xs={12} container justify={'center'}>
 											<LoginButton variant={'contained'} fullWidth color={'secondary'} onClick={logUser}>
 												{t('actions.login')}
 											</LoginButton>
 										</ItemG>
-									</ItemG>
+									</ItemG>  
 								</FadeOutLoader>
 								{/* </FadeOutLoader> */}
 							</InputContainer>
