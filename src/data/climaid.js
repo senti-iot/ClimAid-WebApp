@@ -167,9 +167,11 @@ export const getDeviceOnlineStatus = async (device) => {
 }
 
 export const getDeviceDataConverted = async (device, period, type) => {
-	let cloudFunction = 13;
+	let cloudFunction = 13; //per day
 	if (period.timeTypeData === 1) {
-		cloudFunction = 0;
+		cloudFunction = 0; //raw
+	} else if (period.timeTypeData === 3) {
+		cloudFunction = 14; // per hour
 	}
 	//console.log('/v1/devicedata-clean/' + device + '/' + period.from + '/' + period.to + '/' + type + '/' + cloudFunction);
 	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + period.from + '/' + period.to + '/' + type + '/' + cloudFunction).then(rs => rs.data);

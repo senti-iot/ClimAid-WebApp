@@ -122,23 +122,31 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 						if (key === 'tempavgbuilding') {
 							let combinedData = {};
+							let numDataDevices = 0;
 							await Promise.all(
 								devices.map(async device => {
 									if (device.type === 'data') {
-										let deviceData = await getDeviceDataConverted(device.device, period, 'temperature');
-										deviceData.map(data => {
-											if (!combinedData[data.date]) {
-												combinedData[data.date] = parseFloat(data.value);
-											} else {
-												combinedData[data.date] += parseFloat(data.value);
-											}
-										});
+										numDataDevices++;
+
+										let avgPeriod = period;
+										avgPeriod.timeTypeData = 3;
+										let deviceData = await getDeviceDataConverted(device.device, avgPeriod, 'temperature');
+										if (deviceData) {
+											console.log(deviceData);
+											deviceData.map(data => {
+												if (!combinedData[data.date]) {
+													combinedData[data.date] = parseFloat(data.value);
+												} else {
+													combinedData[data.date] += parseFloat(data.value);
+												}
+											});
+										}
 									}
 								})
 							);
 
 							Object.entries(combinedData).map(value => {
-								temperatureAvgData.push({ date: value[0], value: value[1] / devices.length });
+								temperatureAvgData.push({ date: value[0], value: value[1] / numDataDevices });
 							});
 						}
 
@@ -170,9 +178,15 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 						if (key === 'co2avgbuilding') {
 							let combinedData = {};
+							let numDataDevices = 0;
 							await Promise.all(
 								devices.map(async device => {
 									if (device.type === 'data') {
+										numDataDevices++;
+
+										let avgPeriod = period;
+										avgPeriod.timeTypeData = 3;
+
 										let deviceData = await getDeviceDataConverted(device.device, period, 'co2');
 										deviceData.map(data => {
 											if (!combinedData[data.date]) {
@@ -186,7 +200,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							);
 
 							Object.entries(combinedData).map(value => {
-								co2AvgData.push({ date: value[0], value: value[1] / devices.length });
+								co2AvgData.push({ date: value[0], value: value[1] / numDataDevices });
 							});
 						}
 
@@ -218,9 +232,14 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 						if (key === 'humidityavgbuilding') {
 							let combinedData = {};
+							let numDataDevices = 0;
 							await Promise.all(
 								devices.map(async device => {
 									if (device.type === 'data') {
+										numDataDevices++;
+
+										let avgPeriod = period;
+										avgPeriod.timeTypeData = 3;
 										let deviceData = await getDeviceDataConverted(device.device, period, 'humidity');
 										deviceData.map(data => {
 											if (!combinedData[data.date]) {
@@ -234,7 +253,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							);
 
 							Object.entries(combinedData).map(value => {
-								humidityAvgData.push({ date: value[0], value: value[1] / devices.length });
+								humidityAvgData.push({ date: value[0], value: value[1] / numDataDevices });
 							});
 						}
 
@@ -244,7 +263,6 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 						if (key === 'batteryhistoryrooms') {
 							batteryRoomData = {};
-
 							await Promise.all(
 								Object.keys(props.checkboxStates['batteryhistoryrooms']).map(async uuid => {
 									let roomDevices = await getRoomDevices(uuid);
@@ -266,9 +284,14 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 						if (key === 'batteryavgbuilding') {
 							let combinedData = {};
+							let numDataDevices = 0;
 							await Promise.all(
 								devices.map(async device => {
 									if (device.type === 'data') {
+										numDataDevices++;
+
+										let avgPeriod = period;
+										avgPeriod.timeTypeData = 3;
 										let deviceData = await getDeviceDataConverted(device.device, period, 'batteristatus');
 										deviceData.map(data => {
 											if (!combinedData[data.date]) {
@@ -282,7 +305,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							);
 
 							Object.entries(combinedData).map(value => {
-								batteryAvgData.push({ date: value[0], value: value[1] / devices.length });
+								batteryAvgData.push({ date: value[0], value: value[1] / numDataDevices });
 							});
 						}
 
