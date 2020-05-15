@@ -86,6 +86,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						let batteryAvgData = [];
 						let userexperienceData = null;
 						let analyticsData = null;
+						let analyticsRoomData = null;
 
 						let devices = null;
 						if (key === 'tempavgbuilding' || key === 'co2avgbuilding' || key === 'humidityavgbuilding' || key === 'batteryavgbuilding') {
@@ -420,6 +421,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 						if (key === 'analytics' && Object.keys(checkboxStates['analytics']).length) {
 							analyticsData = [];
+							analyticsRoomData = {};
 							let buildingDevices = await getBuildingDevices(room.building.uuid);
 							let newDevices = [];
 							buildingDevices.map(device => {
@@ -439,6 +441,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 									} else if (experienceType.indexOf('activitylevel_') !== -1) {
 										let keyParts = experienceType.split('_');
 										let roomDevices = await getRoomDevices(keyParts[1]);
+										let r = await getRoom(keyParts[1]);
 
 										let newDevices = [];
 										roomDevices.map(device => {
@@ -446,6 +449,11 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 												newDevices.push(device.device);
 											}
 										});
+
+										let data = await getActivityLevelData(newDevices, period);
+										console.log(data);
+
+										analyticsRoomData[keyParts[1]] = { data: data, room: r };;
 									}
 								})
 							);
@@ -738,6 +746,21 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											color: "darkgreen",
 											noDots: false,
 											maxValue: 100
+										});
+									}
+									if (analyticsRoomData) {
+										Object.keys(analyticsRoomData).map(uuid => {
+											graphLinesData.analytics.push({
+												noArea: true,
+												unit: '%',
+												name: key + uuid,
+												caption: 'Aktivitetsniveau - ' + analyticsRoomData[uuid]['room']['name'],
+												median: true,
+												data: analyticsRoomData[uuid]['data'],
+												color: "darkgreen",
+												noDots: false,
+												maxValue: 100
+											});
 										});
 									}
 									break;

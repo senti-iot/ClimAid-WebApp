@@ -268,9 +268,9 @@ export const getRoomActivityLevel = async (device) => {
 }
 
 export const getActivityLevelData = async (devices, period) => {
-	let sort = 'byhour';
+	let sort = 'byquarter';
 	if (period.timeType === 2) {
-		sort = 'byday';
+		//sort = 'byday';
 	}
 
 	const config = {
