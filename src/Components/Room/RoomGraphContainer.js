@@ -259,7 +259,7 @@ const RoomGraphContainer = (props) => {
 			{room && !loading ?
 				<>
 					<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={2} style={{ marginTop: 30 }}>
-						<Grid item xs={3} xl={2}>
+						<Grid item xs={3} lg={2} xl={2}>
 							<ClimateDropdown
 								onChange={handleCheckboxChange}
 								onTemperatureRoomChange={handleTemperatureRoomChange}
@@ -270,18 +270,16 @@ const RoomGraphContainer = (props) => {
 								rooms={rooms}
 							/>
 						</Grid>
-						<Grid item xs={3} xl={2}>
+						<Grid item xs={3} lg={3} xl={2}>
 							{rooms ? <UserExperienceDropdown onChange={handleuserExperienceChange} checkboxStates={checkboxStates} rooms={rooms} /> : ""}
 						</Grid>
-						<Grid item xs={3} xl={2}>
+						<Grid item xs={3} lg={2} xl={2}>
 							{rooms ? <AnalyticsDropdown onChange={handleAnalyticsChange} checkboxStates={checkboxStates} rooms={rooms} /> : ""}
 						</Grid>
-						<Grid item xs={3} xl={2}>
+						<Grid item xs={3} lg={2} xl={2}>
 							<EnergyDropdown />
 						</Grid>
-						<Grid item xs={3} xl={2}>
-						</Grid>
-						<Grid item xs={3} xl={2}>
+						<Grid item xs={3} lg={2} xl={2}>
 							<ExportDropdown saveGraph={saveGraph} exportCsv={exportCsv} />
 						</Grid>
 
