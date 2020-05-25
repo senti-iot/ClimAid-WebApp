@@ -754,7 +754,7 @@ class d3Line {
 						];
 
 						var stackedData = d3.stack().keys(keys)(line.data);
-						var color = d3.scaleOrdinal().domain(keys).range(['#1F425D', '#224D66', '#007870', '#255870', '#28647A', '#2A7183', '#2D7F8D', '#2F8E97', '#34ABA8', '#04A8AB']);
+						var color = d3.scaleOrdinal().domain(keys).range(['#2b6e48', '#3b8058', '#499267', '#4fa171', '#58b07c', '#5ebf88', '#74c694', '#8dcea4', '#9ed3ae', '#b4ddbf']);
 						var xScale = this.x;
 						var y2Scale = this.y2;
 

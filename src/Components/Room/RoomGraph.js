@@ -35,6 +35,14 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 	const room = props.room;
 	const checkboxStates = props.checkboxStates;
 
+	const colors = {
+		temperature: ['#d4292b', '#eb3723', '#ee4c26', '#f15b22', '#f37351', '#f59072', '#f8a693', '#f8afa4', '#fac5bf', '#fbd5d5'],
+		co2: ['#93192e', '#a01c3b', '#b31e3c', '#c9203b', '#ed194e', '#f27376', '#f59298', '#f7a5ad', '#f8b3bf', '#f9c4d2'],
+		humidity: ['#2f1d54', '#3e2b5e', '#472d61', '#502c63', '#623778', '#72448f', '#8351a0', '#8566ab', '#8f76b5', '#9a87bf'],
+		battery: ['#262b65', '#1d3566', '#103e69', '#11416b', '#154775', '#205785', '#266b9b', '#307dab', '#3d8fb8', '#4ca8cc'],
+		activitylevel: ['#5e421b', '#6c4f1f', '#735923', '#846829', '#92752c', '#9e7f3e', '#ac8952', '#b99259', '#cea273', '#ddad7f'],
+	}
+
 	useEffect(() => {
 		setLoading(true);
 	}, [props.checkboxStates, props.room]);
@@ -482,6 +490,12 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							);
 						}
 
+						let tempColorCount = 0;
+						let co2ColorCount = 0;
+						let humidityColorCount = 0;
+						let batteryColorCount = 0;
+						let activitylevelColorCount = 0;
+
 						if (props.checkboxStates[key]) {
 							switch (key) {
 								default:
@@ -494,7 +508,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: temperatureData,
-											color: "#e28117",
+											color: colors['temperature'][tempColorCount++],
 											alarmColor: '#ff0000',
 											dotSize: period.timeTypeData === 1 ? 2 : 6
 										});
@@ -511,7 +525,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 												caption: 'Temperatur - ' + temperatureRoomData[uuid]['room']['name'],
 												median: true,
 												data: temperatureRoomData[uuid]['data'],
-												color: "#6e33ff",
+												color: colors['temperature'][tempColorCount++],
 												alarmColor: '#ff0000',
 												dotSize: period.timeTypeData === 1 ? 2 : 6
 											});
@@ -530,7 +544,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: dataMinimum,
-											color: "#e28117",
+											color: colors['temperature'][tempColorCount++],
 											noArea: true,
 											noDots: true,
 											dashed: true
@@ -549,7 +563,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: dataMax,
-											color: "#e28117",
+											color: colors['temperature'][tempColorCount++],
 											noArea: true,
 											noDots: true,
 											dashed: true
@@ -564,7 +578,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: temperatureAvgData,
-											color: "#e26f17",
+											color: colors['temperature'][tempColorCount++],
 											alarmColor: '#ff0000',
 											noDots: true
 										});
@@ -579,7 +593,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: co2Data,
-											color: "#245bed",
+											color: colors['co2'][co2ColorCount++],
 											alarmColor: '#ff0000',
 											dotSize: period.timeTypeData === 1 ? 2 : 6
 										});
@@ -596,7 +610,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 												caption: 'Co2 - ' + co2RoomData[uuid]['room']['name'],
 												median: true,
 												data: co2RoomData[uuid]['data'],
-												color: "#6e33ff",
+												color: colors['co2'][co2ColorCount++],
 												alarmColor: '#ff0000',
 												dotSize: period.timeTypeData === 1 ? 2 : 6
 											});
@@ -615,7 +629,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: dataMinimum,
-											color: "#245bed",
+											color: colors['co2'][co2ColorCount++],
 											noArea: true,
 											noDots: true,
 											dashed: true
@@ -634,7 +648,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: dataMax,
-											color: "#245bed",
+											color: colors['co2'][co2ColorCount++],
 											noArea: true,
 											noDots: true,
 											dashed: true
@@ -649,7 +663,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: co2AvgData,
-											color: "#2400ed",
+											color: colors['co2'][co2ColorCount++],
 											alarmColor: '#ff0000',
 											noDots: true
 										});
@@ -664,7 +678,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: humidityData,
-											color: "#1cc933",
+											color: colors['humidity'][humidityColorCount++],
 											alarmColor: '#ff0000',
 											dotSize: period.timeTypeData === 1 ? 2 : 6
 										});
@@ -681,7 +695,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 												caption: 'Luftfugtighed - ' + humidityRoomData[uuid]['room']['name'],
 												median: true,
 												data: humidityRoomData[uuid]['data'],
-												color: "#6e33ff",
+												color: colors['humidity'][humidityColorCount++],
 												alarmColor: '#ff0000',
 												dotSize: period.timeTypeData === 1 ? 2 : 6
 											});
@@ -696,7 +710,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: humidityAvgData,
-											color: "#009b33",
+											color: colors['humidity'][humidityColorCount++],
 											alarmColor: '#ff0000',
 											noDots: true
 										});
@@ -711,7 +725,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: batteryData,
-											color: "#1cc933",
+											color: colors['battery'][batteryColorCount++],
 											dotSize: period.timeTypeData === 1 ? 2 : 6
 										});
 									}
@@ -727,7 +741,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 												caption: 'Batteri - ' + batteryRoomData[uuid]['room']['name'],
 												median: true,
 												data: batteryRoomData[uuid]['data'],
-												color: "#6e33ff",
+												color: colors['battery'][batteryColorCount++],
 												alarmColor: '#ff0000',
 												dotSize: period.timeTypeData === 1 ? 2 : 6
 											});
@@ -741,7 +755,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: batteryAvgData,
-											color: "#1c9d33",
+											color: colors['battery'][batteryColorCount++],
 											noDots: true
 										});
 									}
@@ -766,7 +780,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											name: key,
 											median: true,
 											data: analyticsData,
-											color: "darkgreen",
+											color: colors['activitylevel'][activitylevelColorCount++],
 											noDots: false,
 											maxValue: 100
 										});
@@ -780,7 +794,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 												caption: 'Aktivitetsniveau - ' + analyticsRoomData[uuid]['room']['name'],
 												median: true,
 												data: analyticsRoomData[uuid]['data'],
-												color: "darkgreen",
+												color: colors['activitylevel'][activitylevelColorCount++],
 												noDots: false,
 												maxValue: 100
 											});
