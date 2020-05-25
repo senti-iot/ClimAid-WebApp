@@ -465,7 +465,6 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 								Object.keys(checkboxStates['analytics']).map(async experienceType => {
 									if (experienceType === 'activitylevel') {
 										let data = await getActivityLevelData(newDevices, period);
-										console.log(data);
 
 										analyticsData = data;
 										
@@ -482,7 +481,6 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										});
 
 										let data = await getActivityLevelData(newDevices, period);
-										console.log(data);
 
 										analyticsRoomData[keyParts[1]] = { data: data, room: r };;
 									}
