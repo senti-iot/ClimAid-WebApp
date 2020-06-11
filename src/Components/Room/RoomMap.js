@@ -80,11 +80,11 @@ function RoomMap(props) {
 				}
 			});
 
-			// leafletMap.on('click', function (e) {
-			// 	var coord = e.latlng;
-			// 	console.log(coord);
-			// 	layerGroup.addLayer(L.marker(L.latLng(e.latlng)));
-			// });
+			leafletMap.on('click', function (e) {
+				var coord = e.latlng;
+				console.log(coord);
+				// layerGroup.addLayer(L.marker(L.latLng(e.latlng)));
+			});
 
 		}
 	}, [room.uuid]);
