@@ -17,17 +17,12 @@ function RoomMap(props) {
 	const [draggable, setDraggable] = useState(false);
 	const [comfortDiagramOpen, setComfortDiagramOpen] = useState(false);
 
-	// const markerIcon = L.Icon.extend({
-	// 	options: {
-	// 		iconSize: [50, 84],
-	// 		iconAnchor: [25, 84]
-	// 	}
-	// });
-
-	// const markerIconGood = new markerIcon({ iconUrl: '/images/marker1.svg' });
-	// const markerIconAcceptable = new markerIcon({ iconUrl: '/images/marker2.svg' });
-	// const markerIconUnacceptable = new markerIcon({ iconUrl: '/images/marker3.svg' });
-	// const markerIconVeryUnacceptable = new markerIcon({ iconUrl: '/images/marker4.svg' });
+	const markerIcon = L.Icon.extend({
+		options: {
+			iconSize: [50, 84],
+			iconAnchor: [25, 84]
+		}
+	});
 
 	useEffect(() => {
 		//leaflet hack to fix marker images
