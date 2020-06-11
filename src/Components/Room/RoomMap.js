@@ -65,7 +65,7 @@ function RoomMap(props) {
 			room.devices.map(device => {
 				if (device.position && device.position.length) {
 					let position = device.position.split(',');
-					markers.push(L.marker({ lat: position[0], lng: position[1] }, { icon: markerIconGood }));
+					markers.push(L.marker({ lat: position[0], lng: position[1] }, { icon: new markerIcon({ iconUrl: '/images/marker1.svg' }) }));
 				}
 			});
 
