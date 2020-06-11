@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { AppBackground } from 'Styles/containerStyle';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import Administraion from 'Routes/Administration';
+import AdministrationRoute from 'Routes/AdministrationRoute';
 import Building from 'Routes/Building';
 import UserManual from 'Routes/UserManual';
 import Support from 'Routes/Support';
@@ -36,7 +36,7 @@ function Container(props) {
 					{!loading ?
 						<Switch>
 							<Route path={'/administration'}>
-								<Administraion />
+								<AdministrationRoute />
 							</Route>
 							<Route path={'/usermanual'}>
 								<UserManual />
