@@ -126,7 +126,6 @@ function BuildingMap(props) {
 	}
 
 	const goToRoom = () => {
-		console.log(showingRoom);
 		history.push('/building/' + showingRoom.building.uuid + '/room/' + showingRoom.uuid);
 	}
 

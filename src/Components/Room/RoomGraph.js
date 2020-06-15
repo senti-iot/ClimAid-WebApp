@@ -605,7 +605,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 												maxValue: 1000,
 												noArea: true,
 												name: key + uuid,
-												caption: 'Co2 - ' + co2RoomData[uuid]['room']['name'],
+												caption: 'CO2 - ' + co2RoomData[uuid]['room']['name'],
 												median: true,
 												data: co2RoomData[uuid]['data'],
 												color: colors['co2'][co2ColorCount++],
