@@ -5,6 +5,8 @@ import L from 'leaflet';
 import CloseTwoToneIcon from '@material-ui/icons/CloseTwoTone';
 import Button from '@material-ui/core/Button';
 import Backdrop from '@material-ui/core/Backdrop';
+import IconButton from '@material-ui/core/IconButton';
+import { useHistory } from 'react-router';
 
 import buildingStyles from 'Styles/buildingStyles';
 import RoomInfo from 'Components/Room/RoomInfo';
@@ -19,6 +21,7 @@ function BuildingMap(props) {
 	const mapRef = useRef(null);
 	const building = props.building;
 	const rooms = props.rooms;
+	const history = useHistory();
 
 	const markerIcon = L.Icon.extend({
 		options: {
@@ -122,6 +125,11 @@ function BuildingMap(props) {
 		setComfortDiagramOpen(false);
 	}
 
+	const goToRoom = () => {
+		console.log(showingRoom);
+		history.push('/building/' + showingRoom.building.uuid + '/room/' + showingRoom.uuid);
+	}
+
 	return (
 		<>
 			<Map
@@ -146,7 +154,8 @@ function BuildingMap(props) {
 
 			{showingRoom ?
 				<div style={{ position: 'absolute', left: 38, top: 158, width: 500, zIndex: 1000 }}>
-					<div style={{ position: 'absolute', top: 10, right: 10, cursor: 'pointer' }} onClick={closeRoomInfo}><CloseTwoToneIcon /></div>
+					<div style={{ position: 'absolute', top: 40, right: 0, cursor: 'pointer' }}><IconButton onClick={goToRoom}><img src="/images/door.svg" alt="" /></IconButton></div>
+					<div style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer' }}><IconButton onClick={closeRoomInfo}><CloseTwoToneIcon /></IconButton></div>
 					<RoomInfo room={showingRoom} />
 				</div>
 				: ""}
