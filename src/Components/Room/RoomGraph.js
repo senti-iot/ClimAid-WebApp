@@ -36,11 +36,11 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 	const checkboxStates = props.checkboxStates;
 
 	const colors = {
-		temperature: ['#d4292b', '#eb3723', '#ee4c26', '#f15b22', '#f37351', '#f59072', '#f8a693', '#f8afa4', '#fac5bf', '#fbd5d5'],
-		co2: ['#93192e', '#a01c3b', '#b31e3c', '#c9203b', '#ed194e', '#f27376', '#f59298', '#f7a5ad', '#f8b3bf', '#f9c4d2'],
-		humidity: ['#2f1d54', '#3e2b5e', '#472d61', '#502c63', '#623778', '#72448f', '#8351a0', '#8566ab', '#8f76b5', '#9a87bf'],
-		battery: ['#262b65', '#1d3566', '#103e69', '#11416b', '#154775', '#205785', '#266b9b', '#307dab', '#3d8fb8', '#4ca8cc'],
-		activitylevel: ['#5e421b', '#6c4f1f', '#735923', '#846829', '#92752c', '#9e7f3e', '#ac8952', '#b99259', '#cea273', '#ddad7f'],
+		temperature: ['#972E0A', '#CB4127', '#E75A25', '#F36E21', '#F58222', '#F89840', '#FBB166', '#FCC77F'],
+		co2: ['#730F19', '#A61D32', '#BC213C', '#CB2026', '#EE2B29', '#D82455', '#E8426A', '#E27171'],
+		humidity: ['#53164F', '#92278F', '#9D5BA5', '#B01F8E', '#7F4F9B', '#DF509D', '#F27FB2', '#F6A8CA'],
+		battery: ['#173158', '#0F81C4', '#0093B4', '#2AB1E6', '#19BDD2', '#6ACFF6', '#94DAF8', '#BAE6FB'],
+		activitylevel: ['#CA882E', '#DA9729', '#EEAF1F', '#FFCD17', '#F2D02A', '#F2E521', '#FFF57A', '#FFF79C'],
 	}
 
 	useEffect(() => {
