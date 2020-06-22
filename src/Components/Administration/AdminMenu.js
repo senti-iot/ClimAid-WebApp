@@ -25,31 +25,31 @@ const AdminMenu = (props) => {
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Bruger oprettelse" />
+				<ListItemText primary="Bruger" />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Sensor oprettelse" />
+				<ListItemText primary="Sensor" />
 			</ListItem>
-			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/rooms/list')}>
+			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/zones/list')}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Lokaler" />
+				<ListItemText primary="Zone" />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/buildings/list')}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Bygninger" />
+				<ListItemText primary="Bygning" />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Alarmer" />
+				<ListItemText primary="Alarm" />
 			</ListItem>
 		</List>
 	)

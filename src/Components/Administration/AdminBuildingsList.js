@@ -63,7 +63,7 @@ const AdminBuildingsList = (props) => {
 			</Grid>
 			<Grid container item xs={6}>
 				<Paper elevation={3} className={classes.adminPaperContainer}>
-					<h1 className={classes.adminHeader}>Bygninger</h1>
+					<div className={classes.adminHeader}>Bygninger</div>
 
 					<p>
 						<Button
@@ -82,7 +82,8 @@ const AdminBuildingsList = (props) => {
 								<TableHead>
 									<TableRow className={classes.tableRow}>
 										<TableCell>Navn</TableCell>
-										<TableCell>Antal lokaler</TableCell>
+										<TableCell>Antal zoner</TableCell>
+										<TableCell>Antal brugere</TableCell>
 										<TableCell></TableCell>
 									</TableRow>
 								</TableHead>
@@ -93,10 +94,12 @@ const AdminBuildingsList = (props) => {
 												{building.name}
 											</TableCell>
 											<TableCell>
-												{roomsData[building.uuid] ? roomsData[building.uuid] : ""}
+												{roomsData[building.uuid] ? roomsData[building.uuid] : 0}
+											</TableCell>
+											<TableCell>
 											</TableCell>
 											<TableCell align="right">
-												<IconButton onClick={() => history.push('/administration/rooms/list/' + building.uuid)}>
+												<IconButton onClick={() => history.push('/administration/zones/list/' + building.uuid)}>
 													<ListIcon />
 												</IconButton>
 												<IconButton onClick={() => history.push('/administration/buildings/' + building.uuid + '/edit')}>

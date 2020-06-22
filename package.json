@@ -20,6 +20,7 @@
 		"js-file-download": "^0.4.11",
 		"leaflet": "^1.6.0",
 		"lodash": "^4.17.15",
+		"material-ui-dropzone": "^3.3.0",
 		"memoize-one": "^5.1.1",
 		"moment": "^2.24.0",
 		"react": "^16.13.0",

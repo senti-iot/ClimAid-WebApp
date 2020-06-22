@@ -7,7 +7,7 @@ import Administration from 'Components/Administration/Administration';
 import AdminBuildingsList from 'Components/Administration/AdminBuildingsList';
 import AdminBuildingsAdd from 'Components/Administration/AdminBuildingsAdd';
 import AdminBuildingsView from 'Components/Administration/AdminBuildingsView';
-import AdminRoomsList from 'Components/Administration/AdminRoomsList';
+import AdminZonesList from 'Components/Administration/AdminZonesList';
 
 const AdministrationRoute = () => {
 	const history = useHistory();
@@ -16,8 +16,8 @@ const AdministrationRoute = () => {
 		<GridContainer spacing={2}>
 			<ItemG xs={12}>
 				<Switch>
-					<Route path={['/administration/rooms/list/:uuid', '/administration/rooms/list']}>
-						<AdminRoomsList history={history} />
+					<Route path={['/administration/zones/list/:uuid', '/administration/zones/list']}>
+						<AdminZonesList history={history} />
 					</Route>
 					<Route path={'/administration/buildings/list'}>
 						<AdminBuildingsList history={history} />

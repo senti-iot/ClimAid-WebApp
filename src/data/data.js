@@ -119,5 +119,22 @@ export const dataExportAPI = create({
 	}
 })
 
+const addressApi = create({
+	baseURL: 'https://api.onlinepos.dk/api/taw',
+	timeout: 30000,
+	headers: {
+		'Content-Type': 'application/json',
+		Accept: 'application/json',
+	},
+	mode: 'no-cors',
+});
+
+export const addressLookup = (address) => {
+	let data = addressApi
+		.get('https://dawa.aws.dk/adresser?q=' + address)
+		.then(result => result.data);
+	return data;
+};
+
 setToken();
 setHeaders();

@@ -76,8 +76,7 @@ export const addBuilding = async (postData) => {
 };
 
 export const addBuildingImage = async (uuid, formData) => {
-	let data = await climaidApi.post('/building/' + uuid + '/image', formData).then(rs => rs.data);
-	// console.log(data);
+	let data = await climaidApi.post('/building/' + uuid + '/image', formData).then(rs => rs.status);
 	return data;
 };
 

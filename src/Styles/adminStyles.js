@@ -20,6 +20,12 @@ const adminStyles = makeStyles(theme => ({
 	},
 	tableRow: {
 		height: 40
+	},
+	textField: {
+		minWidth: 500
+	},
+	selectField: {
+		minWidth: 500
 	}
 }));
 
