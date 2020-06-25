@@ -58,7 +58,7 @@ const AdminRoomsList = (props) => {
 			</Grid>
 			<Grid container item xs={6}>
 				<Paper elevation={3} className={classes.adminPaperContainer}>
-					<h1 className={classes.adminHeader}>Lokaler</h1>
+					<h1 className={classes.adminHeader}>Zoner</h1>
 
 					<p>
 						<Button
@@ -67,43 +67,44 @@ const AdminRoomsList = (props) => {
 							startIcon={<Add />}
 							onClick={() => history.push('/administration/buildings/add')}
 						>
-							Tilføj lokale
+							Tilføj zone
 						</Button>
 					</p>
 
-					{rooms ?
-						<TableContainer component={Paper}>
-							<Table stickyHeader className={classes.table} aria-label="buildings table">
-								<TableHead>
-									<TableRow className={classes.tableRow}>
-										<TableCell>Navn</TableCell>
-										<TableCell>Bygning</TableCell>
-										<TableCell></TableCell>
-									</TableRow>
-								</TableHead>
-								<TableBody>
-									{rooms.map(room => (
-										<TableRow hover key={room.uuid} className={classes.tableRow}>
-											<TableCell>
-												{room.name}
-											</TableCell>
-											<TableCell>
-												{room.building.name}
-											</TableCell>
-											<TableCell align="right">
-												<IconButton onClick={() => history.push('/administration/rooms/' + room.uuid + '/edit')}>
-													<EditIcon />
-												</IconButton>
-												<IconButton onClick={() => confirmDelete(room.uuid)}>
-													<DeleteIcon />
-												</IconButton>
-											</TableCell>
+					{rooms ? (
+						!rooms.length ? <p>Der blev ikke fundet nogen zoner på denne bygning</p> : 
+							<TableContainer component={Paper}>
+								<Table stickyHeader className={classes.table} aria-label="buildings table">
+									<TableHead>
+										<TableRow className={classes.tableRow}>
+											<TableCell>Navn</TableCell>
+											<TableCell>Bygning</TableCell>
+											<TableCell></TableCell>
 										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</TableContainer>
-						: <CircularLoader fill />}
+									</TableHead>
+									<TableBody>
+										{rooms.map(room => (
+											<TableRow hover key={room.uuid} className={classes.tableRow}>
+												<TableCell>
+													{room.name}
+												</TableCell>
+												<TableCell>
+													{room.building.name}
+												</TableCell>
+												<TableCell align="right">
+													<IconButton onClick={() => history.push('/administration/rooms/' + room.uuid + '/edit')}>
+														<EditIcon />
+													</IconButton>
+													<IconButton onClick={() => confirmDelete(room.uuid)}>
+														<DeleteIcon />
+													</IconButton>
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							</TableContainer>
+					) : (<CircularLoader fill />)}
 				</Paper>
 			</Grid>
 			<Grid container item xs={3}>

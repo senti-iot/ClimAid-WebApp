@@ -92,6 +92,16 @@ export const getBuildingDevices = async (uuid) => {
 	return data;
 };
 
+export const deleteBuilding = async (uuid) => {
+	let data = await climaidApi.delete('/building/' + uuid).then(rs => rs.data);
+	return data;
+}
+
+export const setBuildingPermissions = async (uuid, permissions) => {
+	let data = await climaidApi.post('/building/' + uuid + '/permissions', permissions).then(rs => rs.data);
+	return data;
+}
+
 export const getRoom = async (uuid) => {
 	let data = await climaidApi.get('/room/' + uuid).then(rs => rs.data);
 	// console.log(data);
@@ -115,6 +125,10 @@ export const getWeather = async (date, lat, long) => {
 	return data;
 };
 
+export const deleteRoom = async (uuid) => {
+	let data = await climaidApi.delete('/room/' + uuid).then(rs => rs.data);
+	return data;
+}
 
 export const getCsvExport = async (device, period) => {
 	let data = await climaidApi.get('/export/roomdata/' + device + '/' + period.from + '/' + period.to + '/').then(rs => rs.data);
