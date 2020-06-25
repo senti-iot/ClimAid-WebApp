@@ -67,25 +67,10 @@ const styles = makeStyles(() => ({
 }))
 
 function LoginImages() {
-	// const t = useLocalization()
 	const classes = styles()
-	// const getRndInteger = () => {
-	// 	let min = 0
-	// 	let max = loginImages.length
-	// 	return Math.floor(Math.random() * (max - min)) + min;
-	// }
-	// const [number] = useState(getRndInteger())
-	// const colorTheme = useSelector(s => s.settings.colorTheme)
 	return (
-		// color = { colorTheme }
 		<Background>
 			<div className={classes.contentWrapper}>
-				{/* <img src={sentiIpadIMG} className={classes.img} alt="" />
-				<img src={sentiWaterWorks} className={classes.sentiDots} alt='' />
-				<T variant={'h5'} className={classes.message}>
-					{t(`login.text`)}
-				</T> */}
-
 			</div>
 		</Background>
 	)

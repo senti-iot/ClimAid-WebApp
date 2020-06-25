@@ -55,9 +55,6 @@ export const confirmPassword = async (obj) => {
 /**
  *
  * @param {object} user
- * @param {object} user.aux - Required
- * @param {object} user.aux.senti
- * @param {object} user.aux.odeum
  */
 export const saveSettings = async (user) => {
 	var data = await api.put(`/user/${user.id}`, user).then(rs => rs.data)

@@ -82,38 +82,35 @@ export const saveSettingsOnServ = () => {
 	return async (dispatch, getState) => {
 		// return true
 		let user = getState().settings.user
-		let s = getState().settings
-		let settings = {
-			dsTheme: s.dsTheme,
-			weekendColor: s.weekendColor,
-			// count: s.count,
-			// tcount: s.tcount,
-			// chartType: s.chartType,
-			// discSentiVal: s.discSentiVal,
-			// sideBar: s.sideBar,
-			theme: s.theme,
-			colorTheme: s.colorTheme,
-			trp: s.trp,
-			// alerts: s.alerts,
-			// didKnow: s.didKnow,
-			// rawData: s.rawData,
-			// mapTheme: s.mapTheme,
-			// defaultRoute: s.defaultRoute,
-			cookies: s.cookies,
-			// periods: s.periods,
-			snackbarLocation: s.snackbarLocation,
-			// detailsPanel: s.detailsPanel,
-			// drawer: s.drawer,
-			// drawerState: s.drawerState,
-			// drawerCloseOnNav: s.drawerCloseOnNav,
-			// headerBorder: s.headerBorder,
-			// breadcrumbs: s.breadcrumbs,
-			hoverTime: s.hoverTime,
-		}
+		// let s = getState().settings
+		// let settings = {
+		// 	dsTheme: s.dsTheme,
+		// 	weekendColor: s.weekendColor,
+		// 	// count: s.count,
+		// 	// tcount: s.tcount,
+		// 	// chartType: s.chartType,
+		// 	// discSentiVal: s.discSentiVal,
+		// 	// sideBar: s.sideBar,
+		// 	theme: s.theme,
+		// 	colorTheme: s.colorTheme,
+		// 	trp: s.trp,
+		// 	// alerts: s.alerts,
+		// 	// didKnow: s.didKnow,
+		// 	// rawData: s.rawData,
+		// 	// mapTheme: s.mapTheme,
+		// 	// defaultRoute: s.defaultRoute,
+		// 	cookies: s.cookies,
+		// 	// periods: s.periods,
+		// 	snackbarLocation: s.snackbarLocation,
+		// 	// detailsPanel: s.detailsPanel,
+		// 	// drawer: s.drawer,
+		// 	// drawerState: s.drawerState,
+		// 	// drawerCloseOnNav: s.drawerCloseOnNav,
+		// 	// headerBorder: s.headerBorder,
+		// 	// breadcrumbs: s.breadcrumbs,
+		// 	hoverTime: s.hoverTime,
+		// }
 		user.aux = user.aux ? user.aux : {}
-		user.aux.sentiWaterworks = user.aux.sentiWaterworks ? user.aux.sentiWaterworks : {}
-		user.aux.sentiWaterworks.settings = settings
-		user.internal.odeum.language = s.language
 		var saved = await saveSettings(user);
 		dispatch({
 			type: SAVESETTINGS,
@@ -156,21 +153,21 @@ export const getSettings = async () => {
 		if (user) {
 			// dispatch(await getAllData(true, user.org.id, user.privileges.apisuperuser ? true : false))
 			if (settings) {
-				moment.locale(user.internal.odeum.language === 'en' ? 'en-gb' : user.internal.odeum.language)
+				moment.locale('da')
 				dispatch({
 					type: GetSettings,
 					settings: {
 						...user.aux.sentiWaterworks.settings,
-						language: user.internal.odeum.language
+						language: 'da'
 					},
 					user
 				})
 			}
 			else {
-				moment.locale(user.internal.odeum.language === 'en' ? 'en-gb' : user.internal.odeum.language)
+				moment.locale('da')
 				let s = {
 					...getState().settings,
-					language: user.internal.odeum.language
+					language: 'da'
 				}
 				dispatch({
 					type: NOSETTINGS,
