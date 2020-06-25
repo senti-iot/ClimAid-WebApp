@@ -83,6 +83,7 @@ export const setToken = () => {
 		let token = cookie.load('SESSION').token;
 		api.setHeader('Authorization', 'Bearer ' + token);
 		servicesAPI.setHeader('Authorization', 'Bearer ' + token);
+		loginApi.setHeader('Authorization', 'Bearer ' + token);
 		return true;
 	}
 	catch (error) {
