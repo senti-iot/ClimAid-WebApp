@@ -9,12 +9,11 @@ import Room from 'Routes/Room';
 import Header from 'Components/Header';
 import Footer from 'Components/Footer';
 import cookie from 'react-cookies';
-import { useDispatch, useSelector } from 'Hooks';
+import { useDispatch } from 'Hooks';
 import { getSettings } from 'Redux/settings';
 import { CircularLoader, MapContainer } from 'Components';
 
 function Container(props) {
-	const colorTheme = useSelector((state) => state.settings.colorTheme)
 	const dispatch = useDispatch()
 	const [loading, setLoading] = useState(true)
 
@@ -32,7 +31,7 @@ function Container(props) {
 		cookie.load('SESSION') ?
 			<Fragment>
 				<Header title={props.title} />
-				<AppBackground color={colorTheme}>
+				<AppBackground color={'blue'}>
 					{!loading ?
 						<Switch>
 							<Route path={'/administration'}>
