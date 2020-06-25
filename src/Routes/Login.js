@@ -24,7 +24,7 @@ import { loginTheme } from 'Styles/themes';
 function Login() {
 	const [error, setEError] = useState(false)
 	const [user, setUser] = useState('')
-	const [pass, setPass] = useState('')
+	const [password, setPassword] = useState('')
 	const [orgId, setOrgId] = useState('')
 	const [loggingIn, setLoggingIn] = useState(false)
 	const [cookies, setCookies] = useState(false)
@@ -50,7 +50,7 @@ function Login() {
 
 	//TODO
 	const handleLoginUser = async () => {
-		await loginUser(user, pass, orgId).then(async rs => {
+		await loginUser(user, password, orgId).then(async rs => {
 			if (rs) {
 				
 				let exp = moment().add('1', 'day')
@@ -69,8 +69,8 @@ function Login() {
 	}
 	const handleInput = (e) => {
 		switch (e.target.id) {
-			case 'pass':
-				setPass(e.target.value)
+			case 'password':
+				setPassword(e.target.value)
 				break;
 			case 'user':
 				setUser(e.target.value)
@@ -156,13 +156,13 @@ function Login() {
 												}}
 											/>
 											<LoginTF
-												id={'pass'}
+												id={'password'}
 												label={t('login.pass')}
 												error={error}
 												type={showPassword ? 'text' : 'password'}
 												fullWidth
 												onChange={handleInput}
-												value={pass}
+												value={password}
 												InputProps={{
 													endAdornment: <InputAdornment>
 														<SmallActionButton
