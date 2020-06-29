@@ -15,6 +15,7 @@ import { loginUser } from 'data/login';
 import { getSettings } from 'Redux/settings';
 import { changeLanguage } from 'Redux/localization';
 import { setToken } from 'data/data';
+import { setTokenClimaid } from 'data/climaid';
 import { LoginWrapper, MobileContainer, ImgLogo, SmallActionButton, Footer, FooterText, MutedButton, InputContainer, LeftPanel, LoginButton, LoginTF } from 'Styles/loginStyles';
 import LoginImages from 'Components/Custom/Login/NewLoginImages';
 import { ThemeProvider } from '@material-ui/styles';
@@ -52,10 +53,10 @@ function Login() {
 	const handleLoginUser = async () => {
 		await loginUser(user, password, orgId).then(async rs => {
 			if (rs) {
-				
+
 				let exp = moment().add('1', 'day')
 				cookie.save('SESSION', rs, { path: '/', expires: exp.toDate() })
-				if (setToken()) {
+				if (setToken() && setTokenClimaid()) {
 					await redux.getSettings()
 					var prevURL = location.state ? location.state.prevURL : null
 					history.push(prevURL ? prevURL : /* defaultRoute */ '/')

@@ -30,7 +30,7 @@ if (hostname === 'localhost') {
 	climaidApiHost = 'https://services.senti.cloud/climaid-backend';
 }
 
-export const setToken = () => {
+export const setTokenClimaid = () => {
 	try {
 		let token = cookie.load('SESSION').token;
 		climaidApi.setHeader('Authorization', 'Bearer ' + token);
@@ -299,4 +299,4 @@ export const getActivityLevelData = async (devices, period) => {
 	return data;
 }
 
-setToken();
+setTokenClimaid();
