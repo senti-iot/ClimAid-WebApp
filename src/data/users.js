@@ -25,6 +25,11 @@ export const getUserOrgs = async () => {
 	return data
 }
 
+export const getOrgUsers = async (uuid) => {
+	var data = await api.get('/v2/entity/users/' + uuid).then(rs => rs.data)
+	return data
+}
+
 // export const createUser = async (user) => {
 // 	let response = await api.post(`core/user`, user).then(rs => rs)
 // 	return response.data ? response.data : response.status

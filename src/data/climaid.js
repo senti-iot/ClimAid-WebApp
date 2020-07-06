@@ -75,6 +75,11 @@ export const addBuilding = async (postData) => {
 	return data;
 };
 
+export const updateBuilding = async (postData) => {
+	let data = await climaidApi.put('/building', postData).then(rs => rs.data);
+	return data;
+};
+
 export const addBuildingImage = async (uuid, formData) => {
 	let data = await climaidApi.post('/building/' + uuid + '/image', formData).then(rs => rs.status);
 	return data;
@@ -99,6 +104,11 @@ export const deleteBuilding = async (uuid) => {
 
 export const setBuildingPermissions = async (uuid, permissions) => {
 	let data = await climaidApi.post('/building/' + uuid + '/permissions', permissions).then(rs => rs.data);
+	return data;
+}
+
+export const getBuildingPermissions = async (uuid) => {
+	let data = await climaidApi.get('/building/' + uuid + '/permissions').then(rs => rs.data);
 	return data;
 }
 

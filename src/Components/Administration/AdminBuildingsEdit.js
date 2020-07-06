@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
@@ -14,10 +15,11 @@ import Chip from '@material-ui/core/Chip';
 import { DropzoneArea } from 'material-ui-dropzone';
 
 import adminStyles from 'Styles/adminStyles';
-import { addBuilding, addBuildingImage, setBuildingPermissions } from 'data/climaid';
+import { getBuilding, getBuildingImage, getBuildingPermissions, getRoomsInBuilding } from 'data/climaid';
 import { addressLookup } from 'data/data';
-import { getUserOrgs, getUser } from 'data/users';
+import { getUserOrgs } from 'data/users';
 import AdminMenu from './AdminMenu';
+import AdminBuildingMap from './AdminBuildingMap';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
 const ITEM_HEIGHT = 48;
@@ -31,13 +33,16 @@ const MenuProps = {
 	},
 };
 
-const AdminBuildingsAdd = (props) => {
+const AdminBuildingsEdit = (props) => {
 	const classes = adminStyles();
 	const [alertSuccess, setAlertSuccess] = useState(false);
 	const [alertFail, setAlertFail] = useState(false);
+	const { uuid } = useParams();
 
 	const [loading, setLoading] = useState(true);
 	const [orgs, setOrgs] = useState([]);
+	const [building, setBuilding] = useState(null);
+	const [rooms, setRooms] = useState(null);
 
 	const [name, setName] = useState('');
 	const [nameError, setNameError] = useState('');
@@ -48,26 +53,46 @@ const AdminBuildingsAdd = (props) => {
 	const [primaryFunction, setPrimaryFunction] = useState('');
 	const [primaryFunctionError, setPrimaryFunctionError] = useState('');
 	const [visibleTo, setVisibleTo] = useState([]);
-	const [file, setFile] = useState(null);
+	// const [file, setFile] = useState(null);
+	const [image, setImage] = useState(null);
 
 	const primaryFunctionOptions = ['Kontor', 'Undervisning', 'Kantine', 'Mødelokale', 'Lager', 'Køkken'];
 
 	useEffect(() => {
 		async function fetchData() {
-			const user = await getUser();
 
-			setVisibleTo([user.org.uuid]);
+			const buildingData = await getBuilding(uuid);
+
+			setBuilding(buildingData);
+			setName(buildingData.name);
+			setAddress(buildingData.address ? buildingData.address : '');
+			setSize(buildingData.size ? buildingData.size : '');
+			setPrimaryFunction(buildingData.primaryFunction ? buildingData.primaryFunction : '');
+
+			const roomsData = await getRoomsInBuilding(uuid);
+			setRooms(roomsData);
+
+			const imageData = await getBuildingImage(uuid);
+			if (imageData) {
+				setImage(imageData);
+			}
+
+			const permissions = await getBuildingPermissions(uuid);
+			if (permissions) {
+				setVisibleTo(permissions);
+			}
 
 			const orgData = await getUserOrgs();
 
 			if (orgData) {
 				setOrgs(orgData);
-				setLoading(false);
 			}
+
+			setLoading(false);
 		}
 
 		fetchData();
-	}, []);
+	}, [uuid]);
 
 	const handleAlertSuccessClose = (event, reason) => {
 		if (reason === 'clickaway') {
@@ -111,7 +136,7 @@ const AdminBuildingsAdd = (props) => {
 			isOK = false;
 		}
 
-		let latlong = '';
+		// let latlong = '';
 		if (address.length) {
 			let addresses = await addressLookup(address);
 
@@ -119,58 +144,58 @@ const AdminBuildingsAdd = (props) => {
 				setAddressError('Addressen blev ikke fundet');
 				isOK = false;
 			} else {
-				latlong = addresses[0]["adgangsadresse"]["adgangspunkt"]["koordinater"][1] + ', ' + addresses[0]["adgangsadresse"]["adgangspunkt"]["koordinater"][0];
+				// latlong = addresses[0]["adgangsadresse"]["adgangspunkt"]["koordinater"][1] + ', ' + addresses[0]["adgangsadresse"]["adgangspunkt"]["koordinater"][0];
 			}
 		}
 
 		if (isOK) {
-			let data = { name: name, address: address, latlong: latlong, size: size, primaryFunction: primaryFunction };
+			// let data = { name: name, address: address, latlong: latlong, size: size, primaryFunction: primaryFunction };
 
-			let added = true;
+			// let added = true;
 
-			let result = await addBuilding(data);
+			// let result = await addBuilding(data);
 
-			if (!result) {
-				added = false;
+			// if (!result) {
+			// 	added = false;
 
-				setAlertFail(true);
-			} else {
-				if (visibleTo.length) {
-					await setBuildingPermissions(result.uuid, visibleTo);
-				}
+			// 	setAlertFail(true);
+			// } else {
+			// 	if (visibleTo.length) {
+			// 		await setBuildingPermissions(result.uuid, visibleTo);
+			// 	}
 
-				if (file) {
-					let imageData = { filename: file.name, filedata: await toBase64(file[0]) }
-					let imageResultStatus = await addBuildingImage(result.uuid, imageData);
+			// 	if (file) {
+			// 		let imageData = { filename: file.name, filedata: await toBase64(file[0]) }
+			// 		let imageResultStatus = await addBuildingImage(result.uuid, imageData);
 
-					if (imageResultStatus !== 200) {
-						added = false;
-					}
-				}
+			// 		if (imageResultStatus !== 200) {
+			// 			added = false;
+			// 		}
+			// 	}
 
-				if (!added) {
-					setAlertFail(true);
-				} else {
-					setAlertSuccess(true);
+			// 	if (!added) {
+			// 		setAlertFail(true);
+			// 	} else {
+			// 		setAlertSuccess(true);
 
-					setTimeout(function () {
-						props.history.push('/administration/buildings/list');
-					}, 500);
-				}
-			}
+			// 		setTimeout(function () {
+			// 			props.history.push('/administration/buildings/list');
+			// 		}, 500);
+			// 	}
+			// }
 		}
 	}
 
-	const toBase64 = file => new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result.replace('data:', '').replace(/^.+,/, ''));
-		reader.onerror = error => reject(error);
-	});
+	// const toBase64 = file => new Promise((resolve, reject) => {
+	// 	const reader = new FileReader();
+	// 	reader.readAsDataURL(file);
+	// 	reader.onload = () => resolve(reader.result.replace('data:', '').replace(/^.+,/, ''));
+	// 	reader.onerror = error => reject(error);
+	// });
 
 	const handleUpload = async (file) => {
 		if (file.length) {
-			setFile(file[0]);
+			// setFile(file[0]);
 		}
 	}
 
@@ -294,6 +319,14 @@ const AdminBuildingsAdd = (props) => {
 									</FormControl>
 								</Grid>
 							</form>
+
+							{image ?
+								<Grid item xs={12} style={{ marginTop: 20 }}>
+									<InputLabel id="visibleTo-select-label">Placer zoner</InputLabel>
+									<AdminBuildingMap building={building} rooms={rooms} />
+								</Grid>
+								: ""}
+
 							<Grid item xs={12} style={{ marginTop: 40 }}>
 								<ButtonGroup variant="contained" color="primary">
 									<Button onClick={handleCancel}>Annuller</Button>
@@ -320,4 +353,4 @@ const AdminBuildingsAdd = (props) => {
 	);
 }
 
-export default AdminBuildingsAdd;
+export default AdminBuildingsEdit;

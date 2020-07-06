@@ -58,14 +58,14 @@ const AdminRoomsList = (props) => {
 			</Grid>
 			<Grid container item xs={6}>
 				<Paper elevation={3} className={classes.adminPaperContainer}>
-					<h1 className={classes.adminHeader}>Zoner</h1>
+					<div className={classes.adminHeader}>Zoner</div>
 
 					<p>
 						<Button
 							variant="contained"
 							color="primary"
 							startIcon={<Add />}
-							onClick={() => history.push('/administration/buildings/add')}
+							onClick={() => history.push('/administration/zones/add/' + uuid)}
 						>
 							Tilføj zone
 						</Button>
