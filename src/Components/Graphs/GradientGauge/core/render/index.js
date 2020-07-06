@@ -284,7 +284,7 @@ function _renderInfoLabels({ config, svg }) {
 		.attr("y", -25)
 		// add text
 		.text(config.topLabel)
-		.style("font-size", config.valueTextFontSize - 13)
+		.style("font-size", config.valueTextFontSize - (config.topLabel.length < 25 ? config.topLabel.length : 25 ) )
 		.style("font-weight", "normal")
 		.style("fill", config.textColor)
 

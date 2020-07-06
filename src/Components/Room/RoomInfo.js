@@ -79,34 +79,36 @@ const RoomInfo = (props) => {
 				</Grid>
 
 				<Grid container item xs={12}>
-					{roomValues ?
-						// eslint-disable-next-line array-callback-return
-						room.devices.map(device => {
-							if (device.gauges && device.gauges.length) {
-								return device.gauges.map((gauge, index) => {
-									let value = roomValues[gauge.uuid];
-									//align={index % 2 ? "right" : "left" }
-									return (
-										<ItemG xs={12} key={index} align="center">
-											{value && <GradientGauge
-												type={gauge.type}
-												ringWidth={7}
-												maxSegmentLabels={gauge.segments}
-												segments={1}
-												minValue={gauge.minValue}
-												maxValue={gauge.maxValue}
-												value={value}
-												valueTextFontSize="35"
-												width={250}
-												height={240}
-												topLabel={gauge.topLabel}
-												unitLabel={gauge.unitLabel}
-											/>}
-										</ItemG>
-									)})
-							}
-						})
-						: <CircularLoader fill />}
+					<div style={{ width: '100%', height: 770, overflow: 'scroll' }}>
+						{roomValues ?
+							// eslint-disable-next-line array-callback-return
+							room.devices.map(device => {
+								if (device.gauges && device.gauges.length) {
+									return device.gauges.map((gauge, index) => {
+										let value = roomValues[gauge.uuid];
+										//align={index % 2 ? "right" : "left" }
+										return (
+											<ItemG xs={12} key={index} align="center">
+												{value && <GradientGauge
+													type={gauge.type}
+													ringWidth={7}
+													maxSegmentLabels={gauge.segments}
+													segments={1}
+													minValue={gauge.minValue}
+													maxValue={gauge.maxValue}
+													value={value}
+													valueTextFontSize="35"
+													width={250}
+													height={240}
+													topLabel={gauge.topLabel}
+													unitLabel={gauge.unitLabel}
+												/>}
+											</ItemG>
+										)})
+								}
+							})
+							: <CircularLoader fill />}
+					</div>
 				</Grid>
 			</Grid>
 		</Paper>
