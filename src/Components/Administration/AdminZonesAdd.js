@@ -54,7 +54,7 @@ const AdminZonesAdd = props => {
 	};
 
 	const handleCancel = () => {
-
+		props.history.goBack();
 	};
 
 	const handleNext = () => {
@@ -84,9 +84,9 @@ const AdminZonesAdd = props => {
 		}
 
 		if (isOK) {
-			const data = { building: building, name: name, address: address, primaryFunction: primaryFunction };
+			const data = { building: building, name: name, address: address, size: size, primaryFunction: primaryFunction };
 
-			props.history.push('/administration/zones/add/levels', { state: data });
+			props.history.push('/administration/zones/add/levels', data);
 		}
 	};
 
@@ -100,7 +100,7 @@ const AdminZonesAdd = props => {
 				</Grid>
 				<Grid container item xs={6}>
 					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<div className={classes.adminHeader}>Tilføj zone</div>
+						<div className={classes.adminHeader}>Zone oprettelse</div>
 
 						<Grid container justify={'flex-start'} spacing={0}>
 							<form>
@@ -180,10 +180,15 @@ const AdminZonesAdd = props => {
 								</Grid>
 							</form>
 							<Grid item xs={12} style={{ marginTop: 40 }}>
-								<ButtonGroup variant="contained" color="primary">
-									<Button onClick={handleCancel}>Annuller</Button>
-									<Button onClick={handleNext}>Næste</Button>
-								</ButtonGroup>
+								<Grid container>
+									<Grid container item xs={12} justify="flex-end">
+										<ButtonGroup variant="contained" color="primary">
+											<Button onClick={handleCancel}>Annuller</Button>
+											<Button onClick={handleNext}>Næste</Button>
+										</ButtonGroup>
+									</Grid>
+								</Grid>
+
 							</Grid>
 						</Grid>
 					</Paper>
