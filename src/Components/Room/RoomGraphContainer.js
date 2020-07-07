@@ -18,6 +18,7 @@ import roomStyles from 'Styles/roomStyles';
 import RoomGraph from 'Components/Room/RoomGraph';
 // import Weather from 'Components/Room/Weather';
 import ClimateDropdown from 'Components/Room/ClimateDropdown';
+import ClimateOutDropdown from 'Components/Room/ClimateOutDropdown';
 import UserExperienceDropdown from 'Components/Room/UserExperienceDropdown';
 import AnalyticsDropdown from 'Components/Room/AnalyticsDropdown';
 import ExportDropdown from 'Components/Room/ExportDropdown';
@@ -33,7 +34,7 @@ const RoomGraphContainer = (props) => {
 	const [loadingOverlayOpen, setLoadingOverlayOpen] = useState(false);
 	// const [roomValues, setRoomValues] = useState(null);
 	// const [batteryLevel, setBatteryLevel] = useState(null);
-	const [checkboxStates, setCheckboxStates] = useState({ temphistory: true, temphistoryrooms: [], userexperience: [], analytics: [], co2historyrooms: [], humidityhistoryrooms: [], batteryhistoryrooms: [] });
+	const [checkboxStates, setCheckboxStates] = useState({ temphistory: true, temphistoryrooms: [], climateout: [], userexperience: [], analytics: [], co2historyrooms: [], humidityhistoryrooms: [], batteryhistoryrooms: [] });
 	// const [anchorEl, setAnchorEl] = useState(null);
 	const [room, setRoom] = useState(null);
 	const [rooms, setRooms] = useState([]);
@@ -89,6 +90,16 @@ const RoomGraphContainer = (props) => {
 	const handleCheckboxChange = (e) => {
 		let newStates = { ...checkboxStates };
 		newStates[e.target.value] = (newStates[e.target.value]) ? false : true;
+		setCheckboxStates(newStates);
+	}
+
+	const handleOutCheckboxChange = (e) => {
+		let newStates = { ...checkboxStates };
+		if (newStates['climateout'][e.target.value]) {
+			delete newStates['climateout'][e.target.value];
+		} else {
+			newStates['climateout'][e.target.value] = true;
+		}
 		setCheckboxStates(newStates);
 	}
 
@@ -266,6 +277,17 @@ const RoomGraphContainer = (props) => {
 								onCo2RoomChange={handleCo2RoomChange}
 								onHumidityRoomChange={handleHumidityRoomChange}
 								onBatteryRoomChange={handleBatteryRoomChange}
+								checkboxStates={checkboxStates}
+								rooms={rooms}
+							/>
+						</Grid>
+						<Grid item xs={3} lg={2} xl={2}>
+							<ClimateOutDropdown
+								onChange={handleOutCheckboxChange}
+								// onTemperatureRoomChange={handleTemperatureRoomChange}
+								// onCo2RoomChange={handleCo2RoomChange}
+								// onHumidityRoomChange={handleHumidityRoomChange}
+								// onBatteryRoomChange={handleBatteryRoomChange}
 								checkboxStates={checkboxStates}
 								rooms={rooms}
 							/>

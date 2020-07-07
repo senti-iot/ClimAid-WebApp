@@ -60,7 +60,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 			humidity: [],
 			battery: [],
 			userexperience: [],
-			analytics: []
+			analytics: [],
+			climateout: []
 		}
 
 		async function fetchData() {
@@ -95,6 +96,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						let userexperienceData = null;
 						let analyticsData = null;
 						let analyticsRoomData = null;
+						let climateoutData = null;
 
 						let devices = null;
 						if (key === 'tempavgbuilding' || key === 'co2avgbuilding' || key === 'humidityavgbuilding' || key === 'batteryavgbuilding') {
@@ -488,6 +490,19 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							);
 						}
 
+						if (key === 'climateout' && Object.keys(checkboxStates['climateout']).length) {
+							climateoutData = [];
+
+							await Promise.all(
+								Object.keys(checkboxStates['climateout']).map(async type => {
+									console.log(type);
+									let data = await getDeviceDataConverted(room.devices[0].device, period, type);
+									console.log(data);
+									climateoutData[type] = data;
+								})
+							);
+						}
+
 						let tempColorCount = 0;
 						let co2ColorCount = 0;
 						let humidityColorCount = 0;
@@ -798,6 +813,75 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											});
 										});
 									}
+									break;
+								case 'climateout':
+									if (climateoutData && Object.keys(climateoutData).length) {
+										Object.keys(climateoutData).map(type => {
+											let unit = '';
+											let maxValue = 0;
+											if (type === 'temperature') {
+												unit = '°C';
+												maxValue = 30;
+											} else if (type === 'airpressure') {
+												unit = 'hPa';
+												maxValue = 1100;
+											} else if (type === 'humidity') {
+												unit = '%';
+												maxValue = 100;
+											} else if (type === 'lux') {
+												unit = 'lx';
+												maxValue = 50000;
+											} else if (type === 'battery') {
+												unit = '%';
+												maxValue = 100;
+											} else if (type === 'mP1') {
+												unit = 'µg/cm3';
+												maxValue = 9000;
+											} else if (type === 'mP2') {
+												unit = 'µg/cm3';
+												maxValue = 9000;
+											} else if (type === 'mP4') {
+												unit = 'µg/cm3';
+												maxValue = 9000;
+											} else if (type === 'mPX') {
+												unit = 'µg/cm3';
+												maxValue = 9000;
+											} else if (type === 'nP0') {
+												unit = '#/cm3';
+												maxValue = 80000;
+											} else if (type === 'nP1') {
+												unit = '#/cm4';
+												maxValue = 80000;
+											} else if (type === 'nP2') {
+												unit = '#/cm5';
+												maxValue = 80000;
+											} else if (type === 'nP4') {
+												unit = '#/cm6';
+												maxValue = 80000;
+											} else if (type === 'nPX') {
+												unit = '#/cm7';
+												maxValue = 80000;
+											} else if (type === 'aPS') {
+												unit = '';
+												maxValue = 5;
+											}
+
+											graphLinesData.climateout.push({
+												unit: unit,
+												maxValue: maxValue,
+												noArea: true,
+												name: key + type,
+												caption: type,
+												median: true,
+												data: climateoutData[type],
+												//color: colors['co2'][co2ColorCount++],
+												color: '#000000',
+												alarmColor: '#ff0000',
+												dotSize: period.timeTypeData === 1 ? 2 : 6
+											});
+										});
+									}
+
 									break;
 							}
 						}
