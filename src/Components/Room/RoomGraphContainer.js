@@ -284,10 +284,6 @@ const RoomGraphContainer = (props) => {
 						<Grid item xs={3} lg={2} xl={2}>
 							<ClimateOutDropdown
 								onChange={handleOutCheckboxChange}
-								// onTemperatureRoomChange={handleTemperatureRoomChange}
-								// onCo2RoomChange={handleCo2RoomChange}
-								// onHumidityRoomChange={handleHumidityRoomChange}
-								// onBatteryRoomChange={handleBatteryRoomChange}
 								checkboxStates={checkboxStates}
 								rooms={rooms}
 							/>

@@ -495,9 +495,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 							await Promise.all(
 								Object.keys(checkboxStates['climateout']).map(async type => {
-									console.log(type);
 									let data = await getDeviceDataConverted(room.devices[0].device, period, type);
-									console.log(data);
 									climateoutData[type] = data;
 								})
 							);
@@ -819,51 +817,67 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										Object.keys(climateoutData).map(type => {
 											let unit = '';
 											let maxValue = 0;
+											let caption = '';
 											if (type === 'temperature') {
 												unit = '°C';
 												maxValue = 30;
+												caption = 'Temperatur, ude';
 											} else if (type === 'airpressure') {
 												unit = 'hPa';
 												maxValue = 1100;
+												caption = 'Lufttryk';
 											} else if (type === 'humidity') {
 												unit = '%';
 												maxValue = 100;
+												caption = 'Relativ luftfugtighed';
 											} else if (type === 'lux') {
 												unit = 'lx';
 												maxValue = 50000;
+												caption = 'Lysniveau';
 											} else if (type === 'battery') {
 												unit = '%';
 												maxValue = 100;
+												caption = 'Batteriniveau';
 											} else if (type === 'mP1') {
 												unit = 'µg/cm3';
 												maxValue = 9000;
+												caption = 'PM1 Massekoncentration';
 											} else if (type === 'mP2') {
 												unit = 'µg/cm3';
 												maxValue = 9000;
+												caption = 'PM2.5 Massekoncentration';
 											} else if (type === 'mP4') {
 												unit = 'µg/cm3';
 												maxValue = 9000;
+												caption = 'PM4 Massekoncentration';
 											} else if (type === 'mPX') {
 												unit = 'µg/cm3';
 												maxValue = 9000;
+												caption = 'PM10 Massekoncentration';
 											} else if (type === 'nP0') {
 												unit = '#/cm3';
 												maxValue = 80000;
+												caption = 'PM0.5 Antal';
 											} else if (type === 'nP1') {
 												unit = '#/cm4';
 												maxValue = 80000;
+												caption = 'PM1 Antal';
 											} else if (type === 'nP2') {
 												unit = '#/cm5';
 												maxValue = 80000;
+												caption = 'PM2.5 Antal';
 											} else if (type === 'nP4') {
 												unit = '#/cm6';
 												maxValue = 80000;
+												caption = 'PM4 Antal';
 											} else if (type === 'nPX') {
 												unit = '#/cm7';
 												maxValue = 80000;
+												caption = 'PM10 Antal';
 											} else if (type === 'aPS') {
 												unit = '';
 												maxValue = 5;
+												caption = 'Gennemsnits partikelstørrelse';
 											}
 
 											graphLinesData.climateout.push({
@@ -871,7 +885,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 												maxValue: maxValue,
 												noArea: true,
 												name: key + type,
-												caption: type,
+												caption: caption,
 												median: true,
 												data: climateoutData[type],
 												//color: colors['co2'][co2ColorCount++],
