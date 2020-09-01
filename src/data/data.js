@@ -19,7 +19,7 @@ let backendHost;
 
 //const hostname = window && window.location && window.location.hostname;
 
-backendHost = 'https://dev.services.senti.cloud/core';
+backendHost = 'https://services.senti.cloud/core';
 
 export const loginApi = create({
 	baseURL: backendHost,
@@ -99,7 +99,7 @@ export const setHeaders = () => {
 }
 
 export const servicesAPI = create({
-	baseURL: 'https://dev.services.senti.cloud/databroker',
+	baseURL: 'https://services.senti.cloud/databroker',
 	timeout: 30000,
 	headers: {
 		'auth': encrypt(process.env.REACT_APP_ENCRYPTION_KEY),
