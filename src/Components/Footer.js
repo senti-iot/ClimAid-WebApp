@@ -2,6 +2,7 @@ import React from 'react';
 import footerStyles from 'Styles/footerStyle';
 import { Grid } from '@material-ui/core';
 import { ItemG } from 'Components';
+import { ReactComponent as PoweredByIcon } from "assets/icons/poweredby.svg";
 
 const Footer = () => {
 	// const t = useLocalization();
@@ -31,6 +32,10 @@ const Footer = () => {
 						<p>Adresse: Hørskætten 6D, 2630 Taastrup</p>
 					</ItemG>
 				</Grid>
+			</div>
+
+			<div style={{ float: 'right', marginRight: 30 }}>
+				<a href="https://senti.io/" target="_new"><PoweredByIcon /></a>
 			</div>
 		</div>
 	);
