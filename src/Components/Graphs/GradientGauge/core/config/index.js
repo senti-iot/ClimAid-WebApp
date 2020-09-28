@@ -121,6 +121,8 @@ export const getConfig = ({ PROPS, parentWidth, parentHeight }) => {
 		topLabel: PROPS.topLabel,
 		unitLabel: PROPS.unitLabel,
 
+		colorConfig: PROPS.colorConfig,
+
 		// font sizes
 		labelFontSize: PROPS.labelFontSize,
 		valueTextFontSize: PROPS.valueTextFontSize,

@@ -89,7 +89,7 @@ const RoomInfo = (props) => {
 										//align={index % 2 ? "right" : "left" }
 										return (
 											<ItemG xs={12} key={index} align="center">
-												{value && <GradientGauge
+												{value ? <GradientGauge
 													type={gauge.type}
 													ringWidth={7}
 													maxSegmentLabels={gauge.segments}
@@ -102,7 +102,31 @@ const RoomInfo = (props) => {
 													height={240}
 													topLabel={gauge.topLabel}
 													unitLabel={gauge.unitLabel}
-												/>}
+													colorConfig={{
+														temperature: {
+															"ben1": 19,
+															"ben2": 20,
+															"ben3": 21,
+															"ben4": 22,
+															"ben5": 24.5,
+															"ben6": 26,
+														},
+														co2: {
+															"ben1": 800,
+															"ben2": 1000,
+															"ben3": 1200,
+														},
+														humidity: {
+															"ben1": 15,
+															"ben2": 25,
+															"ben3": 30,
+															"ben4": 65,
+															"ben5": 75,
+															"ben6": 85,
+														}
+													}
+													}
+												/> : ""}
 											</ItemG>
 										)})
 								}

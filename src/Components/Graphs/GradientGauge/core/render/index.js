@@ -13,7 +13,7 @@ import {
 	configureScale,
 } from "../config/configure"
 
-export const update = ({ d3_refs, newValue, config, type }) => {
+export const update = ({ d3_refs, newValue, config, type, colorConfig }) => {
 	const scale = configureScale(config)
 	const ratio = scale(newValue)
 	const range = config.maxAngle - config.minAngle
@@ -25,25 +25,65 @@ export const update = ({ d3_refs, newValue, config, type }) => {
 		.transition()
 		.attr("transform", `rotate(${newAngle}) translate(0, -${r - 23.5})`)
 
-	if (type === 'temperature') {
-		if (newValue >= 21 && newValue <= 24.5) {
-			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', 'transparent')
+	let color = '#3fbfad';
+	console.log(newValue);
+	if (type === 'temperature' && colorConfig['temperature']) {
+		let tempObj = colorConfig['temperature'];
+		if (tempObj.ben1 > newValue || tempObj.ben6 < newValue) {
+			color = '#e56363';
+		} else if (newValue < tempObj.ben2 || tempObj.ben5 < newValue ) {
+			color = '#d1463d';
+		} else if (newValue < tempObj.ben3 || tempObj.ben4 < newValue) {
+			color = '#e28117';
+		}
 
-		}
-	} else if (type === 'co2') {
-		if (newValue >= 0 && newValue <= 1000) {
-			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', 'transparent')
-		}
-	} else if (type === 'humidity') {
-		if (newValue >= 35 && newValue <= 65) {
-			d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', 'transparent')
-		}
+		d3_refs.pointer.attr('fill', color).style('stroke', 'transparent');
 	}
+
+	if (type === 'humidity' && colorConfig['humidity']) {
+		let humObj = colorConfig['humidity'];
+		if (humObj.ben1 > newValue || humObj.ben6 < newValue) {
+			color = '#e56363';
+		} else if (newValue < humObj.ben2 || humObj.ben5 < newValue) {
+			color = '#d1463d';
+		} else if (newValue < humObj.ben3 || humObj.ben4 < newValue) {
+			color = '#e28117';
+		}
+
+		d3_refs.pointer.attr('fill', color).style('stroke', 'transparent');
+	}
+
+	if (type === 'co2' && colorConfig['co2']) {
+		let co2Obj = colorConfig['co2'];
+		if (newValue > co2Obj.ben3) {
+			color = '#e56363';
+		} else if (newValue > co2Obj.ben2) {
+			color = '#d1463d';
+		} else if (newValue > co2Obj.ben1) {
+			color = '#e28117';
+		}
+
+		d3_refs.pointer.attr('fill', color).style('stroke', 'transparent');
+	}
+	// if (type === 'temperature') {
+	// 	if (newValue >= 21 && newValue <= 24.5) {
+	// 		d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', 'transparent')
+
+	// 	}
+	// } else if (type === 'co2') {
+	// 	if (newValue >= 0 && newValue <= 1000) {
+	// 		d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', 'transparent')
+	// 	}
+	// } else if (type === 'humidity') {
+	// 	if (newValue >= 35 && newValue <= 65) {
+	// 		d3_refs.pointer.attr('fill', '#3fbfad').style('stroke', 'transparent')
+	// 	}
+	// }
 
 	d3_refs.current_value_text.text(formatCurrentValueText(newValue, config))
 }
 
-export const render = ({ container, config, type }) => {
+export const render = ({ container, config, type, colorConfig }) => {
 	const r = getRadius(config)
 	const centerTx = centerTranslation(
 		r,
@@ -63,7 +103,7 @@ export const render = ({ container, config, type }) => {
 	svg.append("rect")
 		.attr("fill", "url(#bg)");
 
-	_renderArcs({ config, svg, centerTx, type })
+	_renderArcs({ config, svg, centerTx, type, colorConfig })
 	_renderLabels({ config, svg, centerTx, r })
 	_renderInfoLabels({ config, svg })
 
@@ -91,7 +131,7 @@ function _renderSVG({ container, config }) {
 	)
 }
 
-function _renderArcs({ config, svg, centerTx, type }) {
+function _renderArcs({ config, svg, centerTx, type, colorConfig }) {
 	const tickData = configureTickData(config);
 	// var gradientDefs = svg.append("svg:defs");
 
@@ -329,8 +369,8 @@ function _renderNeedle({ config, svg, r, centerTx }) {
 		.append("path")
 		.attr("d", arc)
 		.attr('fill', '#c7c7c7')
-		.style('stroke', '#999')
-		.style('stroke-width', '1')
+		// .style('stroke', '#999')
+		// .style('stroke-width', '1')
 
 	// return lg.append("circle")
 	// 	.attr('fill', '#000000')
