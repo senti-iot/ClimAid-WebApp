@@ -79,9 +79,11 @@ class d3Line {
 		// 	.y1((d) => { return this.y2(d.value) })
 
 		this.valueLine = d3.line()
+			.curve(d3.curveCatmullRom)
 			.x((d) => this.x(moment(d.date).valueOf()))
 			.y(d => this.y(d.value))
 		this.valueLine2 = d3.line()
+			.curve(d3.curveCatmullRom)
 			.x((d) => this.x(moment(d.date).valueOf()))
 			.y(d => this.y2(d.value))
 		this.div = d3.select('#temperaturetooltip')
