@@ -26,7 +26,7 @@ export const update = ({ d3_refs, newValue, config, type, colorConfig }) => {
 		.attr("transform", `rotate(${newAngle}) translate(0, -${r - 23.5})`)
 
 	let color = '#3fbfad';
-	console.log(newValue);
+
 	if (type === 'temperature' && colorConfig['temperature']) {
 		let tempObj = colorConfig['temperature'];
 		if (tempObj.ben1 > newValue || tempObj.ben6 < newValue) {
