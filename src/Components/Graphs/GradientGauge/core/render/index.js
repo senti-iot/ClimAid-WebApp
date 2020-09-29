@@ -138,7 +138,7 @@ function _renderArcs({ config, svg, centerTx, type, colorConfig }) {
 	let minAngle, maxAngle;
 	if (type === 'temperature') {
 		minAngle = 12;
-		maxAngle = 61;
+		maxAngle = 40;
 	} else if (type === 'co2') {
 		minAngle = -130;
 		maxAngle = -25;
