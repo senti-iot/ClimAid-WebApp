@@ -243,7 +243,7 @@ const RoomGraphContainer = (props) => {
 				setLoadingOverlayOpen(false);
 
 				savecanvas.toBlob(function (blob) {
-					saveAs(blob, "test.png");
+					saveAs(blob, "Data.png");
 					setAlertImageSaveSuccess(true);
 				}, 'image/png');
 			}, 1000);
