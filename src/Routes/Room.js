@@ -42,10 +42,10 @@ const Room = () => {
 		<>
 			{!loading && room ?
 				<GridContainer spacing={2}>
-					<ItemG xs={4} xl={2}>
+					<ItemG xs={4} xl={3}>
 						<RoomInfo room={room} />
 					</ItemG>
-					<ItemG xs={8} xl={10}>
+					<ItemG xs={8} xl={9}>
 						<RoomMap room={room} />
 					</ItemG>
 					<ItemG xs={12}>
