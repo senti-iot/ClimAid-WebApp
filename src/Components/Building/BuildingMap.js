@@ -73,7 +73,7 @@ function BuildingMap(props) {
 			});
 
 			leafletMap.on('click', function(e) {
-				console.log(e.latlng);
+				console.log([e.latlng.lat, e.latlng.lng]);
 			});
 
 			// eslint-disable-next-line array-callback-return
