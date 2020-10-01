@@ -77,7 +77,7 @@ function RoomMap(props) {
 
 			leafletMap.on('click', function (e) {
 				var coord = e.latlng;
-				console.log(coord);
+				console.log([coord.lat, coord.lng]);
 				// layerGroup.addLayer(L.marker(L.latLng(e.latlng)));
 			});
 
