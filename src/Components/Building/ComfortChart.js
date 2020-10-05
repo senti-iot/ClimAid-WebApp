@@ -158,10 +158,10 @@ const ComfortChart = (props) => {
 					.attr("r", 6)
 					.style("fill", "#7f7f7f")
 					.style("cursor", "pointer")
-					.on('click', () => {
+					.on('click', (event) => {
 						setCurrentReading(reading);
-						setLeft(d3.event.pageX);
-						setTop(d3.event.pageY);
+						setLeft(event.pageX);
+						setTop(event.pageY);
 					});
 			}
 		});

@@ -417,15 +417,15 @@ class d3Line {
 							.append("g");
 
 						g.append("circle") // Uses the enter().append() method
-							.on("mouseover", function (d) {
+							.on("mouseover", function (event, d) {
 								// d3.select(this).attr("r", (d) => { return (d.value <= line.maxValue) ? 8 : 14 });
 								d3.select(this).attr("r", 8);
 								tooltipDiv.transition()
 									.duration(200)
 									.style("opacity", 1)
 									.style('z-index', 1040);
-								tooltipDiv.style("left", (d3.event.pageX) + "px")
-									.style("top", (d3.event.pageY) - 100 + "px");
+								tooltipDiv.style("left", (event.pageX) + "px")
+									.style("top", (event.pageY) - 100 + "px");
 								setTooltip(d)
 
 							}).on("mouseout", function () {
@@ -611,7 +611,7 @@ class d3Line {
 								.attr('stroke-width', '7px')
 								.attr('d', count === 1 ? this.valueLine : this.valueLine2)
 								.attr('id', line.name + 'HArea')
-								.on("mouseover", (d) => {
+								.on("mouseover", (event, d) => {
 									if (!this.state[`${line.name}`]) {
 
 										medianLine.transition()
@@ -623,8 +623,8 @@ class d3Line {
 											.style("opacity", 1)
 											.style('z-index', 1040);
 
-										medianTooltip.style("left", (d3.event.pageX) - 82 + "px")
-											.style("top", (d3.event.pageY) - 41 + "px");
+										medianTooltip.style("left", (event.pageX) - 82 + "px")
+											.style("top", (event.pageY) - 41 + "px");
 
 										setMedianTooltip(d[0])
 									}
@@ -816,7 +816,7 @@ class d3Line {
 	// 				.attr('d', this.valueLine)
 	// 				.attr('id', `${line.name}MedianH`)
 	// 				.style('display', this.state[line.name] ? 'none' : undefined)
-	// 				.on("mouseover", (d) => {
+	// 				.on("mouseover", (event, d) => {
 	// 					if (!this.state[`${line.name}Median`]) {
 
 	// 						medianLine.transition()
@@ -828,8 +828,8 @@ class d3Line {
 	// 							.style("opacity", 1)
 	// 							.style('z-index', 1040);
 
-	// 						medianTooltip.style("left", (d3.event.pageX) - 82 + "px")
-	// 							.style("top", (d3.event.pageY) - 41 + "px");
+	// 						medianTooltip.style("left", (event.pageX) - 82 + "px")
+	// 							.style("top", (event.pageY) - 41 + "px");
 
 	// 						setMedianTooltip(d[0])
 	// 					}
