@@ -76,6 +76,8 @@ class GradientGauge extends PureComponent {
 			d3_refs: this.d3_refs,
 			newValue: this.props.value || 0,
 			config: this.config,
+			type: this.props.type,
+			colorConfig: this.props.colorConfig
 		})
 	}
 }
