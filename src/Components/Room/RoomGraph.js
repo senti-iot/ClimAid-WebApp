@@ -699,7 +699,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 									if (Object.keys(humidityRoomData).length) {
 										Object.keys(humidityRoomData).map(uuid => {
 											graphLinesData.humidity.push({
-												unit: 'ppm',
+												unit: '%',
 												maxValue: 1000,
 												noArea: true,
 												name: key + uuid,
@@ -745,7 +745,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 									if (Object.keys(batteryRoomData).length) {
 										Object.keys(batteryRoomData).map(uuid => {
 											graphLinesData.battery.push({
-												unit: 'ppm',
+												unit: '%',
 												maxValue: 1000,
 												noArea: true,
 												name: key + uuid,
