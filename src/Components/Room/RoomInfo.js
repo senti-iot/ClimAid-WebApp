@@ -79,7 +79,7 @@ const RoomInfo = (props) => {
 				</Grid>
 
 				<Grid container item xs={12}>
-					<div style={{ width: '100%', height: 770, overflow: 'scroll' }}>
+					<div style={{ width: '100%', height: 770, overflow: 'auto' }}>
 						{roomValues ?
 							// eslint-disable-next-line array-callback-return
 							room.devices.map(device => {
