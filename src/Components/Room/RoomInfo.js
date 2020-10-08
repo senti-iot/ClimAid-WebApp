@@ -107,7 +107,7 @@ const RoomInfo = (props) => {
 															"ben1": 19,
 															"ben2": 20,
 															"ben3": 21,
-															"ben4": 22,
+															"ben4": 23,
 															"ben5": 24.5,
 															"ben6": 26,
 														},
