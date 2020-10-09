@@ -252,7 +252,7 @@ export const getBuildingColorData = async (devices, period) => {
 		"CO2_ben1": 800,
 		"CO2_ben2": 1000,
 		"CO2_ben3": 1200,
-		"CO2_an_max": 1000
+		"CO2_an_max": 800
 	};
 
 	let data = await servicesAPI.post('/v2/climaidinsight/colorstate/building/' + from + '/' + to + '/', { "devices": devices, "config": config }).then(rs => rs.data);
