@@ -141,7 +141,7 @@ function _renderArcs({ config, svg, centerTx, type, colorConfig }) {
 		maxAngle = 40;
 	} else if (type === 'co2') {
 		minAngle = -130;
-		maxAngle = -25;
+		maxAngle = -45;
 	} else if (type === 'humidity') {
 		minAngle = -40;
 		maxAngle = 40;
