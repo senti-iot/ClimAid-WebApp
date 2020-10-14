@@ -209,7 +209,7 @@ const MapContainer = (props) => {
 											{buildings.map((building, index) => (
 												<TableRow key={building.uuid} style={{ backgroundColor: index % 2 ? '#f6f7ff' : '#ffffff', height: 40, cursor: 'pointer' }}>
 													<TableCell style={{ width: 80, borderBottom: "none", borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }} align="center">
-														{Object.keys(onlineStates).length ? <>{onlineStates[building.uuid] ? <div style={{ display: 'flex', alignItems: 'center' }}><FiberManualRecordIcon style={{ color: '#74d3c9' }} /> <span style={{ color: '#74d3c9' }}>Online</span></div> : <div style={{ display: 'flex', alignItems: 'center' }}><FiberManualRecordIcon style={{ color: '#cf565c' }} /> <span style={{ color: '#cf565c' }}>Offline</span></div>}</> : <></>}
+														{Object.keys(onlineStates).length ? <>{onlineStates[building.uuid] ? <div style={{ display: 'flex', alignItems: 'center' }}><FiberManualRecordIcon style={{ color: '#74d3c9' }} /> <span style={{ color: '#74d3c9' }}>Online</span></div> : <div style={{ display: 'flex', alignItems: 'center' }}><FiberManualRecordIcon style={{ color: '#b2b3c1' }} /> <span style={{ color: '#b2b3c1' }}>Offline</span></div>}</> : <></>}
 													</TableCell>
 													<TableCell style={{ borderBottom: "none" }} onClick={() => handleGoToBuilding(building.uuid)}>
 														{building.name}

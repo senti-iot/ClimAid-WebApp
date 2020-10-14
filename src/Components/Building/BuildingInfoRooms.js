@@ -54,15 +54,11 @@ const BuildingInfoRooms = (props) => {
 	}, [props.rooms]);
 
 	const getOnlineColorState = (uuid) => {
+		let color = '#b2b3c1';
 		if (Object.keys(onlineStates).length && onlineStates[uuid]) {
-			let color = '';
-			if (onlineStates[uuid]) {
-				color = '#74d3c9';
-			} else {
-				color = '#cf565c';
-			}
-			return <FiberManualRecordIcon style={{ color: color }} />;
+			color = '#74d3c9';
 		}
+		return <FiberManualRecordIcon style={{ color: color }} />;
 	}
 
 	return (
