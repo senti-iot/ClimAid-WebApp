@@ -10,7 +10,7 @@ import { useHistory } from 'react-router';
 
 import buildingStyles from 'Styles/buildingStyles';
 import RoomInfo from 'Components/Room/RoomInfo';
-import { climaidApi, getRoomColorData } from 'data/climaid';
+import { climaidApi, getRoomColorData, getDeviceOnlineStatus } from 'data/climaid';
 import ComfortChart from 'Components/Building/ComfortChart';
 
 function BuildingMap(props) {
@@ -83,10 +83,17 @@ function BuildingMap(props) {
 					let color = 0;
 					if (room.devices.length) {
 						device = room.devices[0];
-						let colorData = await getRoomColorData([device.device]);
 
-						if (colorData) {
-							color = colorData.color;
+						let onlineState = await getDeviceOnlineStatus(device.device);
+
+						if (!onlineState) {
+							color = 0;
+						} else {
+							let colorData = await getRoomColorData([device.device]);
+
+							if (colorData) {
+								color = colorData.color;
+							}
 						}
 					}
 
