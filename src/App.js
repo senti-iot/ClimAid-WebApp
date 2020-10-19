@@ -9,12 +9,15 @@ import { StylesProvider } from "@material-ui/styles";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
+import ScrollToTop from 'Components/ScrollToTop';
+
 export const HTitle = React.createContext(null)
 
 function App() {
 	const [title, setTitle] = useState('')
 	return (
 		<Router>
+			<ScrollToTop />
 			<StylesProvider injectFirst>
 				<Provider store={store}>
 					<LocalizationProvider>
