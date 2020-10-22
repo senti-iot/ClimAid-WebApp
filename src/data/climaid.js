@@ -23,8 +23,8 @@ let climaidApiHost;
 const hostname = window && window.location && window.location.hostname;
 
 if (hostname === 'localhost') {
-//	climaidApiHost = 'http://localhost:3026';
-	climaidApiHost = 'https://services.senti.cloud/climaid-backend';
+	climaidApiHost = 'http://localhost:3026';
+	// climaidApiHost = 'https://services.senti.cloud/climaid-backend';
 } else if (hostname === 'insight.climaid.dk') {
 	climaidApiHost = 'https://services.senti.cloud/climaid-backend';
 } else {
@@ -77,7 +77,7 @@ export const addBuilding = async (postData) => {
 };
 
 export const updateBuilding = async (postData) => {
-	let data = await climaidApi.put('/building', postData).then(rs => rs.data);
+	let data = await climaidApi.put('/building/' + postData.uuid, postData).then(rs => rs.data);
 	return data;
 };
 
@@ -125,7 +125,7 @@ export const addRoom = async (roomData) => {
 };
 
 export const updateRoom = async (roomData) => {
-	let data = await climaidApi.put('/room', roomData).then(rs => rs.data);
+	let data = await climaidApi.put('/room/' + roomData.uuid, roomData).then(rs => rs.data);
 	return data;
 };
 

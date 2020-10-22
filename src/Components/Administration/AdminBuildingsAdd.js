@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import TextField from '@material-ui/core/TextField';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
+import { Typography, TextField, ButtonGroup, Button, Snackbar, Grid, Paper, MenuItem, FormControl, InputLabel, Input, Select, Chip } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { Grid, Paper } from '@material-ui/core';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
 import { DropzoneArea } from 'material-ui-dropzone';
 
 import adminStyles from 'Styles/adminStyles';
 import { addBuilding, addBuildingImage, setBuildingPermissions } from 'data/climaid';
-import { addressLookup } from 'data/data';
 import { getUserOrgs, getUser } from 'data/users';
 import AdminMenu from './AdminMenu';
 import CircularLoader from 'Components/Loaders/CircularLoader';
@@ -43,6 +32,8 @@ const AdminBuildingsAdd = (props) => {
 	const [nameError, setNameError] = useState('');
 	const [address, setAddress] = useState('');
 	const [addressError, setAddressError] = useState('');
+	const [latlong, setLatLong] = useState('');
+	const [latlongError, setLatLongError] = useState('');
 	const [size, setSize] = useState('');
 	const [sizeError, setSizeError] = useState('');
 	const [primaryFunction, setPrimaryFunction] = useState('');
@@ -103,6 +94,9 @@ const AdminBuildingsAdd = (props) => {
 		} else if (!address.length) {
 			setAddressError('Du skal indtaste en adresse på bygningen');
 			isOK = false;
+		} else if (!latlong.length) {
+			setLatLongError('Du skal indtaste en lokation på bygningen');
+			isOK = false;
 		} else if (!size.length) {
 			setSizeError('Du skal indtaste en størrelse på bygningen');
 			isOK = false;
@@ -111,20 +105,8 @@ const AdminBuildingsAdd = (props) => {
 			isOK = false;
 		}
 
-		let latlong = '';
-		if (address.length) {
-			let addresses = await addressLookup(address);
-
-			if (!addresses.length) {
-				setAddressError('Addressen blev ikke fundet');
-				isOK = false;
-			} else {
-				latlong = addresses[0]["adgangsadresse"]["adgangspunkt"]["koordinater"][1] + ', ' + addresses[0]["adgangsadresse"]["adgangspunkt"]["koordinater"][0];
-			}
-		}
-
 		if (isOK) {
-			let data = { name: name, address: address, latlong: latlong, size: size, primaryFunction: primaryFunction };
+			let data = { name: name, address: address, latlong: latlong, size: size, usage: [], primaryFunction: primaryFunction };
 
 			let added = true;
 
@@ -140,7 +122,7 @@ const AdminBuildingsAdd = (props) => {
 				}
 
 				if (file) {
-					let imageData = { filename: file.name, filedata: await toBase64(file[0]) }
+					let imageData = { filename: file[0].name, filedata: await toBase64(file[0]) }
 					let imageResultStatus = await addBuildingImage(result.uuid, imageData);
 
 					if (imageResultStatus !== 200) {
@@ -170,7 +152,7 @@ const AdminBuildingsAdd = (props) => {
 
 	const handleUpload = async (file) => {
 		if (file.length) {
-			setFile(file[0]);
+			setFile(file);
 		}
 	}
 
@@ -222,6 +204,20 @@ const AdminBuildingsAdd = (props) => {
 								<Grid item xs={12}>
 									<TextField
 										id={'latlong'}
+										label='Bygning lokation'
+										value={latlong}
+										onChange={(e) => setLatLong(e.target.value)}
+										margin='normal'
+										variant='outlined'
+										color='primary'
+										error={latlongError.length ? true : false}
+										helperText={latlongError}
+										className={classes.textField}
+									/>
+								</Grid>
+								<Grid item xs={12}>
+									<TextField
+										id={'size'}
 										label='Bygning størrelse i m2'
 										value={size}
 										onChange={(e) => setSize(e.target.value)}
@@ -262,6 +258,7 @@ const AdminBuildingsAdd = (props) => {
 										showAlerts={false}
 										dropzoneText="Upload plantegning"
 									/>
+									{file ? <Typography variant="body1" style={{ marginTop: 10 }}>Valgt fil:  {file[0].name}</Typography> : ""}
 								</Grid>
 								<Grid item xs={12} style={{ marginTop: 20 }}>
 									<FormControl className={classes.formControl}>

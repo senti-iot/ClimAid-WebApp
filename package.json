@@ -19,6 +19,7 @@
 		"hex-to-rgba": "^2.0.1",
 		"js-file-download": "^0.4.12",
 		"leaflet": "^1.7.1",
+		"leaflet-draw": "^1.0.4",
 		"lodash": "^4.17.20",
 		"material-ui-dropzone": "^3.5.0",
 		"memoize-one": "^5.1.1",

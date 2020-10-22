@@ -1,22 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
+import { Typography, TextField, ButtonGroup, Button, Snackbar, Grid, Paper, MenuItem, FormControl, InputLabel, Input, Select, Chip } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { Grid, Paper } from '@material-ui/core';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
 import { DropzoneArea } from 'material-ui-dropzone';
 
 import adminStyles from 'Styles/adminStyles';
-import { getBuilding, getBuildingImage, getBuildingPermissions, getRoomsInBuilding } from 'data/climaid';
-import { addressLookup } from 'data/data';
+import { updateBuilding, setBuildingPermissions, getBuilding, getBuildingImage, addBuildingImage, getBuildingPermissions, getRoomsInBuilding, updateRoom } from 'data/climaid';
 import { getUserOrgs } from 'data/users';
 import AdminMenu from './AdminMenu';
 import AdminBuildingMap from './AdminBuildingMap';
@@ -43,17 +32,20 @@ const AdminBuildingsEdit = (props) => {
 	const [orgs, setOrgs] = useState([]);
 	const [building, setBuilding] = useState(null);
 	const [rooms, setRooms] = useState(null);
+	const [roomLocations, setRoomLocations] = useState({});
 
 	const [name, setName] = useState('');
 	const [nameError, setNameError] = useState('');
 	const [address, setAddress] = useState('');
 	const [addressError, setAddressError] = useState('');
+	const [latlong, setLatLong] = useState('');
+	const [latlongError, setLatLongError] = useState('');
 	const [size, setSize] = useState('');
 	const [sizeError, setSizeError] = useState('');
 	const [primaryFunction, setPrimaryFunction] = useState('');
 	const [primaryFunctionError, setPrimaryFunctionError] = useState('');
 	const [visibleTo, setVisibleTo] = useState([]);
-	// const [file, setFile] = useState(null);
+	const [file, setFile] = useState(null);
 	const [image, setImage] = useState(null);
 
 	const primaryFunctionOptions = ['Kontor', 'Undervisning', 'Kantine', 'Mødelokale', 'Lager', 'Køkken'];
@@ -66,6 +58,7 @@ const AdminBuildingsEdit = (props) => {
 			setBuilding(buildingData);
 			setName(buildingData.name);
 			setAddress(buildingData.address ? buildingData.address : '');
+			setLatLong(buildingData.latlong);
 			setSize(buildingData.size ? buildingData.size : '');
 			setPrimaryFunction(buildingData.primaryFunction ? buildingData.primaryFunction : '');
 
@@ -128,6 +121,9 @@ const AdminBuildingsEdit = (props) => {
 		} else if (!address.length) {
 			setAddressError('Du skal indtaste en adresse på bygningen');
 			isOK = false;
+		} else if (!latlong.length) {
+			setLatLongError('Du skal indtaste en lokation på bygningen');
+			isOK = false;
 		} else if (!size.length) {
 			setSizeError('Du skal indtaste en størrelse på bygningen');
 			isOK = false;
@@ -136,71 +132,75 @@ const AdminBuildingsEdit = (props) => {
 			isOK = false;
 		}
 
-		// let latlong = '';
-		if (address.length) {
-			let addresses = await addressLookup(address);
-
-			if (!addresses.length) {
-				setAddressError('Addressen blev ikke fundet');
-				isOK = false;
-			} else {
-				// latlong = addresses[0]["adgangsadresse"]["adgangspunkt"]["koordinater"][1] + ', ' + addresses[0]["adgangsadresse"]["adgangspunkt"]["koordinater"][0];
-			}
-		}
-
 		if (isOK) {
-			// let data = { name: name, address: address, latlong: latlong, size: size, primaryFunction: primaryFunction };
+			building.name = name;
+			building.address = address;
+			building.latlong = latlong;
+			building.size = size;
+			building.primaryFunction = primaryFunction;
 
-			// let added = true;
+			let updated = true;
 
-			// let result = await addBuilding(data);
+			let result = await updateBuilding(building);
 
-			// if (!result) {
-			// 	added = false;
+			if (!result) {
+				updated = false;
 
-			// 	setAlertFail(true);
-			// } else {
-			// 	if (visibleTo.length) {
-			// 		await setBuildingPermissions(result.uuid, visibleTo);
-			// 	}
+				setAlertFail(true);
+			} else {
+				if (visibleTo.length) {
+					await setBuildingPermissions(result.uuid, visibleTo);
+				}
 
-			// 	if (file) {
-			// 		let imageData = { filename: file.name, filedata: await toBase64(file[0]) }
-			// 		let imageResultStatus = await addBuildingImage(result.uuid, imageData);
+				if (file) {
+					let imageData = { filename: file[0].name, filedata: await toBase64(file[0]) }
+					let imageResultStatus = await addBuildingImage(result.uuid, imageData);
 
-			// 		if (imageResultStatus !== 200) {
-			// 			added = false;
-			// 		}
-			// 	}
+					if (imageResultStatus !== 200) {
+						updated = false;
+					}
+				}
 
-			// 	if (!added) {
-			// 		setAlertFail(true);
-			// 	} else {
-			// 		setAlertSuccess(true);
+				//update room locations
+				rooms.map(async room => {
+					if (roomLocations[room.uuid]) {
+						room.bounds = JSON.parse(roomLocations[room.uuid]);
+						console.log(await updateRoom(room));
+					}
+				})
 
-			// 		setTimeout(function () {
-			// 			props.history.push('/administration/buildings/list');
-			// 		}, 500);
-			// 	}
-			// }
+				if (!updated) {
+					setAlertFail(true);
+				} else {
+					setAlertSuccess(true);
+
+					setTimeout(function () {
+						props.history.push('/administration/buildings/list');
+					}, 500);
+				}
+			}
 		}
 	}
 
-	// const toBase64 = file => new Promise((resolve, reject) => {
-	// 	const reader = new FileReader();
-	// 	reader.readAsDataURL(file);
-	// 	reader.onload = () => resolve(reader.result.replace('data:', '').replace(/^.+,/, ''));
-	// 	reader.onerror = error => reject(error);
-	// });
+	const toBase64 = file => new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result.replace('data:', '').replace(/^.+,/, ''));
+		reader.onerror = error => reject(error);
+	});
 
 	const handleUpload = async (file) => {
 		if (file.length) {
-			// setFile(file[0]);
+			setFile(file);
 		}
 	}
 
 	const handleVisibleToChange = (event) => {
 		setVisibleTo(event.target.value);
+	}
+
+	const saveLocations = (locations) => {
+		setRoomLocations(locations);
 	}
 
 	return (
@@ -213,7 +213,7 @@ const AdminBuildingsEdit = (props) => {
 				</Grid>
 				<Grid container item xs={6}>
 					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<div className={classes.adminHeader}>Tilføj bygning</div>
+						<div className={classes.adminHeader}>Opdater bygning</div>
 
 						<Grid container justify={'flex-start'} spacing={0}>
 							<form>
@@ -247,6 +247,20 @@ const AdminBuildingsEdit = (props) => {
 								<Grid item xs={12}>
 									<TextField
 										id={'latlong'}
+										label='Bygning lokation'
+										value={latlong}
+										onChange={(e) => setLatLong(e.target.value)}
+										margin='normal'
+										variant='outlined'
+										color='primary'
+										error={latlongError.length ? true : false}
+										helperText={latlongError}
+										className={classes.textField}
+									/>
+								</Grid>
+								<Grid item xs={12}>
+									<TextField
+										id={'size'}
 										label='Bygning størrelse i m2'
 										value={size}
 										onChange={(e) => setSize(e.target.value)}
@@ -287,6 +301,7 @@ const AdminBuildingsEdit = (props) => {
 										showAlerts={false}
 										dropzoneText="Upload plantegning"
 									/>
+									{file ? <Typography variant="body1" style={{ marginTop: 10 }}>Valgt fil:  {file[0].name}</Typography> : ""}
 								</Grid>
 								<Grid item xs={12} style={{ marginTop: 20 }}>
 									<FormControl className={classes.formControl}>
@@ -323,19 +338,19 @@ const AdminBuildingsEdit = (props) => {
 							{image ?
 								<Grid item xs={12} style={{ marginTop: 20 }}>
 									<InputLabel id="visibleTo-select-label">Placer zoner</InputLabel>
-									<AdminBuildingMap building={building} rooms={rooms} />
+									<AdminBuildingMap building={building} rooms={rooms} saveLocations={saveLocations} />
 								</Grid>
 								: ""}
 
 							<Grid item xs={12} style={{ marginTop: 40 }}>
 								<ButtonGroup variant="contained" color="primary">
 									<Button onClick={handleCancel}>Annuller</Button>
-									<Button onClick={handleSave}>Opret</Button>
+									<Button onClick={handleSave}>Gem</Button>
 								</ButtonGroup>
 							</Grid>
 						</Grid>
 						<Snackbar open={alertSuccess} autoHideDuration={3000} onClose={handleAlertSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-							<Alert onClose={handleAlertSuccessClose} severity="success" elevation={6} variant="filled">Bygning tilføjet!</Alert>
+							<Alert onClose={handleAlertSuccessClose} severity="success" elevation={6} variant="filled">Bygning opdateret!</Alert>
 						</Snackbar>
 						<Snackbar open={alertFail} autoHideDuration={3000} onClose={handleAlertFailClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
 							<Alert onClose={handleAlertFailClose} severity="error" elevation={6} variant="filled">Der opstod en fejl!</Alert>
