@@ -17,7 +17,7 @@ import AdminMenu from './AdminMenu';
 import adminStyles from 'Styles/adminStyles';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
-const AdminRoomsList = (props) => {
+const AdminZonesList = (props) => {
 	const [rooms, setRooms] = useState(null);
 	const [selectedUuid, setSelectedUuid] = useState(null);
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -150,4 +150,4 @@ const AdminRoomsList = (props) => {
 	);
 }
 
-export default AdminRoomsList;
+export default AdminZonesList;
