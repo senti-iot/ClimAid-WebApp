@@ -27,7 +27,7 @@ const AdminMenu = (props) => {
 				</ListItemIcon>
 				<ListItemText primary="Bruger" />
 			</ListItem>
-			<ListItem className={classes.adminMenuItem}>
+			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/devices/list')}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>

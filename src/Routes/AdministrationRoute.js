@@ -13,6 +13,7 @@ import AdminZonesAdd from 'Components/Administration/AdminZonesAdd';
 import AdminZonesAddLevels from 'Components/Administration/AdminZonesAddLevels';
 import AdminUsersList from 'Components/Administration/AdminUsersList';
 import AdminUsersAdd from 'Components/Administration/AdminUsersAdd';
+import AdminDevicesList from 'Components/Administration/AdminDevicesList';
 
 const AdministrationRoute = () => {
 	const history = useHistory();
@@ -26,6 +27,9 @@ const AdministrationRoute = () => {
 					</Route>
 					<Route path={'/administration/users/add'}>
 						<AdminUsersAdd history={history} />
+					</Route>
+					<Route path={['/administration/devices/list/:uuid', '/administration/devices/list']}>
+						<AdminDevicesList history={history} />
 					</Route>
 					<Route path={['/administration/zones/list/:uuid', '/administration/zones/list']}>
 						<AdminZonesList history={history} />
