@@ -100,11 +100,7 @@ function Login() {
 				history.push('/')
 			}
 		}
-		if (location.pathname.includes('en')) {
-			redux.setLanguage('en')
-			// setLanguage('en')
-		}
-	}, [location.pathname, history, redux])
+	}, [location.pathname, history])
 
 	const handleShowPassword = () => setShowPassword(!showPassword)
 	// const IconEndAd = cx({

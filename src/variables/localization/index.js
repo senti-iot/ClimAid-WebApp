@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import en from './en.json'
 import da from './da.json'
 import chartLinesEn from './chartLinesEn.json'
