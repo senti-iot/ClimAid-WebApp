@@ -16,7 +16,7 @@ export const changeLanguage = (code, noSave) => {
 				code
 			})
 		// if (!noSave)
-			// dispatch(saveSettingsOnServ())
+		// dispatch(saveSettingsOnServ())
 		// dispatch(getDaysOfInterest(code))
 	}
 }
