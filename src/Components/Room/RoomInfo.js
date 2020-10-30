@@ -96,7 +96,7 @@ const RoomInfo = (props) => {
 													segments={1}
 													minValue={gauge.minValue}
 													maxValue={gauge.maxValue}
-													value={value}
+													value={parseFloat(value)}
 													valueTextFontSize="35"
 													width={250}
 													height={240}
