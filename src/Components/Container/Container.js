@@ -2,16 +2,17 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { AppBackground } from 'Styles/containerStyle';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import AdministrationRoute from 'Routes/AdministrationRoute';
-import Building from 'Routes/Building';
-import UserManual from 'Routes/UserManual';
-import Support from 'Routes/Support';
-import Room from 'Routes/Room';
 import Header from 'Components/Header';
 import Footer from 'Components/Footer';
 import cookie from 'react-cookies';
 import { useDispatch } from 'Hooks';
 import { getSettings } from 'Redux/settings';
 import { CircularLoader, MapContainer } from 'Components';
+
+const Building = React.lazy(() => import('Routes/Building'));
+const UserManual = React.lazy(() => import('Routes/UserManual'));
+const Support = React.lazy(() => import('Routes/Support'));
+const Room = React.lazy(() => import('Routes/Room'));
 
 function Container(props) {
 	const dispatch = useDispatch()

@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import Container from 'Components/Container/Container';
-import { ThemeProvider } from 'styled-components';
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import { Route, Switch } from 'react-router-dom';
 import Login from './Login';
@@ -10,9 +9,9 @@ import NewContent from 'Components/Loaders/NewContent';
 
 function Main() {
 	return (
-		<ThemeProvider theme={themes['blue']}>
-			<MuiThemeProvider theme={themes['blue']}>
-				<NewContent />
+		<MuiThemeProvider theme={themes['blue']}>
+			<NewContent />
+			<Suspense fallback={<div>{}</div>}>
 				<Switch>
 					<Route path={'/password/reset/:lang/:token?'}>
 						<ForgotPassword />
@@ -24,8 +23,8 @@ function Main() {
 						<Container />
 					</Route>
 				</Switch>
-			</MuiThemeProvider>
-		</ThemeProvider>
+			</Suspense>
+		</MuiThemeProvider>
 	)
 }
 Main.whyDidYouRender = true;
