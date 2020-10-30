@@ -324,8 +324,9 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							let buildingDevices = await getBuildingDevices(room.building.uuid);
 							let newDevices = [];
 							buildingDevices.map(device => {
-								if (device.type === 'userdata') {
-									newDevices.push(device.device);
+								console.log(device);
+								if (device.qualitativeDevice) {
+									newDevices.push(device.qualitativeDevice);
 								}
 							});
 
@@ -400,8 +401,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 										let newDevices = [];
 										roomDevices.map(device => {
-											if (device.type === 'userdata') {
-												newDevices.push(device.device);
+											if (device.qualitativeDevice) {
+												newDevices.push(device.qualitativeDevice);
 											}
 										});
 

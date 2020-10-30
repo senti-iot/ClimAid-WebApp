@@ -51,10 +51,11 @@ const ComfortChart = (props) => {
 		let userDevices = [];
 		rooms.map(room => {
 			room.devices.map(device => {
-				if (device.type === 'data') {
+				if (device.device) {
 					dataDevices.push(device.device);
-				} else if (device.type === 'userdata') {
-					userDevices.push(device.device);
+				}
+				if (device.qualitativeDevice) {
+					userDevices.push(device.qualitativeDevice);
 				}
 			});
 		});
