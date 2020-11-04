@@ -65,7 +65,7 @@ const AdminDevicesList = (props) => {
 
 	const handleQrCode = async uuid => {
 		try {
-			let dataUrl = await QRCode.toDataURL('https://climaid-feedback.senti.io/feedback/' + uuid);
+			let dataUrl = await QRCode.toDataURL('https://feedback.climaid.dk/feedback/' + uuid);
 			let dataBlob = dataUrlToBlob(dataUrl);
 			saveAs(dataBlob, uuid + '.png');
 		} catch (err) {
