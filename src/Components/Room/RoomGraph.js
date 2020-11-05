@@ -1155,7 +1155,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 					}}>
 				</svg>
 
-				<Legend id={props.id} data={graphLines} />
+				<Legend id={props.id} data={graphLines} checkboxStates={props.checkboxStates} rooms={props.rooms} />
 
 				<Tooltip tooltip={value} id="temperature" />
 				<Tooltip tooltip={value} id="co2" />

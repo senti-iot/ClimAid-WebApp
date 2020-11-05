@@ -303,7 +303,7 @@ const RoomGraphContainer = (props) => {
 
 						<Grid item xs={12}>
 							<div id="graphContainer" className={classes.graphContainer}>
-								<RoomGraph loading={loading} checkboxStates={checkboxStates} room={room} />
+								{rooms ? <RoomGraph loading={loading} checkboxStates={checkboxStates} room={room} rooms={rooms} /> : ""}
 							</div>
 						</Grid>
 						{/* <Grid item xs={3}>
