@@ -336,7 +336,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										experienceType === 'cold' ||
 										experienceType === 'windy' ||
 										experienceType === 'heavyair' ||
-										experienceType === 'concentration' ||
+										experienceType === 'good' ||
 										experienceType === 'tired' ||
 										experienceType === 'itchyeyes' ||
 										experienceType === 'lighting' ||
@@ -362,7 +362,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 													tmpObj["cold"] = 0;
 													tmpObj["windy"] = 0;
 													tmpObj["heavyair"] = 0;
-													tmpObj["concentration"] = 0;
+													tmpObj["good"] = 0;
 													tmpObj["tired"] = 0;
 													tmpObj["itchyeyes"] = 0;
 													tmpObj["lighting"] = 0;
@@ -389,7 +389,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										experienceType.indexOf('cold_') !== -1 ||
 										experienceType.indexOf('windy_') !== -1 ||
 										experienceType.indexOf('heavyair_') !== -1 ||
-										experienceType.indexOf('concentration_') !== -1 ||
+										experienceType.indexOf('good_') !== -1 ||
 										experienceType.indexOf('tired_') !== -1 ||
 										experienceType.indexOf('itchyeyes_') !== -1 ||
 										experienceType.indexOf('lighting_') !== -1 ||
@@ -425,7 +425,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 													tmpObj["cold"] = 0;
 													tmpObj["windy"] = 0;
 													tmpObj["heavyair"] = 0;
-													tmpObj["concentration"] = 0;
+													tmpObj["good"] = 0;
 													tmpObj["tired"] = 0;
 													tmpObj["itchyeyes"] = 0;
 													tmpObj["lighting"] = 0;

@@ -14,7 +14,7 @@ const UserExperienceDropdown = (props) => {
 	const [tooWarmOpen, setTooWarmOpen] = useState(false);
 	const [windyOpen, setWindyOpen] = useState(false);
 	const [heavyAirOpen, setHeavyAirOpen] = useState(false);
-	const [concentrationOpen, setConcentrationOpen] = useState(false);
+	const [goodOpen, setGoodOpen] = useState(false);
 	const [tiredOpen, setTiredOpen] = useState(false);
 	const [itchyEyesOpen, setItchyEyesOpen] = useState(false);
 	const [lightingOpen, setLightingOpen] = useState(false);
@@ -36,8 +36,8 @@ const UserExperienceDropdown = (props) => {
 		if (checkboxStates['userexperience']['heavyair']) {
 			setHeavyAirOpen(true);
 		}
-		if (checkboxStates['userexperience']['concentration']) {
-			setConcentrationOpen(true);
+		if (checkboxStates['userexperience']['good']) {
+			setGoodOpen(true);
 		}
 		if (checkboxStates['userexperience']['tired']) {
 			setTiredOpen(true);
@@ -81,8 +81,8 @@ const UserExperienceDropdown = (props) => {
 		setHeavyAirOpen(heavyAirOpen ? false : true);
 	};
 
-	const toogleConcentrationOpen = () => {
-		setConcentrationOpen(concentrationOpen ? false : true);
+	const toogleGoodOpen = () => {
+		setGoodOpen(goodOpen ? false : true);
 	};
 
 	const toogleTiredOpen = () => {
@@ -302,24 +302,24 @@ const UserExperienceDropdown = (props) => {
 						</Collapse>
 
 						<ListItem key={50} button style={{ backgroundColor: '#eee' }}>
-							<ListItemText id={10} primary="Koncentrationsbesvær" onClick={toogleConcentrationOpen} />
+							<ListItemText id={10} primary="Godt" onClick={toogleGoodOpen} />
 							<ListItemSecondaryAction>
-								<IconButton edge="end" onClick={toogleConcentrationOpen}>
-									{concentrationOpen ? <RemoveIcon /> : <AddIcon />}
+								<IconButton edge="end" onClick={toogleGoodOpen}>
+									{goodOpen ? <RemoveIcon /> : <AddIcon />}
 								</IconButton>
 							</ListItemSecondaryAction>
 						</ListItem>
 						<Divider />
 
-						<Collapse in={concentrationOpen} timeout="auto" unmountOnExit>
+						<Collapse in={goodOpen} timeout="auto" unmountOnExit>
 							<ListItem key={11} button>
 								<ListItemText id={11} primary="Total for bygningen" />
 								<ListItemSecondaryAction>
 									<Checkbox
 										edge="end"
-										value="concentration"
+										value="good"
 										onChange={props.onChange}
-										checked={checkboxStates['userexperience']['concentration'] ? true : false}
+										checked={checkboxStates['userexperience']['good'] ? true : false}
 										inputProps={{ 'aria-labelledby': 11 }}
 									/>
 								</ListItemSecondaryAction>
@@ -331,7 +331,7 @@ const UserExperienceDropdown = (props) => {
 									<ListItemSecondaryAction>
 										<Checkbox
 											edge="end"
-											value={"concentration_" + room.uuid}
+											value={"good_" + room.uuid}
 											onChange={props.onChange}
 											//checked={checkboxStates['temphistory'] ? true : false}
 											inputProps={{ 'aria-labelledby': 1 }}

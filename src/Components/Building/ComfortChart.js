@@ -38,7 +38,7 @@ const ComfortChart = (props) => {
 		cold: 'For koldt',
 		windy: 'Træk',
 		heavyair: 'Tung luft',
-		concentration: 'Koncentrationsbesvær',
+		good: 'Godt',
 		tired: 'Træthed',
 		itchyeyes: 'Tørre øjne og næse',
 		lighting: 'Dårlig belysning',

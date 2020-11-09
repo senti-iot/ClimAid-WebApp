@@ -747,7 +747,7 @@ class d3Line {
 							"cold",
 							"windy",
 							"heavyair",
-							"concentration",
+							"good",
 							"tired",
 							"itchyeyes",
 							"lighting",

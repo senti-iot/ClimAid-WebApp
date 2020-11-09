@@ -17,7 +17,7 @@ const Legend = props => {
 	labels["cold"] = "For koldt";
 	labels["windy"] = "Træk";
 	labels["heavyair"] = "Tung luft";
-	labels["concentration"] = "Koncentrationsbesvær";
+	labels["good"] = "Godt";
 	labels["tired"] = "Træthed";
 	labels["itchyeyes"] = "Tørre øjne og næse";
 	labels["lighting"] = "Dårlig belysning";
