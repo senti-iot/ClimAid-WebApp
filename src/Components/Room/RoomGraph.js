@@ -324,7 +324,6 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 							let buildingDevices = await getBuildingDevices(room.building.uuid);
 							let newDevices = [];
 							buildingDevices.map(device => {
-								console.log(device);
 								if (device.qualitativeDevice) {
 									newDevices.push(device.qualitativeDevice);
 								}
@@ -1137,11 +1136,11 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 					<Grid item xs={4} xl={2}>
 						<Grid container justify={'space-between'} alignItems={'flex-start'} spacing={2}>
 							<IconButton aria-label="Gå tilbage" onClick={goBack}>
-								<KeyboardArrowLeftIcon fontSize="large" style={{ color: '#fff' }} />
+								<KeyboardArrowLeftIcon fontSize="large" style={{ color: '#000' }} />
 							</IconButton>
 							<DateTimeFilter period={period} customSetDate={customSetDate} didSetCustomDate={didSetCustomDate} />
 							<IconButton aria-label="Gå frem" onClick={goForward}>
-								<KeyboardArrowRightIcon fontSize="large" style={{ color: '#fff' }} />
+								<KeyboardArrowRightIcon fontSize="large" style={{ color: '#000' }} />
 							</IconButton>
 						</Grid>
 					</Grid>
