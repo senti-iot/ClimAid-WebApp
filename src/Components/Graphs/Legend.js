@@ -69,7 +69,7 @@ const Legend = props => {
 
 											label={<T
 												style={{
-													color: line.hidden ? 'rgba(255, 255, 255, 0.3)' : '#fff'
+													color: line.hidden ? 'rgba(255, 255, 255, 0.3)' : '#000'
 												}}
 												id={line.name + 'LegendLabel'}>{line.caption ? line.caption : t('chartLines.' + line.name)}</T>}
 										/>
@@ -102,7 +102,7 @@ const Legend = props => {
 
 											label={<T
 												style={{
-													color: '#fff'
+													color: '#000'
 												}}
 												id={ueKey + 'LegendLabel'}>Brugeroplevelse - {renderUeLabel(ueKey)}</T>}
 										/>

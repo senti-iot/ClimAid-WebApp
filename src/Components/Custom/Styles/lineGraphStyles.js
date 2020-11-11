@@ -5,12 +5,12 @@ const lineStyles = makeStyles(theme => ({
 		stroke: 'none'
 	},
 	axisText: {
-		fill: '#ffffff',
+		fill: '#000',
 		fontWeight: 400,
 		fontSize: '16px'
 	},
 	axisTick: {
-		fill: '#ffffff',
+		fill: '#000',
 		fontWeight: 400,
 		fontSize: '16px'
 	},
@@ -20,7 +20,7 @@ const lineStyles = makeStyles(theme => ({
 		strokeWidth: '6px'
 	},
 	periodLabels: {
-		color: '#ffffff',
+		color: '#000',
 		fontSize: 18,
 		textAlign: 'center',
 		userSelect: 'none',

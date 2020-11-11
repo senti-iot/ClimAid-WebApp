@@ -31,7 +31,7 @@ const roomStyles = makeStyles(theme => ({
 		width: '100%',
 		height: 800,
 		// backgroundColor: '#108686',
-		background: 'linear-gradient(180deg, rgba(59,185,169,1) 0%, rgba(6,120,125,1) 100%)',
+		background: 'linear-gradient(180deg, rgba(250, 251, 252,1) 0%, rgba(225, 225, 226,1) 100%)',
 		borderRadius: 4,
 		padding: 20,
 	},
