@@ -8,12 +8,15 @@
 		"co2anbmin": "CO2 anbefalet minimum",
 		"co2anbmax": "CO2 anbefalet maksimum",
 		"co2avgbuilding": "CO2 gennemsnit for bygning",
-		"humidityhistory": "Luftfugtighed Historik",
+		"humidityhistory": "Luftfugtighed historik",
 		"humidityanbmin": "Luftfugtighed anbefalet minimum",
 		"humidityanbmax": "Luftfugtighed anbefalet maksimum",
 		"humidityavgbuilding": "Luftfugtighed gennemsnit for bygning",
 		"batteryhistory": "Batteri historik",
 		"batteryavgbuilding": "Batteri gennemsnit for bygningen",
-		"analytics": "Aktivitetsniveau total for bygningen"
+		"analytics": "Aktivitetsniveau total for bygningen",
+		"noisepeakhistory": "Lydmåling historik",
+		"noisepeakavgbuilding": "Lydmåling gennemsnit for bygning"
+
 	}
 }

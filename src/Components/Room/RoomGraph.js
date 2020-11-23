@@ -59,6 +59,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 			co2: [],
 			humidity: [],
 			battery: [],
+			noisepeak: [],
 			userexperience: [],
 			analytics: [],
 			climateout: []
@@ -93,13 +94,16 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						let batteryData = null;
 						let batteryRoomData = null;
 						let batteryAvgData = [];
+						let noisePeakData = null;
+						let noisePeakRoomData = null;
+						let noisePeakAvgData = [];
 						let userexperienceData = null;
 						let analyticsData = null;
 						let analyticsRoomData = null;
 						let climateoutData = null;
 
 						let devices = null;
-						if (key === 'tempavgbuilding' || key === 'co2avgbuilding' || key === 'humidityavgbuilding' || key === 'batteryavgbuilding') {
+						if (key === 'tempavgbuilding' || key === 'co2avgbuilding' || key === 'humidityavgbuilding' || key === 'batteryavgbuilding' || key === 'noisepeakavgbuilding') {
 							devices = await getBuildingDevices(room.building.uuid);
 							// console.log(devices);
 						}
@@ -142,7 +146,6 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										avgPeriod.timeTypeData = 3;
 										let deviceData = await getDeviceDataConverted(device.device, avgPeriod, 'temperature');
 										if (deviceData) {
-											console.log(deviceData);
 											deviceData.map(data => {
 												if (!combinedData[data.date]) {
 													combinedData[data.date] = parseFloat(data.value);
@@ -283,7 +286,61 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 											if (device.type === 'data') {
 												let data = await getDeviceDataConverted(device.device, period, 'batteristatus');
 												if (data) {
-													co2RoomData[uuid] = { data: data, room: r };
+													batteryRoomData[uuid] = { data: data, room: r };
+												}
+											}
+										})
+									)
+								})
+							);
+						}
+
+						if (key === 'noisepeakhistory') {
+							noisePeakData = await getDeviceDataConverted(room.devices[0].device, period, 'noisePeak');
+						}
+
+						if (key === 'noisepeakavgbuilding') {
+							let combinedData = {};
+							let numDataDevices = 0;
+							await Promise.all(
+								devices.map(async device => {
+									if (device.type === 'data') {
+										numDataDevices++;
+
+										let avgPeriod = period;
+										avgPeriod.timeTypeData = 3;
+										let deviceData = await getDeviceDataConverted(device.device, avgPeriod, 'noisePeak');
+										if (deviceData) {
+											deviceData.map(data => {
+												if (!combinedData[data.date]) {
+													combinedData[data.date] = parseFloat(data.value);
+												} else {
+													combinedData[data.date] += parseFloat(data.value);
+												}
+											});
+										}
+									}
+								})
+							);
+
+							Object.entries(combinedData).map(value => {
+								noisePeakAvgData.push({ date: value[0], value: value[1] / numDataDevices });
+							});
+						}
+
+						if (key === 'noisepeakhistoryrooms') {
+							noisePeakRoomData = {};
+							await Promise.all(
+								Object.keys(props.checkboxStates['noisepeakhistoryrooms']).map(async uuid => {
+									let roomDevices = await getRoomDevices(uuid);
+									let r = await getRoom(uuid);
+
+									await Promise.all(
+										roomDevices.map(async device => {
+											if (device.type === 'data') {
+												let data = await getDeviceDataConverted(device.device, period, 'noisePeak');
+												if (data) {
+													noisePeakRoomData[uuid] = { data: data, room: r };
 												}
 											}
 										})
@@ -771,6 +828,51 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 										});
 									}
 									break;
+								case 'noisepeakhistory':
+									if (noisePeakData) {
+										graphLinesData.noisepeak.push({
+											unit: 'db',
+											maxValue: 150,
+											noArea: true,
+											name: key,
+											median: true,
+											data: noisePeakData,
+											color: colors['temperature'][tempColorCount++],
+											alarmColor: '#ff0000',
+											dotSize: period.timeTypeData === 1 ? 2 : 6
+										});
+									}
+									break;
+								case 'noisepeakavgbuilding':
+									if (noisePeakAvgData.length) {
+										graphLinesData.noisepeak.push({
+											unit: 'db',
+											name: key,
+											median: true,
+											data: noisePeakAvgData,
+											color: colors['temperature'][tempColorCount++],
+											noDots: true
+										});
+									}
+									break;
+								case 'noisepeakhistoryrooms':
+									if (Object.keys(noisePeakRoomData).length) {
+										Object.keys(noisePeakRoomData).map(uuid => {
+											graphLinesData.noisepeak.push({
+												unit: 'db',
+												maxValue: 150,
+												noArea: true,
+												name: key + uuid,
+												caption: 'Lydmåling - ' + noisePeakRoomData[uuid]['room']['name'],
+												median: true,
+												data: noisePeakRoomData[uuid]['data'],
+												color: colors['temperature'][tempColorCount++],
+												alarmColor: '#ff0000',
+												dotSize: period.timeTypeData === 1 ? 2 : 6
+											});
+										});
+									}
+									break;
 								case 'userexperience':
 									if (userexperienceData) {
 										graphLinesData.userexperience.push({
@@ -1160,6 +1262,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 				<Tooltip tooltip={value} id="co2" />
 				<Tooltip tooltip={value} id="humidity" />
 				<Tooltip tooltip={value} id="battery" />
+				<Tooltip tooltip={value} id="noisepeak" />
 			</div>
 	)
 }));

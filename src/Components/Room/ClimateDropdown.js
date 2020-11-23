@@ -13,6 +13,7 @@ const ClimateDropdown = (props) => {
 	const [co2open, setCo2open] = useState(false);
 	const [humidityopen, setHumidityopen] = useState(false);
 	const [batteryopen, setBatteryopen] = useState(false);
+	const [noisePeakopen, setNoisePeakopen] = useState(false);
 	const [popoverWidth, setPopoverWidth] = useState(310);
 	const checkboxStates = props.checkboxStates;
 	const rooms = props.rooms;
@@ -28,6 +29,9 @@ const ClimateDropdown = (props) => {
 			setHumidityopen(true);
 		}
 		if (checkboxStates['batteryhistory']) {
+			setBatteryopen(true);
+		}
+		if (checkboxStates['noisePeakhistory']) {
 			setBatteryopen(true);
 		}
 	}, [checkboxStates]);
@@ -55,6 +59,10 @@ const ClimateDropdown = (props) => {
 
 	const toogleBatteryopen = () => {
 		setBatteryopen(batteryopen ? false : true);
+	}
+
+	const toogleNoisePeakopen = () => {
+		setNoisePeakopen(noisePeakopen ? false : true);
 	}
 
 	return (
@@ -348,6 +356,59 @@ const ClimateDropdown = (props) => {
 								</ListItem>);
 							})}
 						</Collapse>
+
+						<ListItem key={50} button style={{ backgroundColor: '#eee' }}>
+							<ListItemText id={51} primary="Lydmåling" onClick={toogleNoisePeakopen} />
+							<ListItemSecondaryAction>
+								<IconButton edge="end" onClick={toogleNoisePeakopen}>
+									{noisePeakopen ? <RemoveIcon /> : <AddIcon />}
+								</IconButton>
+							</ListItemSecondaryAction>
+						</ListItem>
+						<Divider />
+
+						<Collapse in={noisePeakopen} timeout="auto" unmountOnExit>
+							<ListItem key={52} button>
+								<ListItemText id={42} primary="Historik" />
+								<ListItemSecondaryAction>
+									<Checkbox
+										edge="end"
+										value="noisepeakhistory"
+										onChange={props.onChange}
+										checked={checkboxStates['noisepeakhistory'] ? true : false}
+										inputProps={{ 'aria-labelledby': 52 }}
+									/>
+								</ListItemSecondaryAction>
+							</ListItem>
+							<ListItem key={53} button>
+								<ListItemText id={53} primary="Gennemsnit for bygningen" />
+								<ListItemSecondaryAction>
+									<Checkbox
+										edge="end"
+										value="noisepeakavgbuilding"
+										onChange={props.onChange}
+										checked={checkboxStates['noisepeakavgbuilding'] ? true : false}
+										inputProps={{ 'aria-labelledby': 53 }}
+									/>
+								</ListItemSecondaryAction>
+							</ListItem>
+
+							{rooms.map(room => {
+								return (<ListItem key={room.uuid} button>
+									<ListItemText id={room.uuid} primary={room.name} />
+									<ListItemSecondaryAction>
+										<Checkbox
+											edge="end"
+											value={room.uuid}
+											onChange={props.onNoisePeakRoomChange}
+											checked={checkboxStates['noisepeakhistoryrooms'][room.uuid] ? true : false}
+											inputProps={{ 'aria-labelledby': 1 }}
+										/>
+									</ListItemSecondaryAction>
+								</ListItem>);
+							})}
+						</Collapse>
+
 					</List>
 				</>
 			</Popover>

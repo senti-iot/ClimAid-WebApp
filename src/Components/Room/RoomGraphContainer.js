@@ -34,7 +34,7 @@ const RoomGraphContainer = (props) => {
 	const [loadingOverlayOpen, setLoadingOverlayOpen] = useState(false);
 	// const [roomValues, setRoomValues] = useState(null);
 	// const [batteryLevel, setBatteryLevel] = useState(null);
-	const [checkboxStates, setCheckboxStates] = useState({ temphistory: true, temphistoryrooms: [], climateout: [], userexperience: [], analytics: [], co2historyrooms: [], humidityhistoryrooms: [], batteryhistoryrooms: [] });
+	const [checkboxStates, setCheckboxStates] = useState({ temphistory: true, temphistoryrooms: [], climateout: [], userexperience: [], analytics: [], co2historyrooms: [], humidityhistoryrooms: [], batteryhistoryrooms: [], noisepeakhistoryrooms: [] });
 	// const [anchorEl, setAnchorEl] = useState(null);
 	const [room, setRoom] = useState(null);
 	const [rooms, setRooms] = useState([]);
@@ -143,6 +143,17 @@ const RoomGraphContainer = (props) => {
 			delete newStates['batteryhistoryrooms'][e.target.value];
 		} else {
 			newStates['batteryhistoryrooms'][e.target.value] = true;
+		}
+		setCheckboxStates(newStates);
+	}
+
+	const handleNoisePeakRoomChange = (e) => {
+		let newStates = { ...checkboxStates };
+
+		if (newStates['noisepeakhistoryrooms'][e.target.value]) {
+			delete newStates['noisepeakhistoryrooms'][e.target.value];
+		} else {
+			newStates['noisepeakhistoryrooms'][e.target.value] = true;
 		}
 		setCheckboxStates(newStates);
 	}
@@ -277,6 +288,7 @@ const RoomGraphContainer = (props) => {
 								onCo2RoomChange={handleCo2RoomChange}
 								onHumidityRoomChange={handleHumidityRoomChange}
 								onBatteryRoomChange={handleBatteryRoomChange}
+								onNoisePeakRoomChange={handleNoisePeakRoomChange}
 								checkboxStates={checkboxStates}
 								rooms={rooms}
 							/>
