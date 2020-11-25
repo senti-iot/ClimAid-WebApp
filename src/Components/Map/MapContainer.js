@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useEffect, useRef, useState } from 'react';
 import { Map, TileLayer, ZoomControl, Marker, Popup, FeatureGroup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
@@ -241,13 +242,15 @@ const MapContainer = (props) => {
 						{buildings ? 
 							<FeatureGroup ref={groupRef}>
 								{buildings.map(building => {
-									return (
-										<Marker key={building.uuid} position={building.latlong.split(',')} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })} onClick={handleMarkerClick}>
-											<Popup maxWidth={400} maxHeight={550} closeButton="">
-												<MapPopupBuilding building={building} />
-											</Popup>
-										</Marker>
-									);
+									if (building.latlong) {
+										return (
+											<Marker key={building.uuid} position={building.latlong.split(',')} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })} onClick={handleMarkerClick}>
+												<Popup maxWidth={400} maxHeight={550} closeButton="">
+													<MapPopupBuilding building={building} />
+												</Popup>
+											</Marker>
+										);
+									}
 								})}
 							</FeatureGroup>
 							: ""}
