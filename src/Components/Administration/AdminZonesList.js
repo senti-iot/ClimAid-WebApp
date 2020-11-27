@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import { Grid, Paper, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ListIcon from '@material-ui/icons/List';
 import EditIcon from '@material-ui/icons/Edit';
 
 import { Add } from 'variables/icons';
@@ -94,6 +95,7 @@ const AdminZonesList = (props) => {
 											<TableRow className={classes.tableRow}>
 												<TableCell>Navn</TableCell>
 												<TableCell>Bygning</TableCell>
+												<TableCell>Adresse</TableCell>
 												<TableCell></TableCell>
 											</TableRow>
 										</TableHead>
@@ -106,8 +108,14 @@ const AdminZonesList = (props) => {
 													<TableCell>
 														{room.building.name}
 													</TableCell>
+													<TableCell>
+														{room.building.address}
+													</TableCell>
 													<TableCell align="right">
-														<IconButton onClick={() => history.push('/administration/rooms/' + room.uuid + '/edit')}>
+														<IconButton onClick={() => history.push('/administration/devices/' + room.uuid + '/list')}>
+															<ListIcon />
+														</IconButton>
+														<IconButton onClick={() => history.push('/administration/zones/' + room.uuid + '/edit')}>
 															<EditIcon />
 														</IconButton>
 														<IconButton onClick={() => confirmDelete(room.uuid)}>

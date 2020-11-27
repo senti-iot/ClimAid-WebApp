@@ -99,7 +99,7 @@ const AdminBuildingsList = (props) => {
 											<TableCell>
 											</TableCell>
 											<TableCell align="right">
-												<IconButton onClick={() => history.push('/administration/zones/list/' + building.uuid)}>
+												<IconButton onClick={() => history.push('/administration/zones/' + building.uuid + '/list')}>
 													<ListIcon />
 												</IconButton>
 												<IconButton onClick={() => history.push('/administration/buildings/' + building.uuid + '/edit')}>

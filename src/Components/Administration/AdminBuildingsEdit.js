@@ -165,7 +165,7 @@ const AdminBuildingsEdit = (props) => {
 				rooms.map(async room => {
 					if (roomLocations[room.uuid]) {
 						room.bounds = JSON.parse(roomLocations[room.uuid]);
-						console.log(await updateRoom(room));
+						await updateRoom(room);
 					}
 				})
 

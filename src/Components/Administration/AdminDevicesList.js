@@ -7,14 +7,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 //Dialog, DialogTitle, DialogContent, DialogActions, Button
-import { Grid, Paper, IconButton } from '@material-ui/core';
+import { Grid, Paper, IconButton, Button } from '@material-ui/core';
 // import DeleteIcon from '@material-ui/icons/Delete';
-// import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@material-ui/icons/Edit';
 import QRCode from 'qrcode';
 import { saveAs } from 'file-saver';
 
-// import { Add } from 'variables/icons';
-import { getDevices } from 'data/climaid';
+import { Add } from 'variables/icons';
+import { getDevices, getRoomDevices } from 'data/climaid';
 import AdminMenu from './AdminMenu';
 import adminStyles from 'Styles/adminStyles';
 import CircularLoader from 'Components/Loaders/CircularLoader';
@@ -25,23 +25,21 @@ const AdminDevicesList = (props) => {
 	// const [selectedUuid, setSelectedUuid] = useState(null);
 	// const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 	const classes = adminStyles();
-	// const history = props.history;
+	const history = props.history;
 	const { uuid } = useParams();
 
 	useEffect(() => {
 		async function fetchData() {
-			// if (typeof uuid === 'undefined') {
-			const data = await getDevices();
-
+			let data = null;
+			if (typeof uuid === 'undefined') {
+				data = await getDevices();
+			} else {
+				data = await getRoomDevices(uuid);
+			}
+			console.log(data);
 			if (data) {
 				setDevices(data);
 			}
-			// } else {
-			// 	let data = await getDevicesInBuilding(uuid);
-			// 	if (data) {
-			// 		setDevices(data);
-			// 	}
-			// }
 		}
 
 		fetchData();
@@ -99,45 +97,57 @@ const AdminDevicesList = (props) => {
 					<Paper elevation={3} className={classes.adminPaperContainer}>
 						<div className={classes.adminHeader}>Sensorer</div>
 
-						{/* <p>
+						<p>
 							<Button
 								variant="contained"
 								color="primary"
 								startIcon={<Add />}
-								onClick={() => history.push('/administration/sensor/add/' + uuid)}
+								onClick={() => history.push('/administration/devices/' + uuid + '/add')}
 							>
-								Tilføj sensor
+								Tilknyt sensor
 							</Button>
-						</p> */}
+						</p>
 
 						{devices ? (
-							!devices.length ? <p>Der blev ikke fundet nogen sensorer på denne bygning</p> : 
+							!devices.length ? <p>Der blev ikke fundet nogen tilknyttede sensorer på denne zone</p> : 
 								<TableContainer component={Paper}>
 									<Table stickyHeader className={classes.table} aria-label="buildings table">
 										<TableHead>
 											<TableRow className={classes.tableRow}>
-												<TableCell>Lokale</TableCell>
-												<TableCell>ID</TableCell>
 												<TableCell>Bygning</TableCell>
+												<TableCell>Zone</TableCell>
+												<TableCell>Sensor ID</TableCell>
+												<TableCell>Sensor UUID</TableCell>
+												<TableCell>Kvalitativ sensor ID</TableCell>
+												<TableCell>Kvalitativ sensor UUID</TableCell>
 												<TableCell></TableCell>
 											</TableRow>
 										</TableHead>
 										<TableBody>
 											{devices.map(device => (
-												<TableRow hover key={device.room.uuid} className={classes.tableRow}>
+												<TableRow hover key={device.uuid} className={classes.tableRow}>
+													<TableCell>
+														{device.room.building.name}
+													</TableCell>
 													<TableCell>
 														{device.room.name}
 													</TableCell>
 													<TableCell>
-														{device.uuid}
+														{device.device}
 													</TableCell>
 													<TableCell>
-														{device.room.building.name}
+														{device.deviceUuid}
+													</TableCell>
+													<TableCell>
+														{device.qualitativeDevice}
+													</TableCell>
+													<TableCell>
+														{device.qualitativeDeviceUuid}
 													</TableCell>
 													<TableCell align="right">
-														{/* <IconButton onClick={() => history.push('/administration/devices/' + device.uuid + '/edit')}>
+														<IconButton onClick={() => history.push('/administration/devices/' + device.uuid + '/edit')}>
 															<EditIcon />
-														</IconButton> */}
+														</IconButton>
 														<IconButton onClick={() => handleQrCode(device.uuid)}>
 															<img src={QrCodeIcon} alt="Generer QR kode" />
 														</IconButton>
