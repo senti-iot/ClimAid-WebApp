@@ -154,9 +154,24 @@ export const addRoomDevice = async (uuid, formData) => {
 	return data;
 };
 
+export const updateRoomDevice = async (uuid, formData) => {
+	let data = await climaidApi.put('/room/' + uuid + '/device', formData).then(rs => rs.data);
+	return data;
+};
+
+export const deleteRoomDevice = async (roomUuid, deviceUuid) => {
+	let data = await climaidApi.delete('/room/' + roomUuid + '/device/' + deviceUuid).then(rs => rs.data);
+	return data;
+};
+
 export const getRooms = async () => {
 	let data = await climaidApi.get('/rooms').then(rs => rs.data);
 	// console.log(data);
+	return data;
+};
+
+export const getDevice = async (uuid) => {
+	let data = await climaidApi.get('/device/' + uuid).then(rs => rs.data);
 	return data;
 };
 

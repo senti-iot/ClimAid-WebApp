@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Paper, TextField, Button, ButtonGroup, MenuItem, Snackbar, Typography } from '@material-ui/core';
+import { Grid, Paper, TextField, Button, ButtonGroup, MenuItem, Snackbar, Typography, InputLabel } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { DropzoneArea } from 'material-ui-dropzone';
 
-import { getRoom, updateRoom, addRoomImage } from 'data/climaid';
+import { getRoom, updateRoomDevice, updateRoom, addRoomImage } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
 import AdminMenu from './AdminMenu';
 import CircularLoader from 'Components/Loaders/CircularLoader';
+import AdminZoneMap from './AdminZoneMap';
 
 const AdminZonesEdit = props => {
 	const [alertSuccess, setAlertSuccess] = useState(false);
 	const [alertFail, setAlertFail] = useState(false);
 	const { uuid } = useParams();
 	const classes = adminStyles();
-	const [loading, setLoading] = useState(true);
 
+	const [loading, setLoading] = useState(true);
+	const [deviceLocations, setDeviceLocations] = useState({});
+	const [devices, setDevices] = useState(null);
 	const [zone, setZone] = useState(null);
 	const [building, setBuilding] = useState('');
 	const [name, setName] = useState('');
@@ -27,20 +30,23 @@ const AdminZonesEdit = props => {
 	const [primaryFunction, setPrimaryFunction] = useState('');
 	const [primaryFunctionError, setPrimaryFunctionError] = useState('');
 	const [file, setFile] = useState(null);
+	const [image, setImage] = useState(null);
 
 	const primaryFunctionOptions = ['Kontor', 'Undervisning', 'Kantine', 'Mødelokale', 'Lager', 'Køkken'];
 
 	useEffect(() => {
 		async function fetchData() {
 			const zoneData = await getRoom(uuid);
-
+			console.log(zoneData);
 			if (zoneData) {
 				setZone(zoneData);
 				setBuilding(zoneData.building);
 				setName(zoneData.name);
 				setSize(zoneData.size);
+				setImage(zoneData.image);
 				setAddress(zoneData.building.address);
 				setPrimaryFunction(zoneData.primaryFunction);
+				setDevices(zoneData.devices);
 			}
 
 			setLoading(false);
@@ -129,6 +135,15 @@ const AdminZonesEdit = props => {
 					console.log(await addRoomImage(result.uuid, imageData));
 				}
 
+				//update room locations
+				devices.map(async device => {
+					if (deviceLocations[device.uuid]) {
+						console.log(deviceLocations[device.uuid]);
+						device.position = JSON.parse(deviceLocations[device.uuid]);
+						console.log(await updateRoomDevice(zone.uuid, device));
+					}
+				});
+
 				setAlertSuccess(true);
 
 				setTimeout(function () {
@@ -137,6 +152,10 @@ const AdminZonesEdit = props => {
 			}
 		}
 	};
+
+	const saveLocations = (locations) => {
+		setDeviceLocations(locations);
+	}
 
 	return (
 		!loading ? (
@@ -178,7 +197,7 @@ const AdminZonesEdit = props => {
 								</Grid>
 								<Grid item xs={12}>
 									<TextField
-										id={'name'}
+										id={'address'}
 										label='Adresse'
 										value={address}
 										onChange={(e) => setAddress(e.target.value)}
@@ -234,6 +253,14 @@ const AdminZonesEdit = props => {
 									{file ? <Typography variant="body1" style={{ marginTop: 10 }}>Valgt fil:  {file[0].name}</Typography> : ""}
 								</Grid>
 							</form>
+
+							{image ?
+								<Grid item xs={12} style={{ marginTop: 20 }}>
+									<InputLabel id="visibleTo-select-label">Placer sensorer</InputLabel>
+									<AdminZoneMap zone={zone} devices={devices} saveLocations={saveLocations} />
+								</Grid>
+								: ""}
+
 							<Grid item xs={12} style={{ marginTop: 40 }}>
 								<Grid container>
 									<Grid container item xs={12} justify="flex-end">
@@ -244,7 +271,6 @@ const AdminZonesEdit = props => {
 										</ButtonGroup>
 									</Grid>
 								</Grid>
-
 							</Grid>
 						</Grid>
 						<Snackbar open={alertSuccess} autoHideDuration={3000} onClose={handleAlertSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>

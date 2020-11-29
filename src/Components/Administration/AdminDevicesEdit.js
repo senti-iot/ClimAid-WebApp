@@ -1,55 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Paper, TextField, Button, ButtonGroup, MenuItem, Snackbar } from '@material-ui/core';
+import { Grid, Paper, TextField, Button, ButtonGroup, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
-import { getRooms, getRoom, addRoomDevice } from 'data/climaid';
+import { getDevice, updateRoomDevice } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
 import AdminMenu from './AdminMenu';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
-const AdminDevicesAdd = props => {
+const AdminDevicesEdit = props => {
 	const { uuid } = useParams();
 	const classes = adminStyles();
 	const [alertSuccess, setAlertSuccess] = useState(false);
 	const [alertFail, setAlertFail] = useState(false);
 
 	const [loading, setLoading] = useState(true);
-	const [rooms, setRooms] = useState(null);
-	const [room, setRoom] = useState('');
-	const [roomError, setRoomError] = useState('');
-	const [device, setDevice] = useState('');
-	const [deviceError, setDeviceError] = useState('');
+	const [room, setRoom] = useState(null);
+	const [device, setDevice] = useState(null);
+	const [deviceId, setDeviceId] = useState('');
+	const [deviceIdError, setDeviceIdError] = useState('');
 	const [deviceUuid, setDeviceUuid] = useState('');
 	const [deviceUuidError, setDeviceUuidError] = useState('');
 	const [qualitativeDevice, setQualitativeDevice] = useState('');
 	const [qualitativeDeviceUuid, setQualitativeDeviceUuid] = useState('');
+	const [gauges, setGauges] = useState('');
 
 	useEffect(() => {
 		async function fetchData() {
+			const deviceData = await getDevice(uuid);
 
-			const roomsData = await getRooms();
+			if (deviceData) {
+				setDevice(deviceData);
+				setDeviceId(deviceData.device);
+				setDeviceUuid(deviceData.deviceUuid);
+				setQualitativeDevice(deviceData.qualitativeDevice);
+				setQualitativeDeviceUuid(deviceData.qualitativeDeviceUuid);
+				setGauges(deviceData.gauges);
+				setRoom(deviceData.room);
 
-			if (roomsData) {
-				setRooms(roomsData);
+				setLoading(false);
 			}
-
-			if (uuid !== 'undefined') {
-				const roomData = await getRoom(uuid);
-				if (roomData) {
-					setRoom(roomData.uuid);
-				}
-			}
-
-			setLoading(false);
 		}
 
 		fetchData();
 	}, [uuid]);
-
-	const handleRoomChange = event => {
-		setRoom(event.target.value);
-	};
 
 	const handleAlertSuccessClose = (event, reason) => {
 		if (reason === 'clickaway') {
@@ -74,15 +68,11 @@ const AdminDevicesAdd = props => {
 	const handleSave = async () => {
 		let isOK = true;
 
-		setRoomError('');
-		setDeviceError('');
+		setDeviceIdError('');
 		setDeviceUuidError('');
 
-		if (!room.length) {
-			setRoomError('Du skal vælge en tilknyttet zone');
-			isOK = false;
-		} else if (!device.length) {
-			setDeviceError('Du skal indtaste sensor id');
+		if (!deviceId.length) {
+			setDeviceIdError('Du skal indtaste sensor id');
 			isOK = false;
 		} else if (!deviceUuid.length) {
 			setDeviceUuidError('Du skal indtaste sensor uuid');
@@ -90,17 +80,23 @@ const AdminDevicesAdd = props => {
 		}
 
 		if (isOK) {
-			const data = { roomUuid: room, device: device, deviceUuid: deviceUuid, qualitativeDevice: qualitativeDevice, qualitativeDeviceUuid: qualitativeDeviceUuid, type: 'data', position: [], gauges: [] };
+			const data = { ...device };
+			data.device = device;
+			data.deviceUuid = deviceUuid;
+			data.qualitativeDevice = qualitativeDevice;
+			data.qualitativeDeviceUuid = qualitativeDeviceUuid;
+			data.gauges = JSON.parse(gauges);
+			console.log(JSON.stringify(data.gauges));
+			console.log(data);
+			let updated = await updateRoomDevice(room.uuid, data);
 
-			let added = await addRoomDevice(uuid, data);
-
-			if (!added) {
+			if (!updated) {
 				setAlertFail(true);
 			} else {
 				setAlertSuccess(true);
 
 				setTimeout(function () {
-					props.history.push('/administration/devices/' + uuid + '/list');
+				//	props.history.push('/administration/devices/' + room.uuid + '/list');
 				}, 500);
 			}
 		}
@@ -116,36 +112,30 @@ const AdminDevicesAdd = props => {
 				</Grid>
 				<Grid container item xs={6}>
 					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<div className={classes.adminHeader}>Zone oprettelse</div>
+						<div className={classes.adminHeader}>Zone redigering</div>
 
 						<Grid container justify={'flex-start'} spacing={0}>
 							<form>
 								<Grid item xs={12} style={{ marginTop: 20 }}>
 									<TextField
-										select
 										id="select-building"
-										label="Tilknyt zone"
-										value={room}
-										onChange={handleRoomChange}
-										className={classes.selectField}
-										error={roomError.length ? true : false}
-										helperText={roomError}
-									>
-										{rooms.map(r => {
-											return <MenuItem key={r.uuid} value={r.uuid}>{r.name}</MenuItem>;
-										})}
-									</TextField>
+										label="Tilknyttet zone"
+										value={room.name}
+										margin='normal'
+										variant='outlined'
+										className={classes.textField}
+									/>
 								</Grid>
 								<Grid item xs={12}>
 									<TextField
-										id={'device'}
+										id={'deviceId'}
 										label='Sensor ID'
-										value={device}
-										onChange={(e) => setDevice(e.target.value)}
+										value={deviceId}
+										onChange={(e) => setDeviceId(e.target.value)}
 										margin='normal'
 										variant='outlined'
-										error={deviceError.length ? true : false}
-										helperText={deviceError}
+										error={deviceIdError.length ? true : false}
+										helperText={deviceIdError}
 										className={classes.textField}
 									/>
 								</Grid>
@@ -184,6 +174,18 @@ const AdminDevicesAdd = props => {
 										className={classes.textField}
 									/>
 								</Grid>
+								<Grid item xs={12}>
+									<TextField
+										multiline={true}
+										id={'gauges'}
+										label='Målere'
+										value={gauges}
+										onChange={(e) => setGauges(e.target.value)}
+										margin='normal'
+										variant='outlined'
+										className={classes.textField}
+									/>
+								</Grid>
 							</form>
 							<Grid item xs={12} style={{ marginTop: 40 }}>
 								<Grid container>
@@ -198,7 +200,7 @@ const AdminDevicesAdd = props => {
 							</Grid>
 						</Grid>
 						<Snackbar open={alertSuccess} autoHideDuration={3000} onClose={handleAlertSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-							<Alert onClose={handleAlertSuccessClose} severity="success" elevation={6} variant="filled">Sensor tilknyttet!</Alert>
+							<Alert onClose={handleAlertSuccessClose} severity="success" elevation={6} variant="filled">Sensor opdateret!</Alert>
 						</Snackbar>
 						<Snackbar open={alertFail} autoHideDuration={3000} onClose={handleAlertFailClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
 							<Alert onClose={handleAlertFailClose} severity="error" elevation={6} variant="filled">Der opstod en fejl!</Alert>
@@ -216,4 +218,4 @@ const AdminDevicesAdd = props => {
 	);
 }
 
-export default AdminDevicesAdd;
+export default AdminDevicesEdit;

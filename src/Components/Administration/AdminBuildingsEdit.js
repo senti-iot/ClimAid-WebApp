@@ -167,7 +167,7 @@ const AdminBuildingsEdit = (props) => {
 						room.bounds = JSON.parse(roomLocations[room.uuid]);
 						await updateRoom(room);
 					}
-				})
+				});
 
 				if (!updated) {
 					setAlertFail(true);
