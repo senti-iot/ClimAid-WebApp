@@ -243,13 +243,15 @@ const MapContainer = (props) => {
 							<FeatureGroup ref={groupRef}>
 								{buildings.map(building => {
 									if (building.latlong) {
-										return (
-											<Marker key={building.uuid} position={building.latlong} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })} onClick={handleMarkerClick}>
-												<Popup maxWidth={400} maxHeight={550} closeButton="">
-													<MapPopupBuilding building={building} />
-												</Popup>
-											</Marker>
-										);
+										if (building.latlong.length) {
+											return (
+												<Marker key={building.uuid} position={building.latlong.split(',')} icon={new markerIcon({ iconUrl: '/images/marker' + building.color + '.svg' })} onClick={handleMarkerClick}>
+													<Popup maxWidth={400} maxHeight={550} closeButton="">
+														<MapPopupBuilding building={building} />
+													</Popup>
+												</Marker>
+											);
+										}
 									}
 								})}
 							</FeatureGroup>
