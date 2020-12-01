@@ -35,7 +35,9 @@ const AdminDevicesEdit = props => {
 				setDeviceUuid(deviceData.deviceUuid);
 				setQualitativeDevice(deviceData.qualitativeDevice);
 				setQualitativeDeviceUuid(deviceData.qualitativeDeviceUuid);
-				setGauges(deviceData.gauges);
+				if (deviceData.gauges.length) {
+					setGauges(JSON.stringify(deviceData.gauges));
+				}
 				setRoom(deviceData.room);
 
 				setLoading(false);
@@ -81,13 +83,12 @@ const AdminDevicesEdit = props => {
 
 		if (isOK) {
 			const data = { ...device };
-			data.device = device;
+			data.device = deviceId;
 			data.deviceUuid = deviceUuid;
 			data.qualitativeDevice = qualitativeDevice;
 			data.qualitativeDeviceUuid = qualitativeDeviceUuid;
 			data.gauges = JSON.parse(gauges);
-			console.log(JSON.stringify(data.gauges));
-			console.log(data);
+
 			let updated = await updateRoomDevice(room.uuid, data);
 
 			if (!updated) {
@@ -96,7 +97,7 @@ const AdminDevicesEdit = props => {
 				setAlertSuccess(true);
 
 				setTimeout(function () {
-				//	props.history.push('/administration/devices/' + room.uuid + '/list');
+					props.history.push('/administration/devices/' + room.uuid + '/list');
 				}, 500);
 			}
 		}
