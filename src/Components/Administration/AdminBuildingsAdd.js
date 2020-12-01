@@ -5,6 +5,7 @@ import { DropzoneArea } from 'material-ui-dropzone';
 
 import adminStyles from 'Styles/adminStyles';
 import { addBuilding, addBuildingImage, setBuildingPermissions } from 'data/climaid';
+import { addressLookup } from 'data/data';
 import { getUserOrgs, getUser } from 'data/users';
 import AdminMenu from './AdminMenu';
 import CircularLoader from 'Components/Loaders/CircularLoader';
@@ -85,6 +86,7 @@ const AdminBuildingsAdd = (props) => {
 
 		setNameError('');
 		setAddressError('');
+		setLatLongError('');
 		setSizeError('');
 		setPrimaryFunctionError('');
 
@@ -160,6 +162,18 @@ const AdminBuildingsAdd = (props) => {
 		setVisibleTo(event.target.value);
 	}
 
+	const findLatLong = async (value) => {
+		setLatLongError('');
+		if (!latlong.length && value.length) {
+			const addresLookupResult = await addressLookup(value);
+			if (!addresLookupResult.length) {
+				setLatLongError('Kunne ikke finde adressens lokation, indtast lokation manuelt eller ret adressen');
+			} else {
+				setLatLong(addresLookupResult[0]['adgangsadresse']['adgangspunkt']['koordinater'][1] + ', ' + addresLookupResult[0]['adgangsadresse']['adgangspunkt']['koordinater'][0]);
+			}
+		}
+	}
+
 	return (
 		!loading ? (
 			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={3}>
@@ -193,6 +207,7 @@ const AdminBuildingsAdd = (props) => {
 										label='Bygning adresse'
 										value={address}
 										onChange={(e) => setAddress(e.target.value)}
+										onBlur={e => findLatLong(e.target.value)}
 										margin='normal'
 										variant='outlined'
 										color='primary'
