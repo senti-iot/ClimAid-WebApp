@@ -6,7 +6,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { Grid, Paper, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core';
+import { Paper, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import QRCode from 'qrcode';
@@ -14,7 +14,6 @@ import { saveAs } from 'file-saver';
 
 import { Add } from 'variables/icons';
 import { getDevices, getRoomDevices, deleteRoomDevice } from 'data/climaid';
-import AdminMenu from './AdminMenu';
 import adminStyles from 'Styles/adminStyles';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 import QrCodeIcon from 'assets/icons/qrcode.svg';
@@ -98,75 +97,62 @@ const AdminDevicesList = (props) => {
 
 	return (
 		<>
-			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={3}>
-				<Grid container item xs={3}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<AdminMenu />
-					</Paper>
-				</Grid>
-				<Grid container item xs={6}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<div className={classes.adminHeader}>Sensorer</div>
+			<Paper elevation={3} className={classes.adminPaperContainer}>
+				<div className={classes.adminHeader}>Sensorer</div>
 
-						<p>
-							<Button
-								variant="contained"
-								color="primary"
-								startIcon={<Add />}
-								onClick={() => history.push('/administration/devices/' + uuid + '/add')}
-							>
-								Tilknyt sensor
-							</Button>
-						</p>
+				<p>
+					<Button
+						variant="contained"
+						color="primary"
+						startIcon={<Add />}
+						onClick={() => history.push('/administration/devices/' + uuid + '/add')}
+					>
+						Tilknyt sensor
+					</Button>
+				</p>
 
-						{devices ? (
-							!devices.length ? <p>Der blev ikke fundet nogen tilknyttede sensorer på denne zone</p> : 
-								<TableContainer component={Paper}>
-									<Table stickyHeader className={classes.table} aria-label="buildings table">
-										<TableHead>
-											<TableRow className={classes.tableRow}>
-												<TableCell>Sensor ID</TableCell>
-												<TableCell>Bygning</TableCell>
-												<TableCell>Zone</TableCell>
-												<TableCell></TableCell>
-											</TableRow>
-										</TableHead>
-										<TableBody>
-											{devices.map(device => (
-												<TableRow hover key={device.uuid} className={classes.tableRow}>
-													<TableCell>
-														{device.device}
-													</TableCell>
-													<TableCell>
-														{device.room.building.name}
-													</TableCell>
-													<TableCell>
-														{device.room.name}
-													</TableCell>
-													<TableCell align="right">
-														<IconButton onClick={() => handleQrCode(device.uuid)}>
-															<img src={QrCodeIcon} alt="Generer QR kode" />
-														</IconButton>
-														<IconButton onClick={() => history.push('/administration/devices/' + device.uuid + '/edit')}>
-															<EditIcon />
-														</IconButton>
-														<IconButton onClick={() => confirmDelete(device.uuid)}>
-															<DeleteIcon />
-														</IconButton>
-													</TableCell>
-												</TableRow>
-											))}
-										</TableBody>
-									</Table>
-								</TableContainer>
-						) : (<CircularLoader fill />)}
-					</Paper>
-				</Grid>
-				<Grid container item xs={3}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-					</Paper>
-				</Grid>
-			</Grid >
+				{devices ? (
+					!devices.length ? <p>Der blev ikke fundet nogen tilknyttede sensorer på denne zone</p> : 
+						<TableContainer component={Paper}>
+							<Table stickyHeader className={classes.table} aria-label="buildings table">
+								<TableHead>
+									<TableRow className={classes.tableRow}>
+										<TableCell>Sensor ID</TableCell>
+										<TableCell>Bygning</TableCell>
+										<TableCell>Zone</TableCell>
+										<TableCell></TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{devices.map(device => (
+										<TableRow hover key={device.uuid} className={classes.tableRow}>
+											<TableCell>
+												{device.device}
+											</TableCell>
+											<TableCell>
+												{device.room.building.name}
+											</TableCell>
+											<TableCell>
+												{device.room.name}
+											</TableCell>
+											<TableCell align="right">
+												<IconButton onClick={() => handleQrCode(device.uuid)}>
+													<img src={QrCodeIcon} alt="Generer QR kode" />
+												</IconButton>
+												<IconButton onClick={() => history.push('/administration/devices/' + device.uuid + '/edit')}>
+													<EditIcon />
+												</IconButton>
+												<IconButton onClick={() => confirmDelete(device.uuid)}>
+													<DeleteIcon />
+												</IconButton>
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</TableContainer>
+				) : (<CircularLoader fill />)}
+			</Paper>
 			<Dialog
 				disableBackdropClick
 				disableEscapeKeyDown

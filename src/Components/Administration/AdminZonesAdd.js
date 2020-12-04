@@ -4,7 +4,6 @@ import { Grid, Paper, TextField, Button, ButtonGroup, MenuItem } from '@material
 
 import { getBuildings, getBuilding } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
-import AdminMenu from './AdminMenu';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
 const AdminZonesAdd = props => {
@@ -92,112 +91,99 @@ const AdminZonesAdd = props => {
 
 	return (
 		!loading ? (
-			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={3}>
-				<Grid container item xs={3}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<AdminMenu />
-					</Paper>
-				</Grid>
-				<Grid container item xs={6}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<div className={classes.adminHeader}>Zone oprettelse</div>
+			<Paper elevation={3} className={classes.adminPaperContainer}>
+				<div className={classes.adminHeader}>Zone oprettelse</div>
 
-						<Grid container justify={'flex-start'} spacing={0}>
-							<form>
-								<Grid item xs={12} style={{ marginTop: 20 }}>
-									<TextField
-										select
-										id="select-building"
-										label="Tilknyt bygning"
-										value={building}
-										onChange={handleBuildingChange}
-										className={classes.selectField}
-										error={buildingError.length ? true : false}
-										helperText={buildingError}
-									>
-										{buildings.map(b => {
-											return <MenuItem key={b.uuid} value={b.uuid}>{b.name}</MenuItem>;
-										})}
-									</TextField>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'name'}
-										label='Navn'
-										value={name}
-										onChange={(e) => setName(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										error={nameError.length ? true : false}
-										helperText={nameError}
-										className={classes.textField}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'name'}
-										label='Adresse'
-										value={address}
-										onChange={(e) => setAddress(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										error={addressError.length ? true : false}
-										helperText={addressError}
-										className={classes.textField}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'size'}
-										label='Størrelse'
-										value={size}
-										onChange={(e) => setSize(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										error={sizeError.length ? true : false}
-										helperText={sizeError}
-										className={classes.textField}
-									/>
-								</Grid>
-								<Grid item xs={12} style={{ marginTop: 15 }}>
-									<TextField
-										id="primaryfunction"
-										select
-										label="Zone type"
-										value={primaryFunction}
-										onChange={(e) => setPrimaryFunction(e.target.value)}
-										error={primaryFunctionError.length ? true : false}
-										helperText={primaryFunctionError}
-										variant="outlined"
-										className={classes.textField}
-									>
-										{primaryFunctionOptions.map((option) => (
-											<MenuItem key={option} value={option}>
-												{option}
-											</MenuItem>
-										))}
-									</TextField>
-								</Grid>
-							</form>
-							<Grid item xs={12} style={{ marginTop: 40 }}>
-								<Grid container>
-									<Grid container item xs={12} justify="flex-end">
-										<ButtonGroup variant="contained" color="primary">
-											<Button onClick={handleCancel}>Annuller</Button>
-											<Button onClick={handleNext}>Næste</Button>
-										</ButtonGroup>
-									</Grid>
-								</Grid>
-
+				<Grid container justify={'flex-start'} spacing={0}>
+					<form>
+						<Grid item xs={12} style={{ marginTop: 20 }}>
+							<TextField
+								select
+								id="select-building"
+								label="Tilknyt bygning"
+								value={building}
+								onChange={handleBuildingChange}
+								className={classes.selectField}
+								error={buildingError.length ? true : false}
+								helperText={buildingError}
+							>
+								{buildings.map(b => {
+									return <MenuItem key={b.uuid} value={b.uuid}>{b.name}</MenuItem>;
+								})}
+							</TextField>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'name'}
+								label='Navn'
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								error={nameError.length ? true : false}
+								helperText={nameError}
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'name'}
+								label='Adresse'
+								value={address}
+								onChange={(e) => setAddress(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								error={addressError.length ? true : false}
+								helperText={addressError}
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'size'}
+								label='Størrelse'
+								value={size}
+								onChange={(e) => setSize(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								error={sizeError.length ? true : false}
+								helperText={sizeError}
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12} style={{ marginTop: 15 }}>
+							<TextField
+								id="primaryfunction"
+								select
+								label="Zone type"
+								value={primaryFunction}
+								onChange={(e) => setPrimaryFunction(e.target.value)}
+								error={primaryFunctionError.length ? true : false}
+								helperText={primaryFunctionError}
+								variant="outlined"
+								className={classes.textField}
+							>
+								{primaryFunctionOptions.map((option) => (
+									<MenuItem key={option} value={option}>
+										{option}
+									</MenuItem>
+								))}
+							</TextField>
+						</Grid>
+					</form>
+					<Grid item xs={12} style={{ marginTop: 40 }}>
+						<Grid container>
+							<Grid container item xs={12} justify="flex-end">
+								<ButtonGroup variant="contained" color="primary">
+									<Button onClick={handleCancel}>Annuller</Button>
+									<Button onClick={handleNext}>Næste</Button>
+								</ButtonGroup>
 							</Grid>
 						</Grid>
-					</Paper>
+
+					</Grid>
 				</Grid>
-				<Grid container item xs={3}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-					</Paper>
-				</Grid>
-			</Grid >
+			</Paper>
 		) : (
 			<CircularLoader fill />
 		)

@@ -16,7 +16,10 @@ const adminStyles = makeStyles(theme => ({
 		display: 'none'
 	},
 	adminMenuItem: {
-		cursor: 'pointer'
+		cursor: 'pointer',
+	},
+	adminMenuItemLabel: {
+		fontSize: 16
 	},
 	tableRow: {
 		height: 40
@@ -56,6 +59,14 @@ const adminStyles = makeStyles(theme => ({
 		borderRadius: 4,
 		backgroundColor: '#eee',
 		textAlign: 'center'
+	},
+	infoboxLabel: {
+		color: '#007178',
+		fontSize: 18
+	},
+	infoboxValue: {
+		color: '#7fb7bb',
+		fontSize: 18
 	}
 }));
 

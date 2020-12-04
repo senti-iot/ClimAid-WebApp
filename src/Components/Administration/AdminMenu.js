@@ -19,37 +19,37 @@ const AdminMenu = (props) => {
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Organisation" />
+				<ListItemText primary="Organisation" classes={{ primary: classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/users/list')}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Bruger" />
+				<ListItemText primary="Bruger" classes={{ primary: classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/devices/list')}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Sensor" />
+				<ListItemText primary="Sensor" classes={{ primary: classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/zones/list')}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Zone" />
+				<ListItemText primary="Zone" classes={{ primary: classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/buildings/list')}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Bygning" />
+				<ListItemText primary="Bygning" classes={{ primary: classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem}>
 				<ListItemIcon>
 					<FolderIcon />
 				</ListItemIcon>
-				<ListItemText primary="Alarm" />
+				<ListItemText primary="Alarm" classes={{ primary: classes.adminMenuItemLabel }} />
 			</ListItem>
 		</List>
 	)

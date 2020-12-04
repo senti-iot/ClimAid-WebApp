@@ -6,14 +6,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-import { Grid, Paper, IconButton } from '@material-ui/core';
+import { Paper, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import ListIcon from '@material-ui/icons/List';
 
 import { Add } from 'variables/icons';
 import { getBuildings, getRoomsInBuilding } from 'data/climaid';
-import AdminMenu from './AdminMenu';
 import adminStyles from 'Styles/adminStyles';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
@@ -55,73 +54,60 @@ const AdminBuildingsList = (props) => {
 	}
 
 	return (
-		<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={3}>
-			<Grid container item xs={3}>
-				<Paper elevation={3} className={classes.adminPaperContainer}>
-					<AdminMenu />
-				</Paper>
-			</Grid>
-			<Grid container item xs={6}>
-				<Paper elevation={3} className={classes.adminPaperContainer}>
-					<div className={classes.adminHeader}>Bygninger</div>
+		<Paper elevation={3} className={classes.adminPaperContainer}>
+			<div className={classes.adminHeader}>Bygninger</div>
 
-					<p>
-						<Button
-							variant="contained"
-							color="primary"
-							startIcon={<Add />}
-							onClick={ () => history.push('/administration/buildings/add') }
-						>
-							Tilføj bygning
-						</Button>
-					</p>
+			<p>
+				<Button
+					variant="contained"
+					color="primary"
+					startIcon={<Add />}
+					onClick={ () => history.push('/administration/buildings/add') }
+				>
+					Tilføj bygning
+				</Button>
+			</p>
 
-					{buildings ?
-						<TableContainer component={Paper}>
-							<Table stickyHeader className={classes.table} aria-label="buildings table">
-								<TableHead>
-									<TableRow className={classes.tableRow}>
-										<TableCell>Navn</TableCell>
-										<TableCell>Antal zoner</TableCell>
-										<TableCell>Antal brugere</TableCell>
-										<TableCell></TableCell>
-									</TableRow>
-								</TableHead>
-								<TableBody>
-									{buildings.map(building => (
-										<TableRow hover key={building.uuid} className={classes.tableRow}>
-											<TableCell>
-												{building.name}
-											</TableCell>
-											<TableCell>
-												{roomsData[building.uuid] ? roomsData[building.uuid] : 0}
-											</TableCell>
-											<TableCell>
-											</TableCell>
-											<TableCell align="right">
-												<IconButton onClick={() => history.push('/administration/zones/' + building.uuid + '/list')}>
-													<ListIcon />
-												</IconButton>
-												<IconButton onClick={() => history.push('/administration/buildings/' + building.uuid + '/edit')}>
-													<EditIcon />
-												</IconButton>
-												<IconButton onClick={() => confirmDelete(building.uuid)}>
-													<DeleteIcon />
-												</IconButton>
-											</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</TableContainer>
-						: <CircularLoader fill />}
-				</Paper>
-			</Grid>
-			<Grid container item xs={3}>
-				<Paper elevation={3} className={classes.adminPaperContainer}>
-				</Paper>
-			</Grid>
-		</Grid >
+			{buildings ?
+				<TableContainer component={Paper}>
+					<Table stickyHeader className={classes.table} aria-label="buildings table">
+						<TableHead>
+							<TableRow className={classes.tableRow}>
+								<TableCell>Navn</TableCell>
+								<TableCell>Antal zoner</TableCell>
+								<TableCell>Antal brugere</TableCell>
+								<TableCell></TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{buildings.map(building => (
+								<TableRow hover key={building.uuid} className={classes.tableRow}>
+									<TableCell>
+										{building.name}
+									</TableCell>
+									<TableCell>
+										{roomsData[building.uuid] ? roomsData[building.uuid] : 0}
+									</TableCell>
+									<TableCell>
+									</TableCell>
+									<TableCell align="right">
+										<IconButton onClick={() => history.push('/administration/zones/' + building.uuid + '/list')}>
+											<ListIcon />
+										</IconButton>
+										<IconButton onClick={() => history.push('/administration/buildings/' + building.uuid + '/edit')}>
+											<EditIcon />
+										</IconButton>
+										<IconButton onClick={() => confirmDelete(building.uuid)}>
+											<DeleteIcon />
+										</IconButton>
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+				: <CircularLoader fill />}
+		</Paper>
 	);
 }
 

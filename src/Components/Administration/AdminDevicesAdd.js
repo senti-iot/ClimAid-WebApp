@@ -5,7 +5,6 @@ import Alert from '@material-ui/lab/Alert';
 
 import { getRooms, getRoom, addRoomDevice } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
-import AdminMenu from './AdminMenu';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
 const AdminDevicesAdd = props => {
@@ -108,108 +107,95 @@ const AdminDevicesAdd = props => {
 
 	return (
 		!loading ? (
-			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={3}>
-				<Grid container item xs={3}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<AdminMenu />
-					</Paper>
-				</Grid>
-				<Grid container item xs={6}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<div className={classes.adminHeader}>Zone oprettelse</div>
+			<Paper elevation={3} className={classes.adminPaperContainer}>
+				<div className={classes.adminHeader}>Zone oprettelse</div>
 
-						<Grid container justify={'flex-start'} spacing={0}>
-							<form>
-								<Grid item xs={12} style={{ marginTop: 20 }}>
-									<TextField
-										select
-										id="select-building"
-										label="Tilknyt zone"
-										value={room}
-										onChange={handleRoomChange}
-										className={classes.selectField}
-										error={roomError.length ? true : false}
-										helperText={roomError}
-									>
-										{rooms.map(r => {
-											return <MenuItem key={r.uuid} value={r.uuid}>{r.name}</MenuItem>;
-										})}
-									</TextField>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'device'}
-										label='Sensor ID'
-										value={device}
-										onChange={(e) => setDevice(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										error={deviceError.length ? true : false}
-										helperText={deviceError}
-										className={classes.textField}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'deviceUuid'}
-										label='Sensor UUID'
-										value={deviceUuid}
-										onChange={(e) => setDeviceUuid(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										error={deviceUuidError.length ? true : false}
-										helperText={deviceUuidError}
-										className={classes.textField}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'qualitativeDevice'}
-										label='Kvalitativ sensor ID'
-										value={qualitativeDevice}
-										onChange={(e) => setQualitativeDevice(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										className={classes.textField}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'qualitativeDeviceUuid'}
-										label='Kvalitativ sensor UUID'
-										value={qualitativeDeviceUuid}
-										onChange={(e) => setQualitativeDeviceUuid(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										className={classes.textField}
-									/>
-								</Grid>
-							</form>
-							<Grid item xs={12} style={{ marginTop: 40 }}>
-								<Grid container>
-									<Grid container item xs={12} justify="flex-end">
-										<ButtonGroup variant="contained" color="primary">
-											<Button onClick={handleCancel}>Annuller</Button>
-											<Button onClick={handleSave}>Gem</Button>
-										</ButtonGroup>
-									</Grid>
-								</Grid>
-
+				<Grid container justify={'flex-start'} spacing={0}>
+					<form>
+						<Grid item xs={12} style={{ marginTop: 20 }}>
+							<TextField
+								select
+								id="select-building"
+								label="Tilknyt zone"
+								value={room}
+								onChange={handleRoomChange}
+								className={classes.selectField}
+								error={roomError.length ? true : false}
+								helperText={roomError}
+							>
+								{rooms.map(r => {
+									return <MenuItem key={r.uuid} value={r.uuid}>{r.name}</MenuItem>;
+								})}
+							</TextField>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'device'}
+								label='Sensor ID'
+								value={device}
+								onChange={(e) => setDevice(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								error={deviceError.length ? true : false}
+								helperText={deviceError}
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'deviceUuid'}
+								label='Sensor UUID'
+								value={deviceUuid}
+								onChange={(e) => setDeviceUuid(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								error={deviceUuidError.length ? true : false}
+								helperText={deviceUuidError}
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'qualitativeDevice'}
+								label='Kvalitativ sensor ID'
+								value={qualitativeDevice}
+								onChange={(e) => setQualitativeDevice(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'qualitativeDeviceUuid'}
+								label='Kvalitativ sensor UUID'
+								value={qualitativeDeviceUuid}
+								onChange={(e) => setQualitativeDeviceUuid(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								className={classes.textField}
+							/>
+						</Grid>
+					</form>
+					<Grid item xs={12} style={{ marginTop: 40 }}>
+						<Grid container>
+							<Grid container item xs={12} justify="flex-end">
+								<ButtonGroup variant="contained" color="primary">
+									<Button onClick={handleCancel}>Annuller</Button>
+									<Button onClick={handleSave}>Gem</Button>
+								</ButtonGroup>
 							</Grid>
 						</Grid>
-						<Snackbar open={alertSuccess} autoHideDuration={3000} onClose={handleAlertSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-							<Alert onClose={handleAlertSuccessClose} severity="success" elevation={6} variant="filled">Sensor tilknyttet!</Alert>
-						</Snackbar>
-						<Snackbar open={alertFail} autoHideDuration={3000} onClose={handleAlertFailClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-							<Alert onClose={handleAlertFailClose} severity="error" elevation={6} variant="filled">Der opstod en fejl!</Alert>
-						</Snackbar>
-					</Paper>
+
+					</Grid>
 				</Grid>
-				<Grid container item xs={3}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-					</Paper>
-				</Grid>
-			</Grid >
+				<Snackbar open={alertSuccess} autoHideDuration={3000} onClose={handleAlertSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+					<Alert onClose={handleAlertSuccessClose} severity="success" elevation={6} variant="filled">Sensor tilknyttet!</Alert>
+				</Snackbar>
+				<Snackbar open={alertFail} autoHideDuration={3000} onClose={handleAlertFailClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+					<Alert onClose={handleAlertFailClose} severity="error" elevation={6} variant="filled">Der opstod en fejl!</Alert>
+				</Snackbar>
+			</Paper>
 		) : (
 			<CircularLoader fill />
 		)

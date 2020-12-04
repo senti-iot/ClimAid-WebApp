@@ -6,7 +6,6 @@ import { DropzoneArea } from 'material-ui-dropzone';
 
 import { getRoom, updateRoomDevice, updateRoom, addRoomImage } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
-import AdminMenu from './AdminMenu';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 import AdminZoneMap from './AdminZoneMap';
 
@@ -159,133 +158,120 @@ const AdminZonesEdit = props => {
 
 	return (
 		!loading ? (
-			<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={3}>
-				<Grid container item xs={3}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<AdminMenu />
-					</Paper>
-				</Grid>
-				<Grid container item xs={6}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-						<div className={classes.adminHeader}>Zone redigering</div>
+			<Paper elevation={3} className={classes.adminPaperContainer}>
+				<div className={classes.adminHeader}>Zone redigering</div>
 
-						<Grid container justify={'flex-start'} spacing={0}>
-							<form>
-								<Grid item xs={12} style={{ marginTop: 20 }}>
-									<TextField
-										id="select-building"
-										label="Tilknyttet bygning"
-										value={building.name}
-										onChange={handleBuildingChange}
-										className={classes.textField}
-										variant='outlined'
-										inputProps={{ readOnly: true }}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'name'}
-										label='Navn'
-										value={name}
-										onChange={(e) => setName(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										error={nameError.length ? true : false}
-										helperText={nameError}
-										className={classes.textField}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'address'}
-										label='Adresse'
-										value={address}
-										onChange={(e) => setAddress(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										error={addressError.length ? true : false}
-										helperText={addressError}
-										className={classes.textField}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										id={'size'}
-										label='Størrelse'
-										value={size}
-										onChange={(e) => setSize(e.target.value)}
-										margin='normal'
-										variant='outlined'
-										error={sizeError.length ? true : false}
-										helperText={sizeError}
-										className={classes.textField}
-									/>
-								</Grid>
-								<Grid item xs={12} style={{ marginTop: 15 }}>
-									<TextField
-										id="primaryfunction"
-										select
-										label="Zone type"
-										value={primaryFunction}
-										onChange={(e) => setPrimaryFunction(e.target.value)}
-										error={primaryFunctionError.length ? true : false}
-										helperText={primaryFunctionError}
-										variant="outlined"
-										className={classes.textField}
-									>
-										{primaryFunctionOptions.map((option) => (
-											<MenuItem key={option} value={option}>
-												{option}
-											</MenuItem>
-										))}
-									</TextField>
-								</Grid>
-								<Grid item xs={12} style={{ marginTop: 20 }}>
-									<DropzoneArea
-										onChange={handleUpload}
-										acceptedFiles={['image/jpeg', 'image/png']}
-										showPreviewsInDropzone={false}
-										maxFileSize={1000000}
-										filesLimit={1}
-										showAlerts={false}
-										dropzoneText="Upload zone billede"
-									/>
-									{file ? <Typography variant="body1" style={{ marginTop: 10 }}>Valgt fil:  {file[0].name}</Typography> : ""}
-								</Grid>
-							</form>
+				<Grid container justify={'flex-start'} spacing={0}>
+					<form>
+						<Grid item xs={12} style={{ marginTop: 20 }}>
+							<TextField
+								id="select-building"
+								label="Tilknyttet bygning"
+								value={building.name}
+								onChange={handleBuildingChange}
+								className={classes.textField}
+								variant='outlined'
+								inputProps={{ readOnly: true }}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'name'}
+								label='Navn'
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								error={nameError.length ? true : false}
+								helperText={nameError}
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'address'}
+								label='Adresse'
+								value={address}
+								onChange={(e) => setAddress(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								error={addressError.length ? true : false}
+								helperText={addressError}
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id={'size'}
+								label='Størrelse'
+								value={size}
+								onChange={(e) => setSize(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								error={sizeError.length ? true : false}
+								helperText={sizeError}
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12} style={{ marginTop: 15 }}>
+							<TextField
+								id="primaryfunction"
+								select
+								label="Zone type"
+								value={primaryFunction}
+								onChange={(e) => setPrimaryFunction(e.target.value)}
+								error={primaryFunctionError.length ? true : false}
+								helperText={primaryFunctionError}
+								variant="outlined"
+								className={classes.textField}
+							>
+								{primaryFunctionOptions.map((option) => (
+									<MenuItem key={option} value={option}>
+										{option}
+									</MenuItem>
+								))}
+							</TextField>
+						</Grid>
+						<Grid item xs={12} style={{ marginTop: 20 }}>
+							<DropzoneArea
+								onChange={handleUpload}
+								acceptedFiles={['image/jpeg', 'image/png']}
+								showPreviewsInDropzone={false}
+								maxFileSize={1000000}
+								filesLimit={1}
+								showAlerts={false}
+								dropzoneText="Upload zone billede"
+							/>
+							{file ? <Typography variant="body1" style={{ marginTop: 10 }}>Valgt fil:  {file[0].name}</Typography> : ""}
+						</Grid>
+					</form>
 
-							{image ?
-								<Grid item xs={12} style={{ marginTop: 20 }}>
-									<InputLabel id="visibleTo-select-label">Placer sensorer</InputLabel>
-									<AdminZoneMap zone={zone} devices={devices} saveLocations={saveLocations} />
-								</Grid>
-								: ""}
+					{image ?
+						<Grid item xs={12} style={{ marginTop: 20 }}>
+							<InputLabel id="visibleTo-select-label">Placer sensorer</InputLabel>
+							<AdminZoneMap zone={zone} devices={devices} saveLocations={saveLocations} />
+						</Grid>
+						: ""}
 
-							<Grid item xs={12} style={{ marginTop: 40 }}>
-								<Grid container>
-									<Grid container item xs={12} justify="flex-end">
-										<ButtonGroup variant="contained" color="primary">
-											<Button onClick={handleCancel}>Annuller</Button>
-											<Button onClick={handleLevelsEdit}>Grænseværdier</Button>
-											<Button onClick={handleSave}>Gem</Button>
-										</ButtonGroup>
-									</Grid>
-								</Grid>
+					<Grid item xs={12} style={{ marginTop: 40 }}>
+						<Grid container>
+							<Grid container item xs={12} justify="flex-end">
+								<ButtonGroup variant="contained" color="primary">
+									<Button onClick={handleCancel}>Annuller</Button>
+									<Button onClick={handleLevelsEdit}>Grænseværdier</Button>
+									<Button onClick={handleSave}>Gem</Button>
+								</ButtonGroup>
 							</Grid>
 						</Grid>
-						<Snackbar open={alertSuccess} autoHideDuration={3000} onClose={handleAlertSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-							<Alert onClose={handleAlertSuccessClose} severity="success" elevation={6} variant="filled">Zone opdateret!</Alert>
-						</Snackbar>
-						<Snackbar open={alertFail} autoHideDuration={3000} onClose={handleAlertFailClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-							<Alert onClose={handleAlertFailClose} severity="error" elevation={6} variant="filled">Der opstod en fejl!</Alert>
-						</Snackbar>
-					</Paper>
+					</Grid>
 				</Grid>
-				<Grid container item xs={3}>
-					<Paper elevation={3} className={classes.adminPaperContainer}>
-					</Paper>
-				</Grid>
-			</Grid >
+				<Snackbar open={alertSuccess} autoHideDuration={3000} onClose={handleAlertSuccessClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+					<Alert onClose={handleAlertSuccessClose} severity="success" elevation={6} variant="filled">Zone opdateret!</Alert>
+				</Snackbar>
+				<Snackbar open={alertFail} autoHideDuration={3000} onClose={handleAlertFailClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+					<Alert onClose={handleAlertFailClose} severity="error" elevation={6} variant="filled">Der opstod en fejl!</Alert>
+				</Snackbar>
+			</Paper>
 		) : (
 			<CircularLoader fill />
 		)
