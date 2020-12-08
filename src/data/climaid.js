@@ -193,7 +193,7 @@ export const getCsvExport = async (device, period) => {
 
 // DEVICE DATA
 
-export const getMeassurement = async (device, gauge) => {
+export const getMeassurement = async (device, gauge, datafield) => {
 	let from = 0;
 	let to = 0;
 
@@ -209,7 +209,7 @@ export const getMeassurement = async (device, gauge) => {
 			break;
 	}
 
-	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + from + '/' + to + '/' + gauge.type + '/' + gauge.function).then(rs => rs.data);
+	let data = await servicesAPI.get('/v1/devicedata-clean/' + device + '/' + from + '/' + to + '/' + datafield + '/' + gauge.function).then(rs => rs.data);
 	return data;
 };
 

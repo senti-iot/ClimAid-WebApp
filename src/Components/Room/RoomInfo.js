@@ -20,13 +20,13 @@ const RoomInfo = (props) => {
 			let dataDevice = null;
 			await Promise.all(
 				room.devices.map(async device => {
-					if (device.type === 'data') {
-						dataDevice = device.device;
-					}
+					dataDevice = device.device;
+
 					if (device.gauges && device.gauges.length) {
 						return await Promise.all(
 							device.gauges.map(async (gauge) => {
-								let value = await getMeassurement(device.device, gauge);
+								let datafield = (device.datafields && device.datafields[gauge.type]) ? device.datafields[gauge.type] : gauge.type;
+								let value = await getMeassurement(device.device, gauge, datafield);
 								values[gauge.uuid] = value;
 							})
 						)
