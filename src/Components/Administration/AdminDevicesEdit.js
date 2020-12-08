@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Grid, Paper, TextField, Button, ButtonGroup, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import { getDevice, updateRoomDevice } from 'data/climaid';
+import { getDevice, updateRoomDevice, getSentiDevices } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
@@ -15,14 +16,16 @@ const AdminDevicesEdit = props => {
 
 	const [loading, setLoading] = useState(true);
 	const [room, setRoom] = useState(null);
+	const [devices, setDevices] = useState(null);
+	const [sentiDevice, setSentiDevice] = useState(null);
+	const [sentiQualitativeDevice, setSentiQualitativeDevice] = useState(null);
 	const [device, setDevice] = useState(null);
 	const [deviceId, setDeviceId] = useState('');
-	const [deviceIdError, setDeviceIdError] = useState('');
 	const [deviceUuid, setDeviceUuid] = useState('');
-	const [deviceUuidError, setDeviceUuidError] = useState('');
 	const [qualitativeDevice, setQualitativeDevice] = useState('');
 	const [qualitativeDeviceUuid, setQualitativeDeviceUuid] = useState('');
 	const [gauges, setGauges] = useState('');
+	const [datafields, setDatafields] = useState('');
 
 	useEffect(() => {
 		async function fetchData() {
@@ -37,7 +40,33 @@ const AdminDevicesEdit = props => {
 				if (deviceData.gauges.length) {
 					setGauges(JSON.stringify(deviceData.gauges));
 				}
+				if (deviceData.gauges.length) {
+					setDatafields(JSON.stringify(deviceData.datafields));
+				}
 				setRoom(deviceData.room);
+
+				const devicesData = await getSentiDevices();
+
+				if (devicesData) {
+					setDevices(devicesData);
+
+					if (deviceData.device) {
+						let result = devicesData.filter(obj => {
+							return obj.id === deviceData.device
+						});
+						if (result && result.length) {
+							setSentiDevice(result[0]);
+						}
+					}
+					if (deviceData.qualitativeDevice) {
+						let result = devicesData.filter(obj => {
+							return obj.id === deviceData.qualitativeDevice
+						});
+						if (result && result.length) {
+							setSentiQualitativeDevice(result[0]);
+						}
+					}
+				}
 
 				setLoading(false);
 			}
@@ -67,38 +96,24 @@ const AdminDevicesEdit = props => {
 	};
 
 	const handleSave = async () => {
-		let isOK = true;
+		let data = { ...device };
+		data.device = deviceId;
+		data.deviceUuid = deviceUuid;
+		data.qualitativeDevice = qualitativeDevice;
+		data.qualitativeDeviceUuid = qualitativeDeviceUuid;
+		data.gauges = gauges ? JSON.parse(gauges) : '';
+		data.datafields = datafields ? JSON.parse(datafields) : '';
 
-		setDeviceIdError('');
-		setDeviceUuidError('');
+		let updated = await updateRoomDevice(room.uuid, data);
 
-		if (!deviceId.length) {
-			setDeviceIdError('Du skal indtaste sensor id');
-			isOK = false;
-		} else if (!deviceUuid.length) {
-			setDeviceUuidError('Du skal indtaste sensor uuid');
-			isOK = false;
-		}
+		if (!updated) {
+			setAlertFail(true);
+		} else {
+			setAlertSuccess(true);
 
-		if (isOK) {
-			const data = { ...device };
-			data.device = deviceId;
-			data.deviceUuid = deviceUuid;
-			data.qualitativeDevice = qualitativeDevice;
-			data.qualitativeDeviceUuid = qualitativeDeviceUuid;
-			data.gauges = JSON.parse(gauges);
-
-			let updated = await updateRoomDevice(room.uuid, data);
-
-			if (!updated) {
-				setAlertFail(true);
-			} else {
-				setAlertSuccess(true);
-
-				setTimeout(function () {
-					props.history.push('/administration/devices/' + room.uuid + '/list');
-				}, 500);
-			}
+			setTimeout(function () {
+				props.history.push('/administration/devices/' + room.uuid + '/list');
+			}, 500);
 		}
 	};
 
@@ -120,51 +135,63 @@ const AdminDevicesEdit = props => {
 							/>
 						</Grid>
 						<Grid item xs={12}>
-							<TextField
-								id={'deviceId'}
-								label='Sensor ID'
-								value={deviceId}
-								onChange={(e) => setDeviceId(e.target.value)}
-								margin='normal'
-								variant='outlined'
-								error={deviceIdError.length ? true : false}
-								helperText={deviceIdError}
-								className={classes.textField}
+							<Autocomplete
+								id="device-search"
+								key="device"
+								freeSolo
+								options={devices}
+								value={sentiDevice}
+								getOptionLabel={(option) =>
+									typeof option === 'string' ? option : option.name
+								}
+								onChange={(event, option) => {
+									if (option) {
+										setSentiDevice(option);
+										setDeviceId(option.id);
+										setDeviceUuid(option.uuid);
+									}
+								}}
+								renderInput={(params) => (
+									<TextField
+										{...params}
+										label="Sensor"
+										margin="normal"
+										variant="outlined"
+										InputProps={{ ...params.InputProps, className: classes.searchInput }}
+										classes={{ root: classes.searchInputRoot }}
+
+									/>
+								)}
 							/>
 						</Grid>
 						<Grid item xs={12}>
-							<TextField
-								id={'deviceUuid'}
-								label='Sensor UUID'
-								value={deviceUuid}
-								onChange={(e) => setDeviceUuid(e.target.value)}
-								margin='normal'
-								variant='outlined'
-								error={deviceUuidError.length ? true : false}
-								helperText={deviceUuidError}
-								className={classes.textField}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								id={'qualitativeDevice'}
-								label='Kvalitativ sensor ID'
-								value={qualitativeDevice}
-								onChange={(e) => setQualitativeDevice(e.target.value)}
-								margin='normal'
-								variant='outlined'
-								className={classes.textField}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								id={'qualitativeDeviceUuid'}
-								label='Kvalitativ sensor UUID'
-								value={qualitativeDeviceUuid}
-								onChange={(e) => setQualitativeDeviceUuid(e.target.value)}
-								margin='normal'
-								variant='outlined'
-								className={classes.textField}
+							<Autocomplete
+								id="qualitativeDevice-search"
+								key="qualitativeDevice"
+								freeSolo
+								options={devices}
+								value={sentiQualitativeDevice}
+								getOptionLabel={(option) =>
+									typeof option === 'string' ? option : option.name
+								}
+								onChange={(event, option) => {
+									if (option) {
+										setSentiQualitativeDevice(option);
+										setQualitativeDevice(option.id);
+										setQualitativeDeviceUuid(option.uuid);
+									}
+								}}
+								renderInput={(params) => (
+									<TextField
+										{...params}
+										label="Kvalitativ sensor"
+										margin="normal"
+										variant="outlined"
+										InputProps={{ ...params.InputProps, className: classes.searchInput }}
+										classes={{ root: classes.searchInputRoot }}
+
+									/>
+								)}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -174,6 +201,18 @@ const AdminDevicesEdit = props => {
 								label='Målere'
 								value={gauges}
 								onChange={(e) => setGauges(e.target.value)}
+								margin='normal'
+								variant='outlined'
+								className={classes.textField}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								multiline={true}
+								id={'datafields'}
+								label='Datafelter'
+								value={datafields}
+								onChange={(e) => setDatafields(e.target.value)}
 								margin='normal'
 								variant='outlined'
 								className={classes.textField}

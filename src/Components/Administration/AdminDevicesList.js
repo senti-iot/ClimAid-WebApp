@@ -136,7 +136,7 @@ const AdminDevicesList = (props) => {
 												{device.room.name}
 											</TableCell>
 											<TableCell align="right">
-												<IconButton onClick={() => handleQrCode(device.uuid)}>
+												<IconButton onClick={() => handleQrCode(device.uuid)} disabled={device.qualitativeDeviceUuid ? false : true}>
 													<img src={QrCodeIcon} alt="Generer QR kode" />
 												</IconButton>
 												<IconButton onClick={() => history.push('/administration/devices/' + device.uuid + '/edit')}>

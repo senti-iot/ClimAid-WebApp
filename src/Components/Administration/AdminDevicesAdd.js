@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Grid, Paper, TextField, Button, ButtonGroup, MenuItem, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
-import { getRooms, getRoom, addRoomDevice } from 'data/climaid';
+import { getRooms, getRoom, addRoomDevice, getSentiDevices } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
@@ -17,12 +18,13 @@ const AdminDevicesAdd = props => {
 	const [rooms, setRooms] = useState(null);
 	const [room, setRoom] = useState('');
 	const [roomError, setRoomError] = useState('');
-	const [device, setDevice] = useState('');
-	const [deviceError, setDeviceError] = useState('');
+	const [devices, setDevices] = useState(null);
+	const [deviceId, setDeviceId] = useState('');
 	const [deviceUuid, setDeviceUuid] = useState('');
-	const [deviceUuidError, setDeviceUuidError] = useState('');
 	const [qualitativeDevice, setQualitativeDevice] = useState('');
 	const [qualitativeDeviceUuid, setQualitativeDeviceUuid] = useState('');
+	const [gauges, setGauges] = useState('');
+	const [datafields, setDatafields] = useState('');
 
 	useEffect(() => {
 		async function fetchData() {
@@ -38,6 +40,12 @@ const AdminDevicesAdd = props => {
 				if (roomData) {
 					setRoom(roomData.uuid);
 				}
+			}
+
+			const devicesData = await getSentiDevices();
+
+			if (devicesData) {
+				setDevices(devicesData);
 			}
 
 			setLoading(false);
@@ -74,22 +82,24 @@ const AdminDevicesAdd = props => {
 		let isOK = true;
 
 		setRoomError('');
-		setDeviceError('');
-		setDeviceUuidError('');
 
 		if (!room.length) {
 			setRoomError('Du skal vælge en tilknyttet zone');
 			isOK = false;
-		} else if (!device.length) {
-			setDeviceError('Du skal indtaste sensor id');
-			isOK = false;
-		} else if (!deviceUuid.length) {
-			setDeviceUuidError('Du skal indtaste sensor uuid');
-			isOK = false;
 		}
 
 		if (isOK) {
-			const data = { roomUuid: room, device: device, deviceUuid: deviceUuid, qualitativeDevice: qualitativeDevice, qualitativeDeviceUuid: qualitativeDeviceUuid, type: 'data', position: [], gauges: [] };
+			let data = {};
+			data.roomUuid = room;
+			data.device = deviceId;
+			data.deviceUuid = deviceUuid;
+			data.qualitativeDevice = qualitativeDevice;
+			data.qualitativeDeviceUuid = qualitativeDeviceUuid;
+			data.position = [];
+			data.gauges = gauges ? JSON.parse(gauges) : [];
+			if (datafields.length) {
+				data.datafields = JSON.parse(datafields);
+			}
 
 			let added = await addRoomDevice(uuid, data);
 
@@ -129,48 +139,80 @@ const AdminDevicesAdd = props => {
 							</TextField>
 						</Grid>
 						<Grid item xs={12}>
+							<Autocomplete
+								id="device-search"
+								key="device"
+								freeSolo
+								options={devices}
+								getOptionLabel={(option) =>
+									typeof option === 'string' ? option : option.name
+								}
+								onChange={(event, option) => {
+									if (option) {
+										setDeviceId(option.id);
+										setDeviceUuid(option.uuid);
+									}
+								}}
+								renderInput={(params) => (
+									<TextField
+										{...params}
+										label="Sensor"
+										margin="normal"
+										variant="outlined"
+										InputProps={{ ...params.InputProps, className: classes.searchInput }}
+										classes={{ root: classes.searchInputRoot }}
+
+									/>
+								)}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<Autocomplete
+								id="qualitativeDevice-search"
+								key="qualitativeDevice"
+								freeSolo
+								options={devices}
+								getOptionLabel={(option) =>
+									typeof option === 'string' ? option : option.name
+								}
+								onChange={(event, option) => {
+									if (option) {
+										setQualitativeDevice(option.id);
+										setQualitativeDeviceUuid(option.uuid);
+									}
+								}}
+								renderInput={(params) => (
+									<TextField
+										{...params}
+										label="Kvalitativ sensor"
+										margin="normal"
+										variant="outlined"
+										InputProps={{ ...params.InputProps, className: classes.searchInput }}
+										classes={{ root: classes.searchInputRoot }}
+
+									/>
+								)}
+							/>
+						</Grid>
+						<Grid item xs={12}>
 							<TextField
-								id={'device'}
-								label='Sensor ID'
-								value={device}
-								onChange={(e) => setDevice(e.target.value)}
+								multiline={true}
+								id={'gauges'}
+								label='Målere'
+								value={gauges}
+								onChange={(e) => setGauges(e.target.value)}
 								margin='normal'
 								variant='outlined'
-								error={deviceError.length ? true : false}
-								helperText={deviceError}
 								className={classes.textField}
 							/>
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
-								id={'deviceUuid'}
-								label='Sensor UUID'
-								value={deviceUuid}
-								onChange={(e) => setDeviceUuid(e.target.value)}
-								margin='normal'
-								variant='outlined'
-								error={deviceUuidError.length ? true : false}
-								helperText={deviceUuidError}
-								className={classes.textField}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								id={'qualitativeDevice'}
-								label='Kvalitativ sensor ID'
-								value={qualitativeDevice}
-								onChange={(e) => setQualitativeDevice(e.target.value)}
-								margin='normal'
-								variant='outlined'
-								className={classes.textField}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								id={'qualitativeDeviceUuid'}
-								label='Kvalitativ sensor UUID'
-								value={qualitativeDeviceUuid}
-								onChange={(e) => setQualitativeDeviceUuid(e.target.value)}
+								multiline={true}
+								id={'datafields'}
+								label='Datafelter'
+								value={datafields}
+								onChange={(e) => setDatafields(e.target.value)}
 								margin='normal'
 								variant='outlined'
 								className={classes.textField}

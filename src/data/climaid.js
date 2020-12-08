@@ -180,6 +180,11 @@ export const getDevices = async () => {
 	return data;
 };
 
+export const getSentiDevices = async () => {
+	let data = await servicesAPI.get('/v2/devices').then(rs => rs.data);
+	return data;
+};
+
 export const getWeather = async (date, lat, long) => {
 	let data = await weatherApi.get('/' + date + '/' + lat + '/' + long + '/da').then(rs => rs.data);
 	// console.log(data);
