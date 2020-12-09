@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import FolderIcon from '@material-ui/icons/Folder';
 import { useHistory } from 'react-router';
 
 import adminStyles from 'Styles/adminStyles';
 
-const AdminMenu = (props) => {
+const AdminMenu = () => {
 	const classes = adminStyles();
 	const history = useHistory();
 
+	const [activeMenuItem, setActiveMenuItem] = useState('');
+
 	const goToPage = (page) => {
+		setActiveMenuItem(page);
 		history.push(page);
 	}
 
@@ -17,39 +20,39 @@ const AdminMenu = (props) => {
 		<List>
 			<ListItem className={classes.adminMenuItem}>
 				<ListItemIcon>
-					<FolderIcon />
+					<FolderIcon className={activeMenuItem === '/administration/organisation' ? classes.adminMenuItemIconActive : classes.adminMenuItemIcon} />
 				</ListItemIcon>
-				<ListItemText primary="Organisation" classes={{ primary: classes.adminMenuItemLabel }} />
+				<ListItemText primary="Organisation" classes={{ primary: activeMenuItem === '/administration/organisation' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/users/list')}>
 				<ListItemIcon>
-					<FolderIcon />
+					<FolderIcon className={activeMenuItem === '/administration/users/list' ? classes.adminMenuItemIconActive : classes.adminMenuItemIcon} />
 				</ListItemIcon>
-				<ListItemText primary="Bruger" classes={{ primary: classes.adminMenuItemLabel }} />
+				<ListItemText primary="Bruger" classes={{ primary: activeMenuItem === '/administration/users/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/devices/list')}>
 				<ListItemIcon>
-					<FolderIcon />
+					<FolderIcon className={activeMenuItem === '/administration/devices/list' ? classes.adminMenuItemIconActive : classes.adminMenuItemIcon} />
 				</ListItemIcon>
-				<ListItemText primary="Sensor" classes={{ primary: classes.adminMenuItemLabel }} />
+				<ListItemText primary="Sensor" classes={{ primary: activeMenuItem === '/administration/devices/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/zones/list')}>
 				<ListItemIcon>
-					<FolderIcon />
+					<FolderIcon className={activeMenuItem === '/administration/zones/list' ? classes.adminMenuItemIconActive : classes.adminMenuItemIcon} />
 				</ListItemIcon>
-				<ListItemText primary="Zone" classes={{ primary: classes.adminMenuItemLabel }} />
+				<ListItemText primary="Zone" classes={{ primary: activeMenuItem === '/administration/zones/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem} onClick={() => goToPage('/administration/buildings/list')}>
 				<ListItemIcon>
-					<FolderIcon />
+					<FolderIcon className={activeMenuItem === '/administration/buildings/list' ? classes.adminMenuItemIconActive : classes.adminMenuItemIcon} />
 				</ListItemIcon>
-				<ListItemText primary="Bygning" classes={{ primary: classes.adminMenuItemLabel }} />
+				<ListItemText primary="Bygning" classes={{ primary: activeMenuItem === '/administration/buildings/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 			<ListItem className={classes.adminMenuItem}>
 				<ListItemIcon>
-					<FolderIcon />
+					<FolderIcon className={activeMenuItem === '/administration/alarms/list' ? classes.adminMenuItemIconActive : classes.adminMenuItemIcon} />
 				</ListItemIcon>
-				<ListItemText primary="Alarm" classes={{ primary: classes.adminMenuItemLabel }} />
+				<ListItemText primary="Alarm" classes={{ primary: activeMenuItem === '/administration/alarms/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 		</List>
 	)

@@ -11,7 +11,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
 import { Add } from 'variables/icons';
-import { getUser, getOrgUsers } from 'data/users';
+import { getUser, getUsers } from 'data/users';
 import adminStyles from 'Styles/adminStyles';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
@@ -25,7 +25,8 @@ const AdminUsersList = props => {
 			const user = await getUser();
 
 			if (user.org) {
-				let data = await getOrgUsers(user.org.uuid);
+				let data = await getUsers();
+
 				if (data) {
 				 	setUsers(data);
 				}
@@ -61,6 +62,8 @@ const AdminUsersList = props => {
 							<TableRow className={classes.tableRow}>
 								<TableCell>Navn</TableCell>
 								<TableCell>E-mail</TableCell>
+								<TableCell>Adgang</TableCell>
+								<TableCell>Kontoaktivitet</TableCell>
 								<TableCell></TableCell>
 							</TableRow>
 						</TableHead>
@@ -72,6 +75,11 @@ const AdminUsersList = props => {
 									</TableCell>
 									<TableCell>
 										{user.email}
+									</TableCell>
+									<TableCell>
+									</TableCell>
+									<TableCell>
+										{user.lastLoggedIn !== 'Invalid date' ? "Aktiv" : "Ikke aktiveret"}
 									</TableCell>
 									<TableCell align="right">
 										<IconButton onClick={() => history.push('/administration/users/' + user.uuid + '/edit')}>

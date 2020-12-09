@@ -19,7 +19,20 @@ const adminStyles = makeStyles(theme => ({
 		cursor: 'pointer',
 	},
 	adminMenuItemLabel: {
-		fontSize: 16
+		fontSize: 16,
+		color: '#babebe',
+	},
+	adminMenuItemLabelActive: {
+		fontSize: 16,
+		color: '#000',
+	},
+	adminMenuItemIcon: {
+		fontSize: '1.5rem',
+		color: '#babebe',
+	},
+	adminMenuItemIconActive: {
+		fontSize: '1.5rem',
+		color: '#000',
 	},
 	tableRow: {
 		height: 40
