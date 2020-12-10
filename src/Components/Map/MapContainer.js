@@ -19,6 +19,7 @@ import { getBuildings, getBuildingColorData, getBuildingDevices, getDeviceOnline
 import MapPopupBuilding from 'Components/Map/MapPopupBuilding';
 import { useSelector } from 'Hooks';
 import { ItemG } from 'Components';
+import CircularLoader from 'Components/Loaders/CircularLoader';
 
 const MapContainer = (props) => {
 	const [buildings, setBuildings] = useState(null);
@@ -99,6 +100,7 @@ const MapContainer = (props) => {
 				setBuildings(buildingsWithColor);
 
 				setLoading(false);
+				console.log('loading false');
 			}
 		}
 
@@ -256,7 +258,7 @@ const MapContainer = (props) => {
 							: ""}
 					</Map>
 				</>
-				: "" }
+				: <CircularLoader fill /> }
 		</div>
 	);
 }
