@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { Grid, Paper } from '@material-ui/core';
 
 import { ItemG, GridContainer } from 'Components';
-import Administration from 'Components/Administration/Administration';
+import AdministrationOrganisation from 'Components/Administration/AdministrationOrganisation';
 import AdminBuildingsList from 'Components/Administration/AdminBuildingsList';
 import AdminBuildingsAdd from 'Components/Administration/AdminBuildingsAdd';
 import AdminBuildingsEdit from 'Components/Administration/AdminBuildingsEdit';
@@ -24,6 +24,7 @@ import adminStyles from 'Styles/adminStyles';
 
 const AdministrationRoute = () => {
 	const history = useHistory();
+
 	const classes = adminStyles();
 
 	return (
@@ -31,7 +32,7 @@ const AdministrationRoute = () => {
 			<ItemG xs={12}>
 				<Grid container justify={'flex-start'} alignItems={'flex-start'} spacing={3}>
 					<Grid container item xs={3} xl={2}>
-						<Paper elevation={3} className={classes.adminPaperContainer}>
+						<Paper elevation={3} className={classes.adminPaperContainerMenu}>
 							<AdminMenu />
 						</Paper>
 					</Grid>
@@ -76,10 +77,10 @@ const AdministrationRoute = () => {
 							<Route path={'/administration/buildings/view/:uuid'}>
 								<AdminBuildingsView history={history} />
 							</Route>
-							<Route path={'/administration'}>
-								<Administration />
+							<Route path={'/administration/organisation'}>
+								<AdministrationOrganisation />
 							</Route>
-							<Redirect path={'*'} to={'/administration'}></Redirect>
+							<Redirect path={'*'} to={'/administration/organisation'}></Redirect>
 						</Switch>
 					</Grid>
 					<Grid container item xs={3} xl={2}>

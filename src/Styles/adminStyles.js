@@ -6,6 +6,13 @@ const adminStyles = makeStyles(theme => ({
 		padding: 30,
 		width: '100%'
 	},
+	adminPaperContainerMenu: {
+		backgroundColor: '#ffffff',
+		paddingTop: 30,
+		paddingLeft: 30,
+		paddingBottom: 30,
+		width: '100%'
+	},
 	adminHeader: {
 		fontSize: 34,
 		fontWeight: 300,
@@ -18,21 +25,21 @@ const adminStyles = makeStyles(theme => ({
 	adminMenuItem: {
 		cursor: 'pointer',
 	},
+	adminMenuItemActive: {
+		cursor: 'pointer',
+		borderRight: 'solid 4px #96c4c7',
+	},
 	adminMenuItemLabel: {
-		fontSize: 16,
+		fontSize: 18,
 		color: '#babebe',
 	},
 	adminMenuItemLabelActive: {
-		fontSize: 16,
+		fontSize: 18,
 		color: '#000',
 	},
 	adminMenuItemIcon: {
-		fontSize: '1.5rem',
+		width: 35,
 		color: '#babebe',
-	},
-	adminMenuItemIconActive: {
-		fontSize: '1.5rem',
-		color: '#000',
 	},
 	tableRow: {
 		height: 40

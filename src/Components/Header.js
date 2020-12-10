@@ -1,9 +1,10 @@
 import React from 'react';
 import { AppBar, Toolbar, ButtonBase, Grid } from '@material-ui/core';
+import { useHistory } from 'react-router';
+
 import HeaderLinks from './HeaderLinks';
 import headerStyles from 'Styles/headerStyle';
 import logo from 'assets/logo.png'
-import { useHistory } from 'react-router'
 import { useLocalization } from 'Hooks';
 import { ItemG } from 'Components';
 

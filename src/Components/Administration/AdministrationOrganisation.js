@@ -3,7 +3,7 @@ import { Paper } from '@material-ui/core';
 
 import adminStyles from 'Styles/adminStyles';
 
-const Administration = () => {
+const AdministrationOrganisation = () => {
 	const classes = adminStyles();
 
 	return (
@@ -12,4 +12,4 @@ const Administration = () => {
 	);
 }
 
-export default Administration;
+export default AdministrationOrganisation;

@@ -79,7 +79,7 @@ const AdminUsersList = props => {
 									<TableCell>
 									</TableCell>
 									<TableCell>
-										{user.lastLoggedIn !== 'Invalid date' ? "Aktiv" : "Ikke aktiveret"}
+										{user.lastLoggedIn ? "Aktiv" : "Ikke aktiveret"}
 									</TableCell>
 									<TableCell align="right">
 										<IconButton onClick={() => history.push('/administration/users/' + user.uuid + '/edit')}>
