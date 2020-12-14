@@ -141,11 +141,16 @@ const AdminDevicesEdit = props => {
 								freeSolo
 								options={devices}
 								value={sentiDevice}
+								clearText='Ryd felt'
 								getOptionLabel={(option) =>
 									typeof option === 'string' ? option : option.name
 								}
 								onChange={(event, option) => {
-									if (option) {
+									if (!option) {
+										setSentiDevice('');
+										setDeviceId(null);
+										setDeviceUuid('');
+									} else {
 										setSentiDevice(option);
 										setDeviceId(option.id);
 										setDeviceUuid(option.uuid);
@@ -171,11 +176,16 @@ const AdminDevicesEdit = props => {
 								freeSolo
 								options={devices}
 								value={sentiQualitativeDevice}
+								clearText='Ryd felt'
 								getOptionLabel={(option) =>
 									typeof option === 'string' ? option : option.name
 								}
 								onChange={(event, option) => {
-									if (option) {
+									if (!option) {
+										setSentiQualitativeDevice(null);
+										setQualitativeDevice(null);
+										setQualitativeDeviceUuid('');
+									} else {
 										setSentiQualitativeDevice(option);
 										setQualitativeDevice(option.id);
 										setQualitativeDeviceUuid(option.uuid);

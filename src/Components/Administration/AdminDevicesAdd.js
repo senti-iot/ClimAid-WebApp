@@ -144,11 +144,15 @@ const AdminDevicesAdd = props => {
 								key="device"
 								freeSolo
 								options={devices}
+								clearText='Ryd felt'
 								getOptionLabel={(option) =>
 									typeof option === 'string' ? option : option.name
 								}
 								onChange={(event, option) => {
-									if (option) {
+									if (!option) {
+										setDeviceId(null);
+										setDeviceUuid('');
+									} else {
 										setDeviceId(option.id);
 										setDeviceUuid(option.uuid);
 									}
@@ -172,11 +176,15 @@ const AdminDevicesAdd = props => {
 								key="qualitativeDevice"
 								freeSolo
 								options={devices}
+								clearText='Ryd felt'
 								getOptionLabel={(option) =>
 									typeof option === 'string' ? option : option.name
 								}
 								onChange={(event, option) => {
-									if (option) {
+									if (!option) {
+										setQualitativeDevice(null);
+										setQualitativeDeviceUuid('');
+									} else {
 										setQualitativeDevice(option.id);
 										setQualitativeDeviceUuid(option.uuid);
 									}
