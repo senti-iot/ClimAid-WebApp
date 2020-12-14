@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography, TextField, ButtonGroup, Button, Snackbar, Grid, Paper, MenuItem, FormControl, InputLabel, Input, Select, Chip } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
@@ -24,9 +24,12 @@ const MenuProps = {
 
 const AdminBuildingsEdit = (props) => {
 	const classes = adminStyles();
+	const { uuid } = useParams();
+	const buildingMapRef = useRef();
+
 	const [alertSuccess, setAlertSuccess] = useState(false);
 	const [alertFail, setAlertFail] = useState(false);
-	const { uuid } = useParams();
+	const [alertPlacements, setAlertPlacementsFail] = useState(false);
 
 	const [loading, setLoading] = useState(true);
 	const [orgs, setOrgs] = useState([]);
@@ -47,6 +50,7 @@ const AdminBuildingsEdit = (props) => {
 	const [visibleTo, setVisibleTo] = useState([]);
 	const [file, setFile] = useState(null);
 	const [image, setImage] = useState(null);
+	const [isPlacingZones, setIsPlacingZones] = useState(false);
 
 	const primaryFunctionOptions = ['Kontor', 'Undervisning', 'Kantine', 'Mødelokale', 'Lager', 'Køkken'];
 
@@ -103,6 +107,14 @@ const AdminBuildingsEdit = (props) => {
 		setAlertFail(false);
 	}
 
+	const handleAlertPlacementsClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setAlertPlacementsFail(false);
+	}
+
 	const handleCancel = () => {
 		props.history.push('/administration/buildings/list');
 	}
@@ -110,27 +122,33 @@ const AdminBuildingsEdit = (props) => {
 	const handleSave = async () => {
 		let isOK = true;
 
-		setNameError('');
-		setAddressError('');
-		setLatLongError('');
-		setSizeError('');
-		setPrimaryFunctionError('');
+		if (isPlacingZones) {
+			setAlertPlacementsFail(true);
 
-		if (!name.length) {
-			setNameError('Du skal indtaste et navn på bygningen');
 			isOK = false;
-		} else if (!address.length) {
-			setAddressError('Du skal indtaste en adresse på bygningen');
-			isOK = false;
-		} else if (!latlong.length) {
-			setLatLongError('Du skal indtaste en lokation på bygningen');
-			isOK = false;
-		} else if (!size.length) {
-			setSizeError('Du skal indtaste en størrelse på bygningen');
-			isOK = false;
-		} else if (!primaryFunction.length) {
-			setPrimaryFunctionError('Du skal vælge en primær funktion på bygningen');
-			isOK = false;
+		} else {
+			setNameError('');
+			setAddressError('');
+			setLatLongError('');
+			setSizeError('');
+			setPrimaryFunctionError('');
+
+			if (!name.length) {
+				setNameError('Du skal indtaste et navn på bygningen');
+				isOK = false;
+			} else if (!address.length) {
+				setAddressError('Du skal indtaste en adresse på bygningen');
+				isOK = false;
+			} else if (!latlong.length) {
+				setLatLongError('Du skal indtaste en lokation på bygningen');
+				isOK = false;
+			} else if (!size.length) {
+				setSizeError('Du skal indtaste en størrelse på bygningen');
+				isOK = false;
+			} else if (!primaryFunction.length) {
+				setPrimaryFunctionError('Du skal vælge en primær funktion på bygningen');
+				isOK = false;
+			}
 		}
 
 		if (isOK) {
@@ -213,6 +231,18 @@ const AdminBuildingsEdit = (props) => {
 			} else {
 				setLatLong(addresLookupResult[0]['adgangsadresse']['adgangspunkt']['koordinater'][1] + ', ' + addresLookupResult[0]['adgangsadresse']['adgangspunkt']['koordinater'][0]);
 			}
+		}
+	}
+
+	const togglePlaceZones = () => {
+		if (isPlacingZones) {
+			if (buildingMapRef.current) {
+				buildingMapRef.current.saveSelectedZone();
+			}
+
+			setIsPlacingZones(false);
+		} else {
+			setIsPlacingZones(true);
 		}
 	}
 
@@ -344,8 +374,10 @@ const AdminBuildingsEdit = (props) => {
 
 					{image ?
 						<Grid item xs={12} style={{ marginTop: 20 }}>
-							<InputLabel id="visibleTo-select-label">Placer zoner</InputLabel>
-							<AdminBuildingMap building={building} rooms={rooms} saveLocations={saveLocations} />
+							<Button variant="contained" color="primary" onClick={() => togglePlaceZones()} style={{ marginBottom: 20 }}>
+								{isPlacingZones ? "Gem placeringer" : "Placer zoner"}
+							</Button>
+							{isPlacingZones ? <AdminBuildingMap ref={buildingMapRef} building={building} rooms={rooms} saveLocations={saveLocations} /> : ""}
 						</Grid>
 						: ""}
 
@@ -361,6 +393,9 @@ const AdminBuildingsEdit = (props) => {
 				</Snackbar>
 				<Snackbar open={alertFail} autoHideDuration={3000} onClose={handleAlertFailClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
 					<Alert onClose={handleAlertFailClose} severity="error" elevation={6} variant="filled">Der opstod en fejl!</Alert>
+				</Snackbar>
+				<Snackbar open={alertPlacements} autoHideDuration={3000} onClose={handleAlertPlacementsClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+					<Alert onClose={handleAlertFailClose} severity="error" elevation={6} variant="filled">Du skal først gemme zone placeringer før bygningen kan gemmes!</Alert>
 				</Snackbar>
 			</Paper>
 		) : (

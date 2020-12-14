@@ -19,9 +19,7 @@ const AdminZonesAdd = props => {
 	const [address, setAddress] = useState('');
 	const [addressError, setAddressError] = useState('');
 	const [size, setSize] = useState('');
-	const [sizeError, setSizeError] = useState('');
 	const [primaryFunction, setPrimaryFunction] = useState('');
-	const [primaryFunctionError, setPrimaryFunctionError] = useState('');
 
 	const primaryFunctionOptions = ['Kontor', 'Undervisning', 'Kantine', 'Mødelokale', 'Lager', 'Køkken'];
 
@@ -62,8 +60,6 @@ const AdminZonesAdd = props => {
 		setBuildingError('');
 		setNameError('');
 		setAddressError('');
-		setSizeError('');
-		setPrimaryFunctionError('');
 
 		if (!building.length) {
 			setBuildingError('Du skal vælge en bygning');
@@ -73,12 +69,6 @@ const AdminZonesAdd = props => {
 			isOK = false;
 		} else if (!address.length) {
 			setAddressError('Du skal indtaste en adresse på zonen');
-			isOK = false;
-		} else if (!size.length) {
-			setSizeError('Du skal indtaste en størrelse på zonen');
-			isOK = false;
-		} else if (!primaryFunction.length) {
-			setPrimaryFunctionError('Du skal vælge zone type');
 			isOK = false;
 		}
 
@@ -146,8 +136,6 @@ const AdminZonesAdd = props => {
 								onChange={(e) => setSize(e.target.value)}
 								margin='normal'
 								variant='outlined'
-								error={sizeError.length ? true : false}
-								helperText={sizeError}
 								className={classes.textField}
 							/>
 						</Grid>
@@ -158,8 +146,6 @@ const AdminZonesAdd = props => {
 								label="Zone type"
 								value={primaryFunction}
 								onChange={(e) => setPrimaryFunction(e.target.value)}
-								error={primaryFunctionError.length ? true : false}
-								helperText={primaryFunctionError}
 								variant="outlined"
 								className={classes.textField}
 							>

@@ -36,7 +36,7 @@ const AdminZonesEdit = props => {
 	useEffect(() => {
 		async function fetchData() {
 			const zoneData = await getRoom(uuid);
-			console.log(zoneData);
+
 			if (zoneData) {
 				setZone(zoneData);
 				setBuilding(zoneData.building);

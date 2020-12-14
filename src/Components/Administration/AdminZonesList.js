@@ -58,6 +58,19 @@ const AdminZonesList = (props) => {
 
 	const handleOk = async () => {
 		const result = await deleteRoom(selectedUuid);
+
+		if (typeof uuid === 'undefined') {
+			const data = await getRooms();
+			if (data) {
+				setRooms(data);
+			}
+		} else {
+			let data = await getRoomsInBuilding(uuid);
+			if (data) {
+				setRooms(data);
+			}
+		}
+
 		if (result) {
 			setShowDeleteDialog(false);
 		}

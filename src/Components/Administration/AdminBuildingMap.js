@@ -1,18 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import { Map, ZoomControl } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import "leaflet-draw/dist/leaflet.draw.css";
 import 'leaflet-draw';
-import { Grid } from '@material-ui/core';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Radio from '@material-ui/core/Radio';
+import { Grid, RadioGroup, Radio, FormControlLabel } from '@material-ui/core';
 
 import buildingStyles from 'Styles/buildingStyles';
 import { climaidApi } from 'data/climaid';
 
-function AdminBuildingMap(props) {
+//function AdminBuildingMap(props) {
+const AdminBuildingMap = forwardRef((props, ref) => {
 	const [draggable, setDraggable] = useState(false);
 	const [locations, setLocations] = useState({});
 	const [selectedZone, setSelectedZone] = useState(null);
@@ -106,7 +104,7 @@ function AdminBuildingMap(props) {
 		}
 	}, [building.uuid]);
 
-	const handleZoneChange = zone => {
+	const saveSelectedZone = () => {
 		let l;
 		layerGroup.eachLayer((layer) => {
 			l = layer;
@@ -126,6 +124,16 @@ function AdminBuildingMap(props) {
 
 			props.saveLocations(newLocations);
 		}
+	}
+
+	useImperativeHandle(ref, () => ({
+		saveSelectedZone: () => {
+			saveSelectedZone();
+		}
+	}))
+
+	const handleZoneChange = zone => {
+		saveSelectedZone();
 
 		layerGroup.eachLayer((layer) => {
 			layerGroup.removeLayer(layer);
@@ -185,6 +193,6 @@ function AdminBuildingMap(props) {
 			</Grid>
 		</Grid>
 	);
-}
+})
 
 export default AdminBuildingMap;

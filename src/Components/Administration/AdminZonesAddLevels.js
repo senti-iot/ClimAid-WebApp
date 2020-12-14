@@ -32,7 +32,7 @@ const AdminZonesAddLevels = props => {
 	const handleInputChange = event => {
 		let newValues = { ...levelValues };
 		newValues[event.target.id] = event.target.value;
-		console.log(newValues);
+
 		setLevelValues(newValues);
 	}
 
@@ -57,14 +57,14 @@ const AdminZonesAddLevels = props => {
 		}
 
 		const result = await addRoom(data);
-		console.log(result);
+
 		if (!result) {
 			setAlertFail(true);
 		} else {
 			setAlertSuccess(true);
 
 			setTimeout(function () {
-				props.history.push('/administration/zones/list/' + props.history.location.state.building);
+				props.history.push('/administration/zones/' + props.history.location.state.building + '/list/');
 			}, 500);
 		}
 	}
