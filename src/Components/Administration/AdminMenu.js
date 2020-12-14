@@ -25,7 +25,7 @@ const AdminMenu = () => {
 	const [activeMenuItem, setActiveMenuItem] = useState('');
 
 	useEffect(() => {
-		setActiveMenuItem(location.pathname);
+		setActiveMenuItem(location.pathname.split('/')[2]);
 	}, [location]);
 
 	const goToPage = (page) => {
@@ -34,46 +34,46 @@ const AdminMenu = () => {
 
 	return (
 		<List>
-			<ListItem className={activeMenuItem === '/administration/organisation' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/organisation')}>
+			<ListItem className={activeMenuItem === 'organisation' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/organisation')}>
 				<ListItemIcon style={{ minWidth: 45 }}>
-					{activeMenuItem === '/administration/organisation' ? <OrgIconActive className={classes.adminMenuItemIcon} /> : <OrgIconInactive className={classes.adminMenuItemIcon} />}
+					{activeMenuItem === 'organisation' ? <OrgIconActive className={classes.adminMenuItemIcon} /> : <OrgIconInactive className={classes.adminMenuItemIcon} />}
 				</ListItemIcon>
-				<ListItemText primary="Organisation" classes={{ primary: activeMenuItem === '/administration/organisation' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
+				<ListItemText primary="Organisation" classes={{ primary: activeMenuItem === 'organisation' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 
-			<ListItem className={activeMenuItem === '/administration/users/list' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/users/list')}>
+			<ListItem className={activeMenuItem === 'users' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/users/list')}>
 				<ListItemIcon style={{ minWidth: 45 }}>
-					{activeMenuItem === '/administration/users/list' ? <UserIconActive className={classes.adminMenuItemIcon} /> : <UserIconInactive className={classes.adminMenuItemIcon} />}
+					{activeMenuItem === 'users' ? <UserIconActive className={classes.adminMenuItemIcon} /> : <UserIconInactive className={classes.adminMenuItemIcon} />}
 				</ListItemIcon>
-				<ListItemText primary="Bruger" classes={{ primary: activeMenuItem === '/administration/users/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
+				<ListItemText primary="Bruger" classes={{ primary: activeMenuItem === 'users' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 
-			<ListItem className={activeMenuItem === '/administration/devices/list' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/devices/list')}>
+			<ListItem className={activeMenuItem === 'devices' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/devices/list')}>
 				<ListItemIcon style={{ minWidth: 45 }}>
-					{activeMenuItem === '/administration/devices/list' ? <DeviceIconActive className={classes.adminMenuItemIcon} /> : <DeviceIconInactive className={classes.adminMenuItemIcon} />}
+					{activeMenuItem === 'devices' ? <DeviceIconActive className={classes.adminMenuItemIcon} /> : <DeviceIconInactive className={classes.adminMenuItemIcon} />}
 				</ListItemIcon>
-				<ListItemText primary="Sensor" classes={{ primary: activeMenuItem === '/administration/devices/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
+				<ListItemText primary="Sensor" classes={{ primary: activeMenuItem === 'devices' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 
-			<ListItem className={activeMenuItem === '/administration/zones/list' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/zones/list')}>
+			<ListItem className={activeMenuItem === 'zones' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/zones/list')}>
 				<ListItemIcon style={{ minWidth: 45 }}>
-					{activeMenuItem === '/administration/zones/list' ? <ZoneIconActive className={classes.adminMenuItemIcon} /> : <ZoneIconInactive className={classes.adminMenuItemIcon} />}
+					{activeMenuItem === 'zones' ? <ZoneIconActive className={classes.adminMenuItemIcon} /> : <ZoneIconInactive className={classes.adminMenuItemIcon} />}
 				</ListItemIcon>
-				<ListItemText primary="Zone" classes={{ primary: activeMenuItem === '/administration/zones/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
+				<ListItemText primary="Zone" classes={{ primary: activeMenuItem === 'zones' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 
-			<ListItem className={activeMenuItem === '/administration/buildings/list' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/buildings/list')}>
+			<ListItem className={activeMenuItem === 'buildings' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/buildings/list')}>
 				<ListItemIcon style={{ minWidth: 45 }}>
-					{activeMenuItem === '/administration/buildings/list' ? <BuildingIconActive className={classes.adminMenuItemIcon} /> : <BuildingIconInactive className={classes.adminMenuItemIcon} />}
+					{activeMenuItem === 'buildings' ? <BuildingIconActive className={classes.adminMenuItemIcon} /> : <BuildingIconInactive className={classes.adminMenuItemIcon} />}
 				</ListItemIcon>
-				<ListItemText primary="Bygning" classes={{ primary: activeMenuItem === '/administration/buildings/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
+				<ListItemText primary="Bygning" classes={{ primary: activeMenuItem === 'buildings' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 
-			<ListItem className={activeMenuItem === '/administration/alarms/list' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/alarms/list')}>
+			<ListItem className={activeMenuItem === 'alarms' ? classes.adminMenuItemActive : classes.adminMenuItem} onClick={() => goToPage('/administration/alarms/list')}>
 				<ListItemIcon style={{ minWidth: 45 }}>
-					{activeMenuItem === '/administration/alarms/list' ? <AlarmIconActive className={classes.adminMenuItemIcon} /> : <AlarmIconInactive className={classes.adminMenuItemIcon} />}
+					{activeMenuItem === 'alarms' ? <AlarmIconActive className={classes.adminMenuItemIcon} /> : <AlarmIconInactive className={classes.adminMenuItemIcon} />}
 				</ListItemIcon>
-				<ListItemText primary="Alarm" classes={{ primary: activeMenuItem === '/administration/alarms/list' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
+				<ListItemText primary="Alarm" classes={{ primary: activeMenuItem === 'alarms' ? classes.adminMenuItemLabelActive : classes.adminMenuItemLabel }} />
 			</ListItem>
 		</List>
 	)
