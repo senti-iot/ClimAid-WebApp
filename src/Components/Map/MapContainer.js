@@ -53,20 +53,20 @@ const MapContainer = (props) => {
 
 				await Promise.all(
 					data.map(async building => {
-						let devicesFiltered = [];
+						building.color = 0;
+
+						let devicesIds = [];
 						const devices = await getBuildingDevices(building.uuid);
 						// eslint-disable-next-line array-callback-return
 						devices.map(device => {
-							if (device.type === 'data') {
-								devicesFiltered.push(device.device);
-							}
+							devicesIds.push(device.device);
 						})
 
-						if (devicesFiltered.length) {
+						if (devices.length) {
 							let online = 0;
 							let offline = 0;
 							await Promise.all(
-								devicesFiltered.map(async device => {
+								devicesIds.map(async device => {
 									let onlineState = await getDeviceOnlineStatus(device);
 
 									if (onlineState) {
@@ -83,12 +83,10 @@ const MapContainer = (props) => {
 								onlineStatesData[building.uuid] = 1;
 							}
 
-							let colorData = await getBuildingColorData(devicesFiltered, 'hour');
+							let colorData = await getBuildingColorData(devicesIds, 'hour');
 
 							if (colorData && colorData.length) {
 								building.color = colorData[0].color;
-							} else {
-								building.color = 1;
 							}
 						}
 
