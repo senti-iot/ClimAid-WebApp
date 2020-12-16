@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Paper, TextField, Button, ButtonGroup, Snackbar } from '@material-ui/core';
+import { Grid, Paper, TextField, IconButton, Button, ButtonGroup, Snackbar, Typography, Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 import { getDevice, updateRoomDevice, getSentiDevices } from 'data/climaid';
 import adminStyles from 'Styles/adminStyles';
 import CircularLoader from 'Components/Loaders/CircularLoader';
+import AdminDeviceGaugeDialog from './AdminDeviceGaugeDialog';
+import ConfirmDialog from 'Components/Dialogs/ConfirmDialog';
 
 const AdminDevicesEdit = props => {
 	const { uuid } = useParams();
@@ -24,8 +28,12 @@ const AdminDevicesEdit = props => {
 	const [deviceUuid, setDeviceUuid] = useState('');
 	const [qualitativeDevice, setQualitativeDevice] = useState('');
 	const [qualitativeDeviceUuid, setQualitativeDeviceUuid] = useState('');
-	const [gauges, setGauges] = useState('');
+	const [gauges, setGauges] = useState(null);
+	const [selectedGauge, setSelectedGauge] = useState(null);
 	const [datafields, setDatafields] = useState('');
+	const [showAddGaugeDialog, setShowAddGaugeDialog] = useState(false);
+	const [showEditGaugeDialog, setShowEditGaugeDialog] = useState(false);
+	const [showDeleteGaugeDialog, setShowDeleteGaugeDialog] = useState(false);
 
 	useEffect(() => {
 		async function fetchData() {
@@ -37,8 +45,8 @@ const AdminDevicesEdit = props => {
 				setDeviceUuid(deviceData.deviceUuid);
 				setQualitativeDevice(deviceData.qualitativeDevice);
 				setQualitativeDeviceUuid(deviceData.qualitativeDeviceUuid);
-				if (deviceData.gauges.length) {
-					setGauges(JSON.stringify(deviceData.gauges));
+				if (deviceData.gauges && deviceData.gauges.length) {
+					setGauges(deviceData.gauges);
 				}
 				if (deviceData.gauges.length) {
 					setDatafields(JSON.stringify(deviceData.datafields));
@@ -101,7 +109,7 @@ const AdminDevicesEdit = props => {
 		data.deviceUuid = deviceUuid;
 		data.qualitativeDevice = qualitativeDevice;
 		data.qualitativeDeviceUuid = qualitativeDeviceUuid;
-		data.gauges = gauges ? JSON.parse(gauges) : '';
+		data.gauges = gauges ? gauges : '';
 		data.datafields = datafields ? JSON.parse(datafields) : '';
 
 		let updated = await updateRoomDevice(room.uuid, data);
@@ -116,6 +124,63 @@ const AdminDevicesEdit = props => {
 			}, 500);
 		}
 	};
+
+	const handleAddGauge = () => {
+		setShowAddGaugeDialog(true);
+	}
+
+	const addGauge = (gauge) => {
+		let newGauges = [...gauges];
+		newGauges.push(gauge);
+
+		setGauges(newGauges);
+
+		setShowAddGaugeDialog(false);
+	}
+
+	const handleEditGauge = (g) => {
+		setSelectedGauge(g);
+		setShowEditGaugeDialog(true);
+	}
+
+	const editGaugeSave = (g) => {
+		let newGauges = [...gauges];
+
+		const foundIndex = newGauges.findIndex(x => x.uuid === g.uuid);
+		if (foundIndex) {
+			newGauges[foundIndex] = g;
+		}
+
+		setGauges(newGauges);
+
+		setShowEditGaugeDialog(false);
+	}
+
+	const handleDeleteGauge = (g) => {
+		setSelectedGauge(g);
+		setShowDeleteGaugeDialog(true);
+	}
+
+	const doDeleteGauge = () => {
+		let newGauges = gauges.filter(function (item) {
+			return item.uuid !== selectedGauge.uuid;
+		});
+
+		setGauges(newGauges);
+
+		handleHideDeleteGauge();
+	}
+
+	const handleHideDeleteGauge = () => {
+		setShowDeleteGaugeDialog(false);
+		setSelectedGauge(null);
+	}
+
+	const handleDialogCancel = () => {
+		setShowAddGaugeDialog(false);
+		setShowEditGaugeDialog(false);
+		setShowDeleteGaugeDialog(false);
+	}
 
 	return (
 		!loading ? (
@@ -207,18 +272,6 @@ const AdminDevicesEdit = props => {
 						<Grid item xs={12}>
 							<TextField
 								multiline={true}
-								id={'gauges'}
-								label='Målere'
-								value={gauges}
-								onChange={(e) => setGauges(e.target.value)}
-								margin='normal'
-								variant='outlined'
-								className={classes.textField}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								multiline={true}
 								id={'datafields'}
 								label='Datafelter'
 								value={datafields}
@@ -227,6 +280,53 @@ const AdminDevicesEdit = props => {
 								variant='outlined'
 								className={classes.textField}
 							/>
+						</Grid>
+
+						<Grid item xs={12}>
+							<Typography variant="h5">Målere</Typography>
+
+							<Button variant="contained" color="primary" onClick={() => handleAddGauge()} style={{ marginTop: 10, marginBottom: 20 }}>Tilføj måler</Button>
+
+							{gauges ? (
+								<Table stickyHeader className={classes.table} aria-label="gauges table">
+									<TableHead>
+										<TableRow className={classes.tableRow}>
+											<TableCell>Type</TableCell>
+											<TableCell>Periode</TableCell>
+											<TableCell>Funktion</TableCell>
+											<TableCell>Max værdi</TableCell>
+											<TableCell>Min. værdi</TableCell>
+											<TableCell>Segmenter</TableCell>
+											<TableCell>Tekst</TableCell>
+											<TableCell>Enhed</TableCell>
+											<TableCell></TableCell>
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{gauges.map(gauge => {
+											return <TableRow hover key={gauge.uuid} className={classes.tableRow}>
+												<TableCell>{gauge.type}</TableCell>
+												<TableCell>{gauge.period}</TableCell>
+												<TableCell>{gauge.function}</TableCell>
+												<TableCell>{gauge.maxValue}</TableCell>
+												<TableCell>{gauge.minValue}</TableCell>
+												<TableCell>{gauge.segments}</TableCell>
+												<TableCell>{gauge.topLabel}</TableCell>
+												<TableCell>{gauge.unitLabel}</TableCell>
+												<TableCell>
+													<IconButton onClick={() => handleEditGauge(gauge)}>
+														<EditIcon />
+													</IconButton>
+													<IconButton onClick={() => handleDeleteGauge(gauge)}>
+														<DeleteIcon />
+													</IconButton>
+
+												</TableCell>
+											</TableRow>
+										})}
+									</TableBody>
+								</Table>
+							) : ""}
 						</Grid>
 					</form>
 					<Grid item xs={12} style={{ marginTop: 40 }}>
@@ -247,6 +347,11 @@ const AdminDevicesEdit = props => {
 				<Snackbar open={alertFail} autoHideDuration={3000} onClose={handleAlertFailClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
 					<Alert onClose={handleAlertFailClose} severity="error" elevation={6} variant="filled">Der opstod en fejl!</Alert>
 				</Snackbar>
+
+				<ConfirmDialog visible={showDeleteGaugeDialog} title="Dette vil slette måleren" message="Er du sikker?" handleCancel={handleHideDeleteGauge} handleOk={doDeleteGauge} />
+
+				<AdminDeviceGaugeDialog showAddGaugeDialog={showAddGaugeDialog} save={addGauge} handleDialogCancel={handleDialogCancel} />
+				<AdminDeviceGaugeDialog data={selectedGauge} showAddGaugeDialog={showEditGaugeDialog} save={editGaugeSave} handleDialogCancel={handleDialogCancel} />
 			</Paper>
 		) : (
 			<CircularLoader fill />

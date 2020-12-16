@@ -41,7 +41,8 @@
 		"redux-thunk": "^2.3.0",
 		"senti-apicore": "0.0.53",
 		"store": "^2.0.12",
-		"styled-components": "^5.2.1"
+		"styled-components": "^5.2.1",
+		"uuid": "^8.3.2"
 	},
 	"scripts": {
 		"start": "react-scripts start",
