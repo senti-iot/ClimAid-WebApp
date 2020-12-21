@@ -105,7 +105,13 @@ const AdminDevicesList = (props) => {
 						variant="contained"
 						color="primary"
 						startIcon={<Add />}
-						onClick={() => history.push('/administration/devices/' + uuid + '/add')}
+						onClick={() => {
+							if (typeof uuid === 'undefined') {
+								history.push('/administration/devices/add');
+							} else {
+								history.push('/administration/devices/' + uuid + '/add');
+							}
+						}}
 					>
 						Tilknyt sensor
 					</Button>

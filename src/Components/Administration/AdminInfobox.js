@@ -4,7 +4,7 @@ import { Table, TableBody, TableRow, TableCell, Typography } from '@material-ui/
 import adminStyles from 'Styles/adminStyles';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 import { getBuildings, getRooms, getDevices } from 'data/climaid';
-import { getUsers, getUser } from 'data/users';
+import { getUsers, getLoggedInUser } from 'data/users';
 
 const AdminInfobox = () => {
 	const classes = adminStyles();
@@ -38,7 +38,7 @@ const AdminInfobox = () => {
 				setUsers(usersData.length);
 			}
 
-			const userData = await getUser();
+			const userData = await getLoggedInUser();
 
 			if (userData) {
 				setUser(userData);

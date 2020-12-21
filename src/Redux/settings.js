@@ -1,5 +1,5 @@
 import cookie from 'react-cookies';
-import { getUser, getValidSession } from 'data/users'
+import { getLoggedInUser, getValidSession } from 'data/users'
 import { saveSettings } from 'data/login';
 import { setPrefix, set, get } from 'data/storage';
 
@@ -135,7 +135,7 @@ export const getSettings = async () => {
 		}
 
 		var userId = cookie.load('SESSION') ? cookie.load('SESSION').userID : 0
-		var user = userId !== 0 ? await getUser() : null
+		var user = userId !== 0 ? await getLoggedInUser() : null
 
 		var settings = get('settings') ? get('settings') :
 			user ?

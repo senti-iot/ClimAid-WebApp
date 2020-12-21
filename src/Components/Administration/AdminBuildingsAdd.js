@@ -6,7 +6,7 @@ import { DropzoneArea } from 'material-ui-dropzone';
 import adminStyles from 'Styles/adminStyles';
 import { addBuilding, addBuildingImage, setBuildingPermissions } from 'data/climaid';
 import { addressLookup } from 'data/data';
-import { getUserOrgs, getUser } from 'data/users';
+import { getUserOrgs, getLoggedInUser } from 'data/users';
 import CircularLoader from 'Components/Loaders/CircularLoader';
 
 const ITEM_HEIGHT = 48;
@@ -45,7 +45,7 @@ const AdminBuildingsAdd = (props) => {
 
 	useEffect(() => {
 		async function fetchData() {
-			const user = await getUser();
+			const user = await getLoggedInUser();
 
 			setVisibleTo([user.org.uuid]);
 

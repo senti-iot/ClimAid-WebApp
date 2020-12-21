@@ -130,7 +130,10 @@ const AdminDevicesEdit = props => {
 	}
 
 	const addGauge = (gauge) => {
-		let newGauges = [...gauges];
+		let newGauges = [];
+		if (gauges && gauges.length) {
+			newGauges = [...gauges];
+		}
 		newGauges.push(gauge);
 
 		setGauges(newGauges);
