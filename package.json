@@ -11,7 +11,7 @@
 		"@material-ui/styles": "^4.11.2",
 		"@reach/router": "^1.3.4",
 		"@welldone-software/why-did-you-render": "^6.0.3",
-		"apisauce": "^2.0.0",
+		"apisauce": "^2.0.1",
 		"classnames": "^2.2.6",
 		"d3": "^6.3.1",
 		"file-saver": "^2.0.5",
@@ -39,7 +39,7 @@
 		"react-scripts": "^4.0.1",
 		"redux": "^4.0.5",
 		"redux-thunk": "^2.3.0",
-		"senti-apicore": "0.0.53",
+		"senti-apicore": "0.0.54",
 		"store": "^2.0.12",
 		"styled-components": "^5.2.1",
 		"uuid": "^8.3.2"
