@@ -29,10 +29,13 @@ const BuildingInfoRooms = (props) => {
 					props.rooms.map(async (room) => {
 						if (room.devices.length) {
 							let device = room.devices[0];
+
 							let state = await getBatteryStatus(device.device);
 							batteryStateData[room.uuid] = Math.round(state);
 
-							let onlineState = await getDeviceOnlineStatus(device.device);
+							const dataType = (device.datafields && device.datafields['temperature']) ? device.datafields['temperature'] : 'temperature';
+
+							let onlineState = await getDeviceOnlineStatus(device.device, dataType);
 							onlineStatesData[room.uuid] = onlineState;
 
 							let roomColorData = await getRoomColorData([device.device]);
