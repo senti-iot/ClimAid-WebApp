@@ -995,7 +995,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 			let thisto = 0;
 			let thistimetype;
 			let thistimetypedata;
-
+			console.log(to);
+			console.log(from);
 			if (!from || !to) {
 				setSelectedPeriod(menuId);
 
@@ -1055,7 +1056,13 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 				thistimetype = timeType;
 				thistimetypedata = timeTypeData;
 			}
-
+			console.log({
+				menuId: menuId,
+				from: thisfrom,
+				to: thisto,
+				timeType: thistimetype,
+				timeTypeData: thistimetypedata
+			});
 			return {
 				menuId: menuId,
 				from: thisfrom,
@@ -1124,35 +1131,44 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 		let thisfrom = 0;
 		let thisto = 0;
 
+		let checkFrom = from;
+		let checkTo = to;
+		if (!checkFrom) {
+			checkFrom = period.from;
+		}
+		if (!checkTo) {
+			checkTo = period.to;
+		}
+
 		switch (selectedPeriod) {
 			default:
 			case 10:
-				thisfrom = moment(from).add(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).add(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).add(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).add(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 11:
-				thisfrom = moment(from).add(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).add(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).add(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).add(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 1:
-				thisfrom = moment(from).add(1, 'week').startOf('week').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).add(1, 'week').endOf('week').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).add(1, 'week').startOf('week').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).add(1, 'week').endOf('week').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 2:
-				thisfrom = moment(from).add(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).add(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).add(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).add(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 3:
-				thisfrom = moment(from).add(1, 'month').startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).add(1, 'month').endOf('month').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).add(1, 'month').startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).add(1, 'month').endOf('month').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 5:
-				thisfrom = moment(from).add(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).add(90, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).add(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).add(90, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 7:
-				thisfrom = moment(from).add(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).add(30, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).add(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).add(30, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 		}
 
@@ -1169,35 +1185,44 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 		let thisfrom = 0;
 		let thisto = 0;
 
+		let checkFrom = from;
+		let checkTo = to;
+		if (!checkFrom) {
+			checkFrom = period.from;
+		}
+		if (!checkTo) {
+			checkTo = period.to;
+		}
+
 		switch (selectedPeriod) {
 			default:
 			case 10:
-				thisfrom = moment(from).subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 11:
-				thisfrom = moment(from).subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).subtract(1, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).subtract(1, 'day').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 1:
-				thisfrom = moment(from).subtract(1, 'week').startOf('week').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).subtract(1, 'week').endOf('week').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).subtract(1, 'week').startOf('week').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).subtract(1, 'week').endOf('week').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 2:
-				thisfrom = moment(from).subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).subtract(7, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 3:
-				thisfrom = moment(from).subtract(1, 'month').startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).subtract(1, 'month').endOf('month').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).subtract(1, 'month').startOf('month').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).subtract(1, 'month').endOf('month').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 5:
-				thisfrom = moment(from).subtract(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).subtract(90, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).subtract(90, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).subtract(90, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 			case 7:
-				thisfrom = moment(from).subtract(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-				thisto = moment(to).subtract(30, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisfrom = moment(checkFrom).subtract(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+				thisto = moment(checkTo).subtract(30, 'days').endOf('day').format('YYYY-MM-DD HH:mm:ss');
 				break;
 		}
 
