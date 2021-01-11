@@ -45,10 +45,11 @@ const AdminDevicesEdit = props => {
 				setDeviceUuid(deviceData.deviceUuid);
 				setQualitativeDevice(deviceData.qualitativeDevice);
 				setQualitativeDeviceUuid(deviceData.qualitativeDeviceUuid);
-				if (deviceData.gauges && deviceData.gauges.length) {
+				if (deviceData.gauges) {
 					setGauges(deviceData.gauges);
 				}
-				if (deviceData.gauges.length) {
+
+				if (deviceData.datafields) {
 					setDatafields(JSON.stringify(deviceData.datafields));
 				}
 				setRoom(deviceData.room);
@@ -188,7 +189,7 @@ const AdminDevicesEdit = props => {
 	return (
 		!loading ? (
 			<Paper elevation={3} className={classes.adminPaperContainer}>
-				<div className={classes.adminHeader}>Zone redigering</div>
+				<div className={classes.adminHeader}>Sensor redigering</div>
 
 				<Grid container justify={'flex-start'} spacing={0}>
 					<form>
