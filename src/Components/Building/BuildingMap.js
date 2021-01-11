@@ -84,7 +84,9 @@ function BuildingMap(props) {
 					if (room.devices.length) {
 						device = room.devices[0];
 
-						let onlineState = await getDeviceOnlineStatus(device.device);
+						const dataType = (device.datafields && device.datafields['temperature']) ? device.datafields['temperature'] : 'temperature';
+
+						let onlineState = await getDeviceOnlineStatus(device.device, dataType);
 
 						if (!onlineState) {
 							color = 0;
