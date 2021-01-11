@@ -1053,7 +1053,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 				thisfrom = from;
 				thisto = to;
 				thistimetype = timeType;
-				thistimetype = timeTypeData;
+				thistimetypedata = timeTypeData;
 			}
 
 			return {
