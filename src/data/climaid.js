@@ -269,8 +269,14 @@ export const getQualitativeData = async (devices, period) => {
 }
 
 export const getBuildingColorData = async (devices, period) => {
-	const from = moment().startOf(period).format('YYYY-MM-DD HH:mm:ss');
-	const to = moment().endOf(period).format('YYYY-MM-DD HH:mm:ss');
+	let from, to;
+	if (typeof period === 'string') {
+		from = moment().startOf(period).format('YYYY-MM-DD HH:mm:ss');
+		to = moment().endOf(period).format('YYYY-MM-DD HH:mm:ss');
+	} else {
+		from = period.from;
+		to = period.to;
+	}
 
 	const config = {
 		"T_ben1": 19,
@@ -357,6 +363,16 @@ export const getActivityLevelData = async (devices, period) => {
 	}
 
 	let data = await servicesAPI.post('/v2/climaidinsight/activity/' + sort + '/' + period.from + '/' + period.to, { "devices": devices, "config": config }).then(rs => rs.data);
+	return data;
+}
+
+export const getHeatmapData = async (type, period, devices) => {
+	let data = await servicesAPI.post('/v2/climaidinsight/heatmap/' + type + '/' + period.from + '/' + period.to, devices).then(rs => rs.data);
+	return data;
+}
+
+export const getActivityMinutes = async (period, device) => {
+	let data = await servicesAPI.get('/v2/climaidinsight/activeminutes/' + device + '/' + period.from + '/' + period.to).then(rs => rs.data);
 	return data;
 }
 
