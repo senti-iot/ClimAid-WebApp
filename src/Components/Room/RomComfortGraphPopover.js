@@ -33,7 +33,7 @@ const RomComfortGraphPopover = (props) => {
 	const left = props.left;
 	const top = props.top;
 	const onClose = props.onClose;
-	const currentMeassurement = props.currentMeassurement;
+	//const currentMeassurement = props.currentMeassurement;
 
 	return (
 		<Backdrop open={open} onClick={onClose} style={{ zIndex: 3000 }}>
