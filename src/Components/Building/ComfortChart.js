@@ -151,7 +151,7 @@ const ComfortChart = (props) => {
 		qualitativeData.map((reading) => {
 			if (reading) {
 				let day = moment(reading.ts.split(' ')[0]).format('D');
-				let hour = reading.ts.split(' ')[1];
+				let hour = parseInt(reading.ts.split(' ')[1]) + 1;
 
 				svg.append("circle")
 					.attr("cx", () => { return (day - 1) * gridSize + gridSize / 2; })
