@@ -263,7 +263,8 @@ export const getQualitativeData = async (devices, period) => {
 	if (period.timeType === 2) {
 		sort = 'byday';
 	}
-	// console.log('/v2/climaidinsight/qualitative/' + sort + '/' + period.from + '/' + period.to);
+	console.log('/v2/climaidinsight/qualitative/' + sort + '/' + period.from + '/' + period.to);
+	console.log(devices);
 	let data = await servicesAPI.post('/v2/climaidinsight/qualitative/' + sort + '/' + period.from + '/' + period.to, { "devices": devices }).then(rs => rs.data);
 	return data;
 }

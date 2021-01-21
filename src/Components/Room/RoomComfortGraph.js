@@ -26,6 +26,8 @@ const RoomComfortGraph = (props) => {
 	const [currentMeassurement, setCurrentMeassurement] = useState('temperature');
 	const [period, setPeriod] = useState(null);
 	const [selectedPeriod, setSelectedPeriod] = useState(3);
+	const [devices, setDevices] = useState([]);
+	const [qualitativeDevices, setQualitativeDevices] = useState([]);
 
 	const colors = ['#3fbfad', '#e28117', '#d1463d', '#e56363'];
 
@@ -110,6 +112,9 @@ const RoomComfortGraph = (props) => {
 				userDevices.push(device.qualitativeDevice);
 			}
 		});
+
+		setDevices(dataDevices);
+		setQualitativeDevices(userDevices);
 
 		async function fetchData() {
 			let newPeriod = period;
@@ -225,11 +230,13 @@ const RoomComfortGraph = (props) => {
 
 				return color;
 			})
-			.style("cursor", "pointer")
+			.style("cursor", currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes' ? "pointer" : "initial")
 			.on('click', (event, d) => {
-			// 	setCurrentReading(d);
-				setLeft(event.pageX);
-				setTop(event.pageY);
+				if (currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes') {
+				 	setCurrentReading(d);
+					setLeft(event.pageX);
+					setTop(event.pageY);
+				}
 			});
 
 		cards.exit().remove();
@@ -238,13 +245,21 @@ const RoomComfortGraph = (props) => {
 		qualitativeData.map((reading) => {
 			if (reading) {
 				let day = moment(reading.ts.split(' ')[0]).format('D');
-				let hour = reading.ts.split(' ')[1];
+				let hour = parseInt(reading.ts.split(' ')[1]) + 1;
 
 				svg.append("circle")
 					.attr("cx", () => { return (day - 1) * gridSize + gridSize / 2; })
 					.attr("cy", () => { return hour * gridSize - gridSize / 2; })
 					.attr("r", 6)
 					.style("fill", "#7f7f7f")
+					.style("cursor", currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes' ? "pointer" : "initial")
+					.on('click', (event) => {
+						if (currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes') {
+							setCurrentReading(reading);
+							setLeft(event.pageX);
+							setTop(event.pageY);
+						}
+					});
 			}
 		});
 	}
@@ -459,7 +474,7 @@ const RoomComfortGraph = (props) => {
 							{loadingNewData ? <CircularLoader fill /> : <div id="chart"></div>}
 						</div>
 
-						<RomComfortGraphPopover open={currentReading ? true : false} left={left} top={top} onClose={closeReadingPopover} currentMeassurement={currentMeassurement} />
+						{currentReading ? <RomComfortGraphPopover open={currentReading ? true : false} left={left} top={top} onClose={closeReadingPopover} currentReading={currentReading} devices={devices} qualitativeDevices={qualitativeDevices} /> : ""}
 					</ItemG>
 					<ItemG xs={4}>
 						<Grid container justify={'space-between'} alignItems={'center'} spacing={2} style={{ marginTop: 10, maxWidth: 300 }}>
@@ -481,7 +496,7 @@ const RoomComfortGraph = (props) => {
 									{
 										legend[currentMeassurement].map((l) => {
 											return (
-												<Grid container style={{ marginBottom: 10 }}>
+												<Grid container style={{ marginBottom: 10 }} key={l.color}>
 													<Grid item xs={1}>
 														<div style={{ width: 25, height: 25, backgroundColor: l.color }}></div>
 													</Grid>
