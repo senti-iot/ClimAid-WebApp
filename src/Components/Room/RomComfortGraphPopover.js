@@ -10,10 +10,10 @@ import CircularLoader from 'Components/Loaders/CircularLoader';
 
 const TCard = styled(Card)`
 	position: absolute;
-	top: -1000px;
-	left: -1000px;
-	min-width: 400px;
-	min-height: 500px;
+	top: calc(50% - 200px);
+	left: calc(50% - 270px);
+	width: 400px;
+	min-height: 540px;
 	border: 0;
 	border-radius: 4;
 	z-index: 2200;
@@ -121,7 +121,7 @@ const RomComfortGraphPopover = (props) => {
 
 	return (
 		<Backdrop open={open} onClick={onClose} style={{ zIndex: 3000 }}>
-			<TCard id='readingPopoverOpen' style={{ left: left, top: top }}>
+			<TCard id='readingPopoverOpen'>
 				{!loading ?
 					<CardContent>
 						<div style={{ position: 'absolute', top: 0, right: -10 }}>

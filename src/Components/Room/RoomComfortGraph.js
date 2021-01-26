@@ -81,10 +81,10 @@ const RoomComfortGraph = (props) => {
 			{ label: 'Ingen data', color: '#E7E6E6' },
 		],
 		colorData: [
-			{ label: '', color: '#3fbfad' },
-			{ label: '', color: '#e28117' },
-			{ label: '', color: '#d1463d' },
-			{ label: '', color: '#e56363' },
+			{ label: 'Godt', color: '#3fbfad' },
+			{ label: 'Acceptabelt', color: '#e28117' },
+			{ label: 'Uacceptabelt', color: '#e56363' },
+			{ label: 'Yderst uacceptabelt', color: '#d1463d' },
 			{ label: 'Ingen data', color: '#E7E6E6' },
 		],
 		activityMinutes: [
@@ -384,6 +384,39 @@ const RoomComfortGraph = (props) => {
 		return color;
 	}
 
+	const renderSignature = () => {
+		let text = '';
+
+		if (currentMeassurement === 'temperature') {
+			text = 'Temperatur [°C]';
+		} else if (currentMeassurement === 'co2') {
+			text = 'Luftkvalitet [ppm]';
+		} else if (currentMeassurement === 'humidity') {
+			text = 'Luftfugtighed [%]';
+		} else if (currentMeassurement === 'voc') {
+			text = 'VOC [ppb]';
+		} else if (currentMeassurement === 'noisePeak') {
+			text = 'Lydniveau [dB]';
+		} else if (currentMeassurement === 'light') {
+			text = 'Lysniveau [lx]';
+		} else if (currentMeassurement === 'colorData') {
+			text = 'Indeklima';
+		} else if (currentMeassurement === 'activityMinutes') {
+			text = 'Aktivitet';
+		}
+
+		return text;
+	}
+
+	const renderSignatureDesc = () => {
+		let text = 'Hver firkant viser gennemsnittet af målingerne.';
+		if (currentMeassurement === 'activityMinutes') {
+			text = 'Hver firkant viser hvor længe der har været aktivitet i lokalet.';
+		}
+
+		return text;
+	}
+
 	const customSetDate = (menuId, to, from, defaultT) => {
 		setSelectedPeriod(menuId);
 
@@ -488,8 +521,8 @@ const RoomComfortGraph = (props) => {
 						</Grid>
 
 						<div style={{ marginTop: 100 }}>
-							<Typography variant="h4">Signatur</Typography>
-							<Typography variant="body2" style={{ fontSize: 16 }}>Hver firkant viser gennemsnittet af målingerne.</Typography>
+							<Typography variant="h4">{renderSignature()}</Typography>
+							<Typography variant="body2" style={{ fontSize: 16 }}>{renderSignatureDesc()}</Typography>
 
 							<Grid container style={{ marginTop: 20 }}>
 								<Grid item xs={12}>

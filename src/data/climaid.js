@@ -192,6 +192,7 @@ export const getWeather = async (date, lat, long) => {
 };
 
 export const getCsvExport = async (device, period) => {
+	console.log(device);
 	let data = await climaidApi.get('/export/roomdata/' + device + '/' + period.from + '/' + period.to + '/').then(rs => rs.data);
 	return data;
 }
@@ -263,8 +264,6 @@ export const getQualitativeData = async (devices, period) => {
 	if (period.timeType === 2) {
 		sort = 'byday';
 	}
-	console.log('/v2/climaidinsight/qualitative/' + sort + '/' + period.from + '/' + period.to);
-	console.log(devices);
 	let data = await servicesAPI.post('/v2/climaidinsight/qualitative/' + sort + '/' + period.from + '/' + period.to, { "devices": devices }).then(rs => rs.data);
 	return data;
 }
