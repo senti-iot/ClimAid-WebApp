@@ -21,8 +21,6 @@ const RoomComfortGraph = (props) => {
 	const [loading, setLoading] = useState(true);
 	const [loadingNewData, setLoadingNewData] = useState(false);
 	const [currentReading, setCurrentReading] = useState(null);
-	const [left, setLeft] = useState(-1000);
-	const [top, setTop] = useState(-1000);
 	const [currentMeassurement, setCurrentMeassurement] = useState('temperature');
 	const [period, setPeriod] = useState(null);
 	const [selectedPeriod, setSelectedPeriod] = useState(3);
@@ -234,8 +232,6 @@ const RoomComfortGraph = (props) => {
 			.on('click', (event, d) => {
 				if (currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes') {
 				 	setCurrentReading(d);
-					setLeft(event.pageX);
-					setTop(event.pageY);
 				}
 			});
 
@@ -256,8 +252,6 @@ const RoomComfortGraph = (props) => {
 					.on('click', (event) => {
 						if (currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes') {
 							setCurrentReading(reading);
-							setLeft(event.pageX);
-							setTop(event.pageY);
 						}
 					});
 			}
@@ -507,7 +501,7 @@ const RoomComfortGraph = (props) => {
 							{loadingNewData ? <CircularLoader fill /> : <div id="chart"></div>}
 						</div>
 
-						{currentReading ? <RomComfortGraphPopover open={currentReading ? true : false} left={left} top={top} onClose={closeReadingPopover} currentReading={currentReading} devices={devices} qualitativeDevices={qualitativeDevices} /> : ""}
+						{currentReading ? <RomComfortGraphPopover open={currentReading ? true : false} onClose={closeReadingPopover} currentReading={currentReading} devices={devices} qualitativeDevices={qualitativeDevices} /> : ""}
 					</ItemG>
 					<ItemG xs={4}>
 						<Grid container justify={'space-between'} alignItems={'center'} spacing={2} style={{ marginTop: 10, maxWidth: 300 }}>

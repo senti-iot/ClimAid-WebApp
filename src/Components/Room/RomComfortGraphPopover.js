@@ -36,8 +36,6 @@ const keyToText = {
 
 const RomComfortGraphPopover = (props) => {
 	const open = props.open;
-	const left = props.left;
-	const top = props.top;
 	const onClose = props.onClose;
 	const currentReading = props.currentReading;
 	const devices = props.devices;
