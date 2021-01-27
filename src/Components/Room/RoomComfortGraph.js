@@ -72,10 +72,10 @@ const RoomComfortGraph = (props) => {
 			{ label: 'Ingen data', color: '#E7E6E6' },
 		],
 		voc: [
-			{ label: '< 400 ppb', color: '#E7E6E6' },
-			{ label: '400 – 800 ppb', color: '#E7E6E6' },
-			{ label: '800 – 1000 ppb', color: '#E7E6E6' },
-			{ label: '> 1000 ppb', color: '#E7E6E6' },
+			{ label: '< 400 ppb', color: '#3fbfad' },
+			{ label: '400 – 800 ppb', color: '#e28117' },
+			{ label: '800 – 1000 ppb', color: '#e56363' },
+			{ label: '> 1000 ppb', color: '#d1463d' },
 			{ label: 'Ingen data', color: '#E7E6E6' },
 		],
 		colorData: [
@@ -228,11 +228,9 @@ const RoomComfortGraph = (props) => {
 
 				return color;
 			})
-			.style("cursor", currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes' ? "pointer" : "initial")
+			.style("cursor", "pointer")
 			.on('click', (event, d) => {
-				if (currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes') {
-				 	setCurrentReading(d);
-				}
+			 	setCurrentReading(d);
 			});
 
 		cards.exit().remove();
@@ -248,11 +246,9 @@ const RoomComfortGraph = (props) => {
 					.attr("cy", () => { return hour * gridSize - gridSize / 2; })
 					.attr("r", 6)
 					.style("fill", "#7f7f7f")
-					.style("cursor", currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes' ? "pointer" : "initial")
+					.style("cursor", "pointer")
 					.on('click', (event) => {
-						if (currentMeassurement === 'colorData' || currentMeassurement === 'activityMinutes') {
-							setCurrentReading(reading);
-						}
+						setCurrentReading(reading);
 					});
 			}
 		});
