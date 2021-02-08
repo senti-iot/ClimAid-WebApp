@@ -65,10 +65,10 @@ const RomComfortGraphPopover = (props) => {
 
 			let period = {};
 			period.timeTypeData = 3;
-			period.from = moment(currentReading.ts.split(' ')[0] + ':' + currentReading.ts.split(' ')[1] + ':00:00').format('YYYY-MM-DD HH:mm:ss');
-			period.to = moment(currentReading.ts.split(' ')[0] + ':' + currentReading.ts.split(' ')[1] + ':59:59').format('YYYY-MM-DD HH:mm:ss');
+			period.from = moment(currentReading.ts.split(' ')[0] + ' ' + currentReading.ts.split(' ')[1] + ':00:00').format('YYYY-MM-DD HH:mm:ss');
+			period.to = moment(currentReading.ts.split(' ')[0] + ' ' + currentReading.ts.split(' ')[1] + ':59:59').format('YYYY-MM-DD HH:mm:ss');
 			setPeriod(period);
-
+			console.log(period);
 			let temperatureData = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['temperature']) ? device.datafields['temperature'] : 'temperature');
 			let co2Data = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['co2']) ? device.datafields['co2'] : 'co2');
 			let humidityData = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['humidity']) ? device.datafields['humidity'] : 'humidity');
