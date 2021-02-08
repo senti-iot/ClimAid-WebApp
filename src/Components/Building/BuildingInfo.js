@@ -33,7 +33,7 @@ const BuildingInfo = (props) => {
 						<div></div>
 					</ItemG>
 				</Grid>
-				{props.building.usage.length ?
+				{props.building.usage && props.building.usage.length ?
 					<Grid container item xs={12}>
 						<ItemG xs={12}>
 							<BuildingInfoUsage building={props.building} />
