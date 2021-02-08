@@ -50,7 +50,7 @@ const RomComfortGraphPopover = (props) => {
 	const [light, setLight] = useState(null);
 	const [voc, setVoc] = useState(null);
 	const [qualitative, setQualitative] = useState({});
-	const [activityMinutes, setActivityMinutes] = useState({});
+	const [activityMinutes, setActivityMinutes] = useState(null);
 
 	useEffect(() => {
 		console.log(currentReading);
@@ -68,7 +68,7 @@ const RomComfortGraphPopover = (props) => {
 			period.from = moment(currentReading.ts.split(' ')[0] + ' ' + currentReading.ts.split(' ')[1] + ':00:00').format('YYYY-MM-DD HH:mm:ss');
 			period.to = moment(currentReading.ts.split(' ')[0] + ' ' + currentReading.ts.split(' ')[1] + ':59:59').format('YYYY-MM-DD HH:mm:ss');
 			setPeriod(period);
-			console.log(period);
+
 			let temperatureData = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['temperature']) ? device.datafields['temperature'] : 'temperature');
 			let co2Data = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['co2']) ? device.datafields['co2'] : 'co2');
 			let humidityData = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['humidity']) ? device.datafields['humidity'] : 'humidity');
@@ -142,9 +142,14 @@ const RomComfortGraphPopover = (props) => {
 							return "";
 						})}
 
-						<Typography variant="h5" style={{ marginTop: 10 }}>Aktivitet</Typography>
-						<Typography><b>Brugstid:</b> {parseInt(activityMinutes.activeMinutes)} minutter</Typography>
-						<Typography><b>Aktivitetsniveau:</b> </Typography>
+						{activityMinutes ?
+							<>
+								<Typography variant="h5" style={{ marginTop: 10 }}>Aktivitet</Typography>
+								<Typography><b>Brugstid:</b> {parseInt(activityMinutes.activeMinutes)} minutter</Typography>
+								<Typography><b>Aktivitetsniveau:</b> </Typography>
+							</>
+							: ""
+						}
 					</CardContent>
 					: <CircularLoader fill />}
 			</TCard>
