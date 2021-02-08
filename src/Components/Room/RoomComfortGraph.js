@@ -22,9 +22,11 @@ const RoomComfortGraph = (props) => {
 	const [loadingNewData, setLoadingNewData] = useState(false);
 	const [currentReading, setCurrentReading] = useState(null);
 	const [currentMeassurement, setCurrentMeassurement] = useState('temperature');
+	const [currentMeassurementDataType, setCurrentMeassurementDataType] = useState('temperature');
 	const [period, setPeriod] = useState(null);
 	const [selectedPeriod, setSelectedPeriod] = useState(3);
 	const [devices, setDevices] = useState([]);
+	const [deviceIds, setDeviceIds] = useState([]);
 	const [qualitativeDevices, setQualitativeDevices] = useState([]);
 
 	const colors = ['#3fbfad', '#e28117', '#d1463d', '#e56363'];
@@ -101,10 +103,15 @@ const RoomComfortGraph = (props) => {
 		}
 
 		let dataDevices = [];
+		let dataDeviceIds = [];
 		let userDevices = [];
 		room.devices.map(device => {
 			if (device.device) {
-				dataDevices.push(device.device);
+				const dataType = (device.datafields && device.datafields[currentMeassurement]) ? device.datafields[currentMeassurement] : currentMeassurement;
+				setCurrentMeassurementDataType(dataType);
+
+				dataDevices.push(device);
+				dataDeviceIds.push(device.device);
 			}
 			if (device.qualitativeDevice) {
 				userDevices.push(device.qualitativeDevice);
@@ -112,6 +119,7 @@ const RoomComfortGraph = (props) => {
 		});
 
 		setDevices(dataDevices);
+		setDeviceIds(dataDeviceIds);
 		setQualitativeDevices(userDevices);
 
 		async function fetchData() {
@@ -126,11 +134,12 @@ const RoomComfortGraph = (props) => {
 
 			let data = null;
 			if (currentMeassurement === 'colorData') {
-				data = await getBuildingColorData(dataDevices, newPeriod);
+				data = await getBuildingColorData(dataDeviceIds, newPeriod);
 			} else if (currentMeassurement === 'activityMinutes') {
-				data = await getActivityMinutes(newPeriod, dataDevices);
+				data = await getActivityMinutes(newPeriod, dataDeviceIds);
+				//console.log(data);
 			} else {
-				data = await getHeatmapData(currentMeassurement, newPeriod, dataDevices);
+				data = await getHeatmapData(currentMeassurementDataType, newPeriod, dataDeviceIds);
 			}
 
 			if (data) {
@@ -230,6 +239,7 @@ const RoomComfortGraph = (props) => {
 			})
 			.style("cursor", "pointer")
 			.on('click', (event, d) => {
+				console.log(d);
 			 	setCurrentReading(d);
 			});
 
@@ -418,7 +428,7 @@ const RoomComfortGraph = (props) => {
 			newPeriod.from = moment().subtract(30, 'days').startOf('day').format('YYYY-MM-DD HH:mm:ss');
 			newPeriod.to = moment().endOf('day').format('YYYY-MM-DD HH:mm:ss');
 		}
-		console.log(newPeriod);
+
 		setPeriod(newPeriod);
 	}
 

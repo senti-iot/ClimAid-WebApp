@@ -68,24 +68,22 @@ const RomComfortGraphPopover = (props) => {
 			period.from = moment(currentReading.ts.split(' ')[0] + ':' + currentReading.ts.split(' ')[1] + ':00:00').format('YYYY-MM-DD HH:mm:ss');
 			period.to = moment(currentReading.ts.split(' ')[0] + ':' + currentReading.ts.split(' ')[1] + ':59:59').format('YYYY-MM-DD HH:mm:ss');
 			setPeriod(period);
-			console.log(period);
-			let temperatureData = await getDeviceDataConverted(device, period, 'temperature');
-			let co2Data = await getDeviceDataConverted(device, period, 'co2');
-			let humidityData = await getDeviceDataConverted(device, period, 'humidity');
-			let noisePeakData = await getDeviceDataConverted(device, period, 'noisePeak');
-			let lightData = await getDeviceDataConverted(device, period, 'light');
-			let vocData = await getDeviceDataConverted(device, period, 'voc');
+
+			let temperatureData = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['temperature']) ? device.datafields['temperature'] : 'temperature');
+			let co2Data = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['co2']) ? device.datafields['co2'] : 'co2');
+			let humidityData = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['humidity']) ? device.datafields['humidity'] : 'humidity');
+			let noisePeakData = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['noisePeak']) ? device.datafields['noisePeak'] : 'noisePeak');
+			let lightData = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['light']) ? device.datafields['light'] : 'light');
+			let vocData = await getDeviceDataConverted(device.device, period, (device.datafields && device.datafields['voc']) ? device.datafields['voc'] : 'voc');
 
 			let activityData = await getActivityMinutes(period, device);
 			if (activityData.length) {
-				console.log(activityData[0]);
 				setActivityMinutes(activityData[0]);
 			}
 
 			if (qualitativeDevices.length) {
 				let qualitativeData = await getQualitativeData([qDevice], period);
 				if (qualitativeData.length) {
-					console.log(qualitativeData[0]);
 					setQualitative(qualitativeData[0]);
 				}
 			}
