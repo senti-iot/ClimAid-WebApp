@@ -26,7 +26,6 @@ const RoomComfortGraph = (props) => {
 	const [period, setPeriod] = useState(null);
 	const [selectedPeriod, setSelectedPeriod] = useState(3);
 	const [devices, setDevices] = useState([]);
-	const [deviceIds, setDeviceIds] = useState([]);
 	const [qualitativeDevices, setQualitativeDevices] = useState([]);
 
 	const colors = ['#3fbfad', '#e28117', '#d1463d', '#e56363'];
@@ -111,7 +110,6 @@ const RoomComfortGraph = (props) => {
 				setCurrentMeassurementDataType(dataType);
 
 				dataDevices.push(device);
-				dataDeviceIds.push(device.device);
 			}
 			if (device.qualitativeDevice) {
 				userDevices.push(device.qualitativeDevice);
@@ -119,7 +117,6 @@ const RoomComfortGraph = (props) => {
 		});
 
 		setDevices(dataDevices);
-		setDeviceIds(dataDeviceIds);
 		setQualitativeDevices(userDevices);
 
 		async function fetchData() {
