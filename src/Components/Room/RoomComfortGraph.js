@@ -110,6 +110,7 @@ const RoomComfortGraph = (props) => {
 				setCurrentMeassurementDataType(dataType);
 
 				dataDevices.push(device);
+				dataDeviceIds.push(device.device);
 			}
 			if (device.qualitativeDevice) {
 				userDevices.push(device.qualitativeDevice);
