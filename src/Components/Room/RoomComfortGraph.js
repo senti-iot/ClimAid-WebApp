@@ -18,7 +18,7 @@ import RomComfortGraphPopover from './RomComfortGraphPopover';
 const RoomComfortGraph = (props) => {
 	const classes = comformChartStyles();
 	const room = props.room;
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [loadingNewData, setLoadingNewData] = useState(false);
 	const [currentReading, setCurrentReading] = useState(null);
 	const [currentMeassurement, setCurrentMeassurement] = useState('temperature');
@@ -100,26 +100,26 @@ const RoomComfortGraph = (props) => {
 			setLoadingNewData(true);
 		}
 
-		let dataDevices = [];
-		let dataDeviceIds = [];
-		let userDevices = [];
-		let dataType = '';
-		room.devices.map(device => {
-			if (device.device) {
-				dataType = (device.datafields && device.datafields[currentMeassurement]) ? device.datafields[currentMeassurement] : currentMeassurement;
-
-				dataDevices.push(device);
-				dataDeviceIds.push(device.device);
-			}
-			if (device.qualitativeDevice) {
-				userDevices.push(device.qualitativeDevice);
-			}
-		});
-
-		setDevices(dataDevices);
-		setQualitativeDevices(userDevices);
-
 		async function fetchData() {
+			let dataDevices = [];
+			let dataDeviceIds = [];
+			let userDevices = [];
+			let dataType = '';
+			room.devices.map(device => {
+				if (device.device) {
+					dataType = (device.datafields && device.datafields[currentMeassurement]) ? device.datafields[currentMeassurement] : currentMeassurement;
+
+					dataDevices.push(device);
+					dataDeviceIds.push(device.device);
+				}
+				if (device.qualitativeDevice) {
+					userDevices.push(device.qualitativeDevice);
+				}
+			});
+
+			setDevices(dataDevices);
+			setQualitativeDevices(userDevices);
+
 			let newPeriod = period;
 			if (!newPeriod) {
 				newPeriod = {};
@@ -137,7 +137,6 @@ const RoomComfortGraph = (props) => {
 			} else {
 				data = await getHeatmapData(dataType, newPeriod, dataDeviceIds);
 			}
-			//console.log(data);
 
 			if (data) {
 				let qualitativeData = await getQualitativeData(userDevices, newPeriod);
@@ -154,7 +153,7 @@ const RoomComfortGraph = (props) => {
 
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentMeassurement, period]);
+	}, [currentMeassurement, loading]);
 
 	const generateChart = (data, qualitativeData) => {
 		let margin = { top: 30, right: 0, bottom: 30, left: 60 };
@@ -164,9 +163,9 @@ const RoomComfortGraph = (props) => {
 		let days = generateDayLabels();
 		let times = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
 
-		d3.select("#chart > *").remove(); //remove previous graph
+		d3.select("#chart").selectAll("*").remove(); //remove previous graph
 
-		let svg = d3.select("#chart").append("svg")
+		let svg = d3.select("#chart")
 			.attr("width", width + margin.left + margin.right)
 			.attr("height", height + margin.top + margin.bottom)
 			.append("g")
@@ -192,9 +191,6 @@ const RoomComfortGraph = (props) => {
 					+ "translate(" + gridSize / 1.5 + ", 125) rotate(-90)";
 			})
 
-		let cards = svg.selectAll(".hour")
-			.data(data, function (d) { return d.ts ? moment(d.ts.split(' ')[0]).format("D") + ':' + d.ts.split(' ')[1] : '' });
-
 		let daysInMonth = moment().daysInMonth();
 		if (period) {
 			if (period.timeType === 7) {
@@ -203,6 +199,20 @@ const RoomComfortGraph = (props) => {
 				daysInMonth = moment(period.from).daysInMonth();
 			}
 		}
+
+		//add dayNo so last 30 days works
+		let dayNo = -1;
+		let lastDate = '';
+		data.map(d => {		
+			if (lastDate !== d.ts.split(' ')[0]) {
+				dayNo++;
+				lastDate = d.ts.split(' ')[0];
+			}
+			d.dayNo = dayNo;
+		});
+
+		let cards = svg.selectAll(".hour")
+			.data(data, function (d) { return d.ts ? moment(d.ts.split(' ')[0]).format("D") + ':' + d.ts.split(' ')[1] : '' });
 
 		for (let i = 1; i <= daysInMonth; i++) {
 			svg.selectAll('.gridrect')
@@ -217,7 +227,7 @@ const RoomComfortGraph = (props) => {
 		}
 
 		cards.enter().append("rect")
-			.attr("x", function (d) { return d.ts ? (moment(d.ts.split(' ')[0]).format("D") - 1) * gridSize : '' })
+			.attr("x", function (d) { return d.ts ? (d.dayNo) * gridSize : '' })
 			.attr("y", function (d) { return d.ts ? (d.ts.split(' ')[1]) * gridSize : '' })
 			.attr("class", classes.rectbordered2)
 			.attr("width", gridSize)
@@ -427,6 +437,7 @@ const RoomComfortGraph = (props) => {
 		}
 
 		setPeriod(newPeriod);
+		setLoading(true);
 	}
 
 	const goBack = () => {
@@ -450,6 +461,7 @@ const RoomComfortGraph = (props) => {
 		newPeriod.from = thisfrom;
 		newPeriod.to = thisto;
 		setPeriod(newPeriod);
+		setLoading(true);
 	}
 
 	const goForward = () => {
@@ -473,6 +485,7 @@ const RoomComfortGraph = (props) => {
 		newPeriod.from = thisfrom;
 		newPeriod.to = thisto;
 		setPeriod(newPeriod);
+		setLoading(true);
 	}
 
 	return (
@@ -501,7 +514,7 @@ const RoomComfortGraph = (props) => {
 						</Grid>
 
 						<div style={{ backgroundColor: '#fff', marginTop: 18 }}>
-							{loadingNewData ? <CircularLoader fill /> : <div id="chart"></div>}
+							{loadingNewData ? <CircularLoader fill /> : <svg id="chart"></svg>}
 						</div>
 
 						{currentReading ? <RomComfortGraphPopover open={currentReading ? true : false} onClose={closeReadingPopover} currentReading={currentReading} devices={devices} qualitativeDevices={qualitativeDevices} /> : ""}
