@@ -200,10 +200,37 @@ const RoomComfortGraph = (props) => {
 			}
 		}
 
+		let from = moment().startOf('month');
+		if (period) {
+			from = moment(period.from);
+		}
+
+		// console.log(data);
+		let newData = [];
+		const monthDate = from;
+		let hourCount = monthDate;
+		for (let i = 1; i <= daysInMonth; i++) {
+			for (let j = 0; j <= 23; j++) {
+				let ts = hourCount.format('YYYY-MM-DD H');
+
+				let result = data.filter(obj => {
+					return obj.ts === ts
+				});
+
+				let obj = { ts: ts };
+				if (result.length) {
+					obj = result[0];
+				}
+
+				newData.push(obj);
+				hourCount.add(1, 'hour')
+			}
+		}
+
 		//add dayNo so last 30 days works
 		let dayNo = -1;
 		let lastDate = '';
-		data.map(d => {		
+		newData.map(d => {		
 			if (lastDate !== d.ts.split(' ')[0]) {
 				dayNo++;
 				lastDate = d.ts.split(' ')[0];
@@ -212,7 +239,7 @@ const RoomComfortGraph = (props) => {
 		});
 
 		let cards = svg.selectAll(".hour")
-			.data(data, function (d) { return d.ts ? moment(d.ts.split(' ')[0]).format("D") + ':' + d.ts.split(' ')[1] : '' });
+			.data(newData, function (d) { return d.ts ? moment(d.ts.split(' ')[0]).format("D") + ':' + d.ts.split(' ')[1] : '' });
 
 		for (let i = 1; i <= daysInMonth; i++) {
 			svg.selectAll('.gridrect')
@@ -235,7 +262,7 @@ const RoomComfortGraph = (props) => {
 			.style("fill", (d) => { 
 				let color = '';
 				if (currentMeassurement === 'colorData') {
-					color = colors[d.color - 1];
+					color = d.color ? colors[d.color - 1] : '#E7E6E6';
 				} else if (currentMeassurement === 'activityMinutes') {
 					color = decideColor(d.activeMinutes);
 				} else {
@@ -246,7 +273,6 @@ const RoomComfortGraph = (props) => {
 			})
 			.style("cursor", "pointer")
 			.on('click', (event, d) => {
-				console.log(d);
 			 	setCurrentReading(d);
 			});
 
