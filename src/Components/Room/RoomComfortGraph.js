@@ -22,7 +22,6 @@ const RoomComfortGraph = (props) => {
 	const [loadingNewData, setLoadingNewData] = useState(false);
 	const [currentReading, setCurrentReading] = useState(null);
 	const [currentMeassurement, setCurrentMeassurement] = useState('temperature');
-	const [currentMeassurementDataType, setCurrentMeassurementDataType] = useState('temperature');
 	const [period, setPeriod] = useState(null);
 	const [selectedPeriod, setSelectedPeriod] = useState(3);
 	const [devices, setDevices] = useState([]);
@@ -104,10 +103,10 @@ const RoomComfortGraph = (props) => {
 		let dataDevices = [];
 		let dataDeviceIds = [];
 		let userDevices = [];
+		let dataType = '';
 		room.devices.map(device => {
 			if (device.device) {
-				const dataType = (device.datafields && device.datafields[currentMeassurement]) ? device.datafields[currentMeassurement] : currentMeassurement;
-				setCurrentMeassurementDataType(dataType);
+				dataType = (device.datafields && device.datafields[currentMeassurement]) ? device.datafields[currentMeassurement] : currentMeassurement;
 
 				dataDevices.push(device);
 				dataDeviceIds.push(device.device);
@@ -135,10 +134,10 @@ const RoomComfortGraph = (props) => {
 				data = await getBuildingColorData(dataDeviceIds, newPeriod);
 			} else if (currentMeassurement === 'activityMinutes') {
 				data = await getActivityMinutes(newPeriod, dataDeviceIds);
-				//console.log(data);
 			} else {
-				data = await getHeatmapData(currentMeassurementDataType, newPeriod, dataDeviceIds);
+				data = await getHeatmapData(dataType, newPeriod, dataDeviceIds);
 			}
+			//console.log(data);
 
 			if (data) {
 				let qualitativeData = await getQualitativeData(userDevices, newPeriod);
@@ -324,7 +323,7 @@ const RoomComfortGraph = (props) => {
 		} else if (currentMeassurement === 'humidity') {
 			if (value < 15) {
 				color = '#025373';
-			} else if (value >= 15 && value < 21) {
+			} else if (value >= 15 && value < 25) {
 				color = '#04ADBF';
 			} else if (value >= 25 && value < 30) {
 				color = '#63F2F2';
