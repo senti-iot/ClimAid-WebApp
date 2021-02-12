@@ -112,6 +112,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						let datafieldCo2 = (room.devices[0].datafields && room.devices[0].datafields['co2']) ? room.devices[0].datafields['co2'] : 'co2';
 						let datafieldHumidity = (room.devices[0].datafields && room.devices[0].datafields['humidity']) ? room.devices[0].datafields['humidity'] : 'humidity';
 						let datafieldBattery = (room.devices[0].datafields && room.devices[0].datafields['batteristatus']) ? room.devices[0].datafields['batteristatus'] : 'batteristatus';
+						let datafieldNoisePeak = (room.devices[0].datafields && room.devices[0].datafields['noisePeak']) ? room.devices[0].datafields['noisePeak'] : 'noisePeak';
 
 						if (key === 'temphistoryrooms') {
 							temperatureRoomData = {};
@@ -123,7 +124,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 									await Promise.all(
 										roomDevices.map(async device => {
-											let data = await getDeviceDataConverted(device.device, period, datafieldTemperature);
+											let df = (device.datafields && device.datafields['temperature']) ? device.datafields['temperature'] : 'temperature';
+											let data = await getDeviceDataConverted(device.device, period, df);
 											if (data) {
 												temperatureRoomData[uuid] = { data: data, room: r };
 											}
@@ -146,7 +148,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 									let avgPeriod = period;
 									avgPeriod.timeTypeData = 3;
-									let deviceData = await getDeviceDataConverted(device.device, avgPeriod, datafieldTemperature);
+									let df = (device.datafields && device.datafields['temperature']) ? device.datafields['temperature'] : 'temperature';
+									let deviceData = await getDeviceDataConverted(device.device, avgPeriod, df);
 									if (deviceData) {
 										deviceData.map(data => {
 											if (!combinedData[data.date]) {
@@ -178,7 +181,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 									await Promise.all(
 										roomDevices.map(async device => {
-											let data = await getDeviceDataConverted(device.device, period, datafieldCo2);
+											let df = (device.datafields && device.datafields['co2']) ? device.datafields['co2'] : 'co2';
+											let data = await getDeviceDataConverted(device.device, period, df);
 											if (data) {
 												co2RoomData[uuid] = { data: data, room: r };
 											}
@@ -198,7 +202,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 									let avgPeriod = period;
 									avgPeriod.timeTypeData = 3;
 
-									let deviceData = await getDeviceDataConverted(device.device, period, datafieldCo2);
+									let df = (device.datafields && device.datafields['co2']) ? device.datafields['co2'] : 'co2';
+									let deviceData = await getDeviceDataConverted(device.device, period, df);
 									deviceData.map(data => {
 										if (!combinedData[data.date]) {
 											combinedData[data.date] = parseFloat(data.value);
@@ -228,7 +233,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 									await Promise.all(
 										roomDevices.map(async device => {
-											let data = await getDeviceDataConverted(device.device, period, datafieldHumidity);
+											let df = (device.datafields && device.datafields['humidity']) ? device.datafields['humidity'] : 'humidity';
+											let data = await getDeviceDataConverted(device.device, period, df);
 											if (data) {
 												humidityRoomData[uuid] = { data: data, room: r };
 											}
@@ -247,7 +253,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 									let avgPeriod = period;
 									avgPeriod.timeTypeData = 3;
-									let deviceData = await getDeviceDataConverted(device.device, period, datafieldHumidity);
+									let df = (device.datafields && device.datafields['humidity']) ? device.datafields['humidity'] : 'humidity';
+									let deviceData = await getDeviceDataConverted(device.device, period, df);
 									deviceData.map(data => {
 										if (!combinedData[data.date]) {
 											combinedData[data.date] = parseFloat(data.value);
@@ -276,7 +283,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 									await Promise.all(
 										roomDevices.map(async device => {
-											let data = await getDeviceDataConverted(device.device, period, datafieldBattery);
+											let df = (device.datafields && device.datafields['batteristatus']) ? device.datafields['batteristatus'] : 'batteristatus';
+											let data = await getDeviceDataConverted(device.device, period, df);
 											if (data) {
 												batteryRoomData[uuid] = { data: data, room: r };
 											}
@@ -295,7 +303,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 									let avgPeriod = period;
 									avgPeriod.timeTypeData = 3;
-									let deviceData = await getDeviceDataConverted(device.device, period, datafieldBattery);
+									let df = (device.datafields && device.datafields['batteristatus']) ? device.datafields['batteristatus'] : 'batteristatus';
+									let deviceData = await getDeviceDataConverted(device.device, period, df);
 									deviceData.map(data => {
 										if (!combinedData[data.date]) {
 											combinedData[data.date] = parseFloat(data.value);
@@ -312,7 +321,7 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 						}
 
 						if (key === 'noisepeakhistory') {
-							noisePeakData = await getDeviceDataConverted(room.devices[0].device, period, 'noisePeak');
+							noisePeakData = await getDeviceDataConverted(room.devices[0].device, period, datafieldNoisePeak);
 						}
 
 						if (key === 'noisepeakavgbuilding') {
@@ -324,7 +333,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 									let avgPeriod = period;
 									avgPeriod.timeTypeData = 3;
-									let deviceData = await getDeviceDataConverted(device.device, avgPeriod, 'noisePeak');
+									let df = (device.datafields && device.datafields['noisePeak']) ? device.datafields['noisePeak'] : 'noisePeak';
+									let deviceData = await getDeviceDataConverted(device.device, avgPeriod, df);
 									if (deviceData) {
 										deviceData.map(data => {
 											if (!combinedData[data.date]) {
@@ -351,7 +361,8 @@ const RoomGraph = React.memo(React.forwardRef((props, ref) => {
 
 									await Promise.all(
 										roomDevices.map(async device => {
-											let data = await getDeviceDataConverted(device.device, period, 'noisePeak');
+											let df = (device.datafields && device.datafields['noisePeak']) ? device.datafields['noisePeak'] : 'noisePeak';
+											let data = await getDeviceDataConverted(device.device, period, df);
 											if (data) {
 												noisePeakRoomData[uuid] = { data: data, room: r };
 											}
